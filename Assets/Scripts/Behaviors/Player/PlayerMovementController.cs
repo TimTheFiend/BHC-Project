@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementController : MovingObject
 {
-    public void OnMovement(InputAction.CallbackContext _context) {
-        UpdateMoveDirection(_context.ReadValue<Vector2>());
-    }
+    //public void OnMovement(InputAction.CallbackContext _context) {
+    //    UpdateMoveDirection(_context.ReadValue<Vector2>());
+    //}
 }

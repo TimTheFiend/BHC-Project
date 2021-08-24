@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponObject : MonoBehaviour
+public class AttackingObject : MonoBehaviour
 {
+    public WeaponEntity activeWeapon;
+
     public Transform weaponTransform;
     public float weaponAngle;
 
@@ -18,8 +20,8 @@ public class WeaponObject : MonoBehaviour
         MoveWeapon();
     }
 
-    protected virtual bool AttemptAttack() {
-        return canAttack;
+    public virtual void AttemptAttack() {
+        activeWeapon.AttemptAttack();
     }
 
     //TODO IEnumerator Attack
