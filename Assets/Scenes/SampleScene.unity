@@ -302,7 +302,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1293312839}
         m_TargetAssemblyTypeName: PlayerWeaponController, Assembly-CSharp
-        m_MethodName: OnShoot
+        m_MethodName: OnAttack
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -435,6 +435,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponTransform: {fileID: 1085297288}
   weaponAngle: 0
+  canAttack: 1
+  attackCooldown: 0.5
   projectile: {fileID: 3871277409544475581, guid: fa0fb67e7f916e54e89d07d0586bd723, type: 3}
-  canShoot: 1
-  shotCooldown: 0.5

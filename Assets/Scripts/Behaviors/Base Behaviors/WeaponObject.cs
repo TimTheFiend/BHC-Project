@@ -7,6 +7,9 @@ public class WeaponObject : MonoBehaviour
     public Transform weaponTransform;
     public float weaponAngle;
 
+    public bool canAttack = true;
+    [Range(0f, 5f)] public float attackCooldown = 0.5f;
+
     private float rotationRadius = 0.5f;
     protected Vector2 trackingPosition;
 
@@ -14,6 +17,12 @@ public class WeaponObject : MonoBehaviour
         UpdateTrackingData();
         MoveWeapon();
     }
+
+    protected virtual bool AttemptAttack() {
+        return canAttack;
+    }
+
+    //TODO IEnumerator Attack
 
     public virtual void UpdateTrackingData() {
     }

@@ -5,8 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerWeaponController : RangedWeaponObject
 {
-    public void OnShoot(InputAction.CallbackContext _context) {
-        Shoot();
+    public void OnAttack(InputAction.CallbackContext _context) {
+        if (AttemptAttack()) {
+            StartCoroutine(ShootRoutine());
+        }
     }
 
     public override void UpdateTrackingData() {
