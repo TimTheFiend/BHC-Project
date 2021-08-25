@@ -11,6 +11,14 @@ public class PlayerAttackController : AttackingObject
     //}
     private void Start() {
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
+
+        ChangeProjectile();
+    }
+
+    public void ChangeProjectile() {
+        if (activeWeapon.GetType() == typeof(RangedWeaponEntity)) {
+            (activeWeapon as RangedWeaponEntity).projectile.GetComponent<ProjectileEntity>().ChangeFlags(ProjectileFlags.Piercing, true);
+        }
     }
 
     public override void UpdateTrackingData() {
