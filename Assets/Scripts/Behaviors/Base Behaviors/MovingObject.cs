@@ -26,6 +26,7 @@ public class MovingObject : MonoBehaviour
     /// <param name="newPosition">New position.</param>
     protected virtual void Move(Vector2 newPosition) {
         rbody.MovePosition(rbody.position + newPosition * movementSpeed * Time.deltaTime);
+        //rbody.velocity = newPosition * movementSpeed * Time.deltaTime;
     }
 
     public void UpdateMoveDirection(Vector2 newDirection) {

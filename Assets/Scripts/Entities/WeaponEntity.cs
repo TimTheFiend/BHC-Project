@@ -8,9 +8,8 @@ public class WeaponEntity : MonoBehaviour
     public float attackCooldown = .5f;
     public float attackDamage = .5f;
 
-
-    public void AttemptAttack() {
-        if(!isAttacking) {
+    public virtual void AttemptAttack() {
+        if (!isAttacking) {
             //TODO attack
             StartCoroutine(Attack());
         }
@@ -26,5 +25,4 @@ public class WeaponEntity : MonoBehaviour
 
         isAttacking = false;
     }
-
 }

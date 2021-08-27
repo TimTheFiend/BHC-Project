@@ -8,8 +8,11 @@ public class ProjectileEntity : MonoBehaviour
     public ProjectileFlags projectileFlags;
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        print(collision.gameObject.tag);
+        if (collision.tag == "Untagged") {
+            return;
+        }
 
+        print("HIT");
         OnHit();
     }
 
@@ -28,7 +31,7 @@ public class ProjectileEntity : MonoBehaviour
                 return;
 
             case false:
-                projectileFlags &= flag;
+                projectileFlags &= ~flag;
                 return;
         }
     }
@@ -39,5 +42,8 @@ public enum ProjectileFlags
 {
     None = 0,
     Piercing = 1,
-    Etheral = 2
+    Etheral = 2,
+    Temp1 = 4,
+    Temp2 = 8,
+    temp3 = 16
 }
