@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : CharacterObject
 {
     public PlayerMovementController pMovement;
     public PlayerAttackController pAttack;
+    public int coins = 0;
 
     private void Start() {
         pMovement = GetComponent<PlayerMovementController>();
