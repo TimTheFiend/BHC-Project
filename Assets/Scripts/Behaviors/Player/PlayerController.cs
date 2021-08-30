@@ -12,6 +12,9 @@ public class PlayerController : CharacterObject
     private void Start() {
         pMovement = GetComponent<PlayerMovementController>();
         pAttack = GetComponent<PlayerAttackController>();
+
+        //TODO fix
+        currentHP = maxHP;
     }
 
     public void OnMovement(InputAction.CallbackContext _context) {
