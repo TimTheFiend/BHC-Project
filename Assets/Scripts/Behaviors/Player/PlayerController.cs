@@ -22,4 +22,8 @@ public class PlayerController : MonoBehaviour
             pAttack.AttemptAttack();
         }
     }
+
+    public void OnDash(InputAction.CallbackContext _context) {
+        pMovement.AttemptDash();
+    }
 }
