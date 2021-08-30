@@ -7,13 +7,15 @@ public class PickupObject : MonoBehaviour {
     // Pickup
     // Remove
 
+
     private void OnTriggerEnter2D(Collider2D collision) {
         if(collision.gameObject.tag == "Player") {
-            OnPickup();
+            OnPickup(collision.gameObject);
         }
+        print(collision.gameObject.name);
     }
 
-    protected virtual void OnPickup() {
+    protected virtual void OnPickup(GameObject playerObj) {
         Destroy(gameObject);
     }
 }
