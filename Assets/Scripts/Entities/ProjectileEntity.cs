@@ -35,6 +35,10 @@ public class ProjectileEntity : MonoBehaviour
                 return;
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        print(collision.gameObject);
+    }
 }
 
 [System.Flags]

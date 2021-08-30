@@ -15,7 +15,6 @@ public class RangedWeaponEntity : WeaponEntity
 
     protected override IEnumerator Attack() {
         isAttacking = true;
-        print("pew pew");
         GameObject toInstantiate = Instantiate(projectile, transform.position, transform.rotation);
         // TODO change static value
         toInstantiate.GetComponent<Rigidbody2D>().AddForce(transform.right * 2.5f, ForceMode2D.Impulse);
