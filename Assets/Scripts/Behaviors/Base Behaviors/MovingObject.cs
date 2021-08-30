@@ -34,6 +34,7 @@ public class MovingObject : MonoBehaviour
 
         }
         rbody.MovePosition(rbody.position + newPosition * movementSpeed * Time.deltaTime);
+        //rbody.velocity = newPosition * movementSpeed * Time.deltaTime;
     }
 
     public void UpdateMoveDirection(Vector2 newDirection) {
