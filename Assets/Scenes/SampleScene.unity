@@ -2789,6 +2789,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: f1f81e5e-2e4f-4829-b87b-cb2acfc41c34
     m_ActionName: Gameplay Loop/Shoot[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1293312840}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 423ada1c-b487-45b6-a7a0-7dd6adc7b9ca
+    m_ActionName: Gameplay Loop/Dash[/Keyboard/space]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay Loop
@@ -2844,6 +2860,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rbody: {fileID: 0}
   movementSpeed: 5
+  dashSpeed: 5
+  dashLengthInSeconds: 0.5
+  isDashing: 0
   moveDirection: {x: 0, y: 0}
 --- !u!212 &1293312838
 SpriteRenderer:
@@ -2926,6 +2945,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8875fd3aedb44954895bc51c5e49fe79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 100
+  currentHP: 0
   pMovement: {fileID: 0}
   pAttack: {fileID: 0}
 --- !u!61 &1293312841

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : CharacterObject
 {
     public PlayerMovementController pMovement;
     public PlayerAttackController pAttack;
@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void OnAttack(InputAction.CallbackContext _context) {
-        if(!_context.canceled) {
+        if (!_context.canceled) {
             pAttack.AttemptAttack();
         }
     }
