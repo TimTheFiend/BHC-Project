@@ -22,8 +22,12 @@ public class PlayerController : CharacterObject
     }
 
     public void OnAttack(InputAction.CallbackContext _context) {
-        if(!_context.canceled) {
+        if (!_context.canceled) {
             pAttack.AttemptAttack();
         }
+    }
+
+    public void OnDash(InputAction.CallbackContext _context) {
+        pMovement.AttemptDash();
     }
 }

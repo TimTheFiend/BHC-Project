@@ -15,6 +15,13 @@ public class RangedWeaponEntity : WeaponEntity
         projectile.ProjectileSpeed = 15f;
     }
 
+    public override void AttemptAttack() {
+        if (!isAttacking) {
+            //TODO attack
+            StartCoroutine(Attack());
+        }
+    }
+
     protected override IEnumerator Attack() {
         isAttacking = true;
 

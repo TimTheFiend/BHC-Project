@@ -3,50 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class ProjectileEntity : MonoBehaviour {
-    //public float projectileSpeed = 2.5f;
-    public float damage = 25f;
-    public LayerMask layer;
-
-    private const float MAXSPEED = 8f;
-
-    // TODO 
-    [SerializeField]private float projectileSpeed;
-    
-
-    public float ProjectileSpeed {
-        get { return projectileSpeed; }
-        set {
-            if(projectileSpeed + value > MAXSPEED) {
-                print("MAX SPEED");
-                projectileSpeed = MAXSPEED;
-            }
-            else {
-                projectileSpeed += value;
-
-            }
-        }
-    }
-
-    //private void OnTriggerEnter2D(Collider2D collision) {
-    //    print("HEWEE");
-    //    if(collision.gameObject.layer == layer) {
-    //        if(collision.gameObject.tag == "Enemy") {
-    //            collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
-    //        }
-    //        OnHit();
-    //    }
-    //}
-
+public class ProjectileEntity : MonoBehaviour
+{
+    public float projectileSpeed = 2.5f;
+    public ProjectileFlags projectileFlags;
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if(collision.gameObject.tag == "Enemy") {
-            collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
+        if (collision.tag == "Untagged") {
+            return;
         }
+
+        print("HIT");
         OnHit();
     }
 
     private void OnHit() {
+        // Check to see if destroy self.
+        if (projectileFlags.HasFlag(ProjectileFlags.Piercing)) {
+            return;
+        }
         Destroy(gameObject);
     }
+
+    public void ChangeFlags(ProjectileFlags flag, bool state) {
+        switch (state) {
+            case true:
+                projectileFlags |= flag;
+                return;
+
+            case false:
+                projectileFlags &= ~flag;
+                return;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        print(collision.gameObject);
+    }
+}
+
+[System.Flags]
+public enum ProjectileFlags
+{
+    None = 0,
+    Piercing = 1,
+    Etheral = 2,
+    Temp1 = 4,
+    Temp2 = 8,
+    temp3 = 16
 }
