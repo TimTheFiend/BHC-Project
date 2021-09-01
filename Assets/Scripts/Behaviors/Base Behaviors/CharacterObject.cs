@@ -18,17 +18,15 @@ public class CharacterObject : MonoBehaviour
         }
     }
 
-    public void LoseHealth(float damageTaken) {
-        //float damageResult = maxHP - damageTaken;
-        currentHP -= damageTaken;
-
+    public void LoseHealth(float healthLost) {
+        currentHP -= healthLost;
         if(isDead) {
             Die();
         }
     }
 
-    private void Die() {
-        throw new NotImplementedException();
+    protected virtual void Die() {
+        Destroy(gameObject);
 
     }
 
