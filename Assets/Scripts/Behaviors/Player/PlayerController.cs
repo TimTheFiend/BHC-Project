@@ -7,10 +7,14 @@ public class PlayerController : CharacterObject
 {
     public PlayerMovementController pMovement;
     public PlayerAttackController pAttack;
+    public int coins = 0;
 
     private void Start() {
         pMovement = GetComponent<PlayerMovementController>();
         pAttack = GetComponent<PlayerAttackController>();
+
+        //TODO fix
+        currentHP = maxHP;
     }
 
     public void OnMovement(InputAction.CallbackContext _context) {
