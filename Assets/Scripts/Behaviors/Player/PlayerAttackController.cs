@@ -13,13 +13,6 @@ public class PlayerAttackController : AttackingObject
         //ChangeProjectile();
     }
 
-    public void ChangeProjectile() {
-        if (activeWeapon.GetType() == typeof(RangedWeaponEntity)) {
-            (activeWeapon as RangedWeaponEntity).projectile.GetComponent<ProjectileEntity>().ChangeFlags(ProjectileFlags.Piercing, flipAbility);
-            print((activeWeapon as RangedWeaponEntity).projectile.GetComponent<ProjectileEntity>().projectileFlags.ToString());
-        }
-    }
-
     public override void UpdateTrackingData() {
         UpdateTrackingData(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
     }

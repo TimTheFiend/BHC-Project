@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class ProjectileEntity : MonoBehaviour
 {
+    public GameObject parent;
     public float projectileSpeed = 2.5f;
     public ProjectileFlags projectileFlags;
+
+    public void SpawnProjectile(GameObject spawnObject, Transform weaponTransfrom, ForceMode2D forceMode) {
+        parent = spawnObject;
+        GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * projectileSpeed, forceMode);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Untagged") {
@@ -25,17 +30,18 @@ public class ProjectileEntity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void ChangeFlags(ProjectileFlags flag, bool state) {
-        switch (state) {
-            case true:
-                projectileFlags |= flag;
-                return;
+    //NOTE: Not in use
+    //public void ChangeFlags(ProjectileFlags flag, bool state) {
+    //    switch (state) {
+    //        case true:
+    //            projectileFlags |= flag;
+    //            return;
 
-            case false:
-                projectileFlags &= ~flag;
-                return;
-        }
-    }
+    //        case false:
+    //            projectileFlags &= ~flag;
+    //            return;
+    //    }
+    //}
 
     private void OnCollisionEnter2D(Collision2D collision) {
         print(collision.gameObject);

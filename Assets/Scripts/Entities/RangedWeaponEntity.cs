@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class RangedWeaponEntity : WeaponEntity
 {
     public GameObject projectileObject;
-    public ProjectileEntity projectile;
+    [SerializeField] private GameObject parent;
 
     private void Start() {
-        projectile = projectileObject.GetComponent<ProjectileEntity>();
-        // TODO 
-        projectile.damage = 15f;
-        projectile.ProjectileSpeed = 15f;
+        parent = transform.parent.gameObject;
     }
 
     public override void AttemptAttack() {
@@ -26,12 +22,9 @@ public class RangedWeaponEntity : WeaponEntity
         isAttacking = true;
 
         GameObject toInstantiate = Instantiate(projectileObject, transform.position, transform.rotation);
-        
-        toInstantiate.GetComponent<Rigidbody2D>().AddForce(transform.right * projectile.ProjectileSpeed, ForceMode2D.Impulse);
 
+        toInstantiate.GetComponent<ProjectileEntity>().SpawnProjectile(parent, transform, ForceMode2D.Impulse);
         yield return new WaitForSeconds(attackCooldown);
-
-        projectile.ProjectileSpeed = 5f;
 
         isAttacking = false;
     }
