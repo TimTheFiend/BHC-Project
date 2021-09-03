@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3871277409544475580}
   - component: {fileID: 280527672278224466}
   - component: {fileID: 4425211245093217538}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Base Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132,8 +132,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -772725651
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1229858627709956937, guid: 30fe0b6d66e92f549ba754d15a83446d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

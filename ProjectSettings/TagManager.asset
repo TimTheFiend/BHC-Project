@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -12,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Walls
-  - Object or Entities
+  - Objects
   - Projectiles
   - 
   - 
@@ -41,9 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Walls
-    uniqueID: 1410631053
+  - name: Floor
+    uniqueID: 1864326429
     locked: 0
-  - name: Entities
-    uniqueID: 205060001
+  - name: Objects
+    uniqueID: 2053536561
+    locked: 0
+  - name: Projectiles
+    uniqueID: 3522241645
     locked: 0
