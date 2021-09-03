@@ -14,7 +14,7 @@ public class ProjectileEntity : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.tag == "Untagged") {
+        if (collision.gameObject == parent) {
             return;
         }
 

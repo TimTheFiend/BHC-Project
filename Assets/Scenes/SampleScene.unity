@@ -3159,6 +3159,7 @@ MonoBehaviour:
   currentHP: 0
   pMovement: {fileID: 0}
   pAttack: {fileID: 0}
+  coins: 0
 --- !u!61 &1293312841
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3252,6 +3253,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8925967075313187769, guid: c8574908809a4d54f853a233261883e1, type: 3}
+      propertyPath: projectileObject
+      value: 
+      objectReference: {fileID: 3871277409544475581, guid: fa0fb67e7f916e54e89d07d0586bd723, type: 3}
     m_RemovedComponents:
     - {fileID: -6196557717439042408, guid: c8574908809a4d54f853a233261883e1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c8574908809a4d54f853a233261883e1, type: 3}
