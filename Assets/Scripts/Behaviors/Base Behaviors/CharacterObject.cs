@@ -27,7 +27,6 @@ public class CharacterObject : MonoBehaviour
 
     protected virtual void Die() {
         Destroy(gameObject);
-
     }
 
     public void RecoverHealth(float healthRecovered) {
@@ -55,7 +54,7 @@ public class CharacterObject : MonoBehaviour
     }
 
     /// <summary>
-    /// Loseing your health from effects overtime
+    /// Losing your health from effects overtime
     /// </summary>
     /// <param name="totalAmount">How much dmg you will lose in total</param>
     /// <param name="totalDuration">How long it will take/be active</param>
@@ -68,8 +67,6 @@ public class CharacterObject : MonoBehaviour
             yield return new WaitForSeconds(timeUntilDamaged);
 
             LoseHealth(totalAmount / totalTicks);
-        }
-        
-
+        }       
     }
 }

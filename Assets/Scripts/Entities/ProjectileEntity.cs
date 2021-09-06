@@ -27,6 +27,7 @@ public class ProjectileEntity : MonoBehaviour
         if (projectileFlags.HasFlag(ProjectileFlags.Piercing)) {
             return;
         }
+        
         Destroy(gameObject);
     }
 
