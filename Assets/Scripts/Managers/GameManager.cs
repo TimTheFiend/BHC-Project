@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static UIManager instance = null; // Singleton
+    public static GameManager instance = null; // Singleton
+
+    public GameObject player;
+
 
     private void Awake() {
         #region Singleton Pattern
@@ -17,4 +20,6 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         #endregion
     }
+
+
 }
