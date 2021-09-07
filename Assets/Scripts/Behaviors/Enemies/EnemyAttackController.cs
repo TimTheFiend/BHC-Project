@@ -4,19 +4,32 @@ using UnityEngine;
 
 public class EnemyAttackController : AttackingObject
 {
+    public Transform playerPosition;
+    public bool enableAutoAttack = false;
+    [Range(2f, 10f)] public float autoAttackTimer;
+
     // Start is called before the first frame update
     void Start()
     {
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
+
+        StartCoroutine(AutoAttackCoroutine());
     }
 
-    // Update is called once per frame
+    public IEnumerator AutoAttackCoroutine() {
+        while(true) {
+            float time = 0f;
+            while(time < autoAttackTimer) {
+                time += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+            if(enableAutoAttack) {
+                activeWeapon.AttemptAttack();
+            }
+        }
+    }
+
     public override void UpdateTrackingData() {
-
-
-        UpdateTrackingData(Camera.main.ScreenToWorldPoint(GameObject.Find("Player").transform.position));
-
-        // Fra PlayerAttackController
-        // UpdateTrackingData(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
+        UpdateTrackingData(playerPosition.position);
     }
 }
