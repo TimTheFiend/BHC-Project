@@ -16,6 +16,10 @@ public class EnemyAttackController : AttackingObject
         StartCoroutine(AutoAttackCoroutine());
     }
 
+    /// <summary>
+    /// Enables autoattacking
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator AutoAttackCoroutine() {
         while(true) {
             float time = 0f;
