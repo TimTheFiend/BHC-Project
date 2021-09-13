@@ -41,7 +41,6 @@ public class MovingObject : MonoBehaviour
         moveDirection = newDirection;
     }
 
-
     /// <summary>
     /// checking if you can dash
     /// </summary>

@@ -24,6 +24,7 @@ public class ProjectileEntity : MonoBehaviour
             OnHit();
         }
 
+
         //print(collision.gameObject.tag);
     }
 

@@ -8,11 +8,13 @@ public class EnemyAttackController : AttackingObject
     public bool enableAutoAttack = false;
     [Range(2f, 10f)] public float autoAttackTimer;
 
+    Rigidbody2D rb2D;
+
     // Start is called before the first frame update
     void Start()
     {
+        rb2D = GetComponent<Rigidbody2D>();
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
-
         StartCoroutine(AutoAttackCoroutine());
     }
 
@@ -35,5 +37,14 @@ public class EnemyAttackController : AttackingObject
 
     public override void UpdateTrackingData() {
         UpdateTrackingData(playerPosition.position);
+    }
+
+    private void Update() {
+        float laserLength = 50f;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, playerPosition.position, laserLength);
+        if(hit.collider != null) {
+            Debug.Log("Hitting: " + hit.collider.tag);
+        }
+        Debug.DrawRay(transform.position, playerPosition.position * laserLength, Color.red);
     }
 }
