@@ -41,22 +41,13 @@ public class EnemyAttackController : AttackingObject
 
     private void Update() {
         // put in seperate function
-
         float laserLength = 50f;
-
-        // do some mathmagic on playerPosition.position so the raycast actualyl aims at the correct direction
+        int objectLayer = LayerMask.GetMask("Objects", "Walls");
         Vector2 realPosition = transform.InverseTransformPoint(playerPosition.position);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, realPosition, laserLength);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, realPosition, laserLength, objectLayer);
 
-        if(hit.collider != null) {
+        if(hit.collider.tag == "Player") {
             Debug.Log("Hitting: " + hit.collider.tag);
-            Debug.Log(hit.point);
-
-            if(hit.collider.tag == "Enemy") {
-
-            }
-            else if (hit.collider.tag == "Player") {
-            }
         }
         Debug.DrawRay(transform.position, realPosition * laserLength, Color.red);
     }
