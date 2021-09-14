@@ -47,8 +47,13 @@ public class EnemyAttackController : AttackingObject
         RaycastHit2D hit = Physics2D.Raycast(transform.position, realPosition, laserLength, objectLayer);
 
         if(hit.collider.tag == "Player") {
+            enableAutoAttack = true;
             Debug.Log("Hitting: " + hit.collider.tag);
+            Debug.DrawRay(transform.position, realPosition * laserLength, Color.green);
         }
-        Debug.DrawRay(transform.position, realPosition * laserLength, Color.red);
+        else {
+            Debug.DrawRay(transform.position, realPosition * laserLength, Color.red);
+            enableAutoAttack = false;
+        }
     }
 }
