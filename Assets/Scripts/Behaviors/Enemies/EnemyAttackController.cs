@@ -40,19 +40,17 @@ public class EnemyAttackController : AttackingObject
     }
 
     private void Update() {
-        // put in seperate function
         float laserLength = 50f;
-        int objectLayer = LayerMask.GetMask("Objects", "Walls");
-        Vector2 realPosition = transform.InverseTransformPoint(playerPosition.position);
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, realPosition, laserLength, objectLayer);
+        int objectLayers = LayerMask.GetMask("Objects", "Walls");
+        Vector2 realPlayerPosition = transform.InverseTransformPoint(playerPosition.position);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, realPlayerPosition, laserLength, objectLayers);
 
         if(hit.collider.tag == "Player") {
+            Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.green);
             enableAutoAttack = true;
-            Debug.Log("Hitting: " + hit.collider.tag);
-            Debug.DrawRay(transform.position, realPosition * laserLength, Color.green);
         }
         else {
-            Debug.DrawRay(transform.position, realPosition * laserLength, Color.red);
+            Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.red);
             enableAutoAttack = false;
         }
     }
