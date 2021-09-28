@@ -40,6 +40,10 @@ public class EnemyAttackController : AttackingObject
     }
 
     private void Update() {
+        // projectile entities from enemies damage other enemies
+        // "newHit" rayline casting seem to randomly change based on angle
+        //      possible issue is that the hit.point is outside of "Enemy" instead of on or inside, and will therefore see the "Enemy" it's supposed to ignore as an obstacle
+
         float laserLength = 50f;
         int objectLayers = LayerMask.GetMask("Objects", "Walls");
         Vector2 realPlayerPosition = transform.InverseTransformPoint(playerPosition.position);
@@ -49,9 +53,27 @@ public class EnemyAttackController : AttackingObject
             Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.green);
             enableAutoAttack = true;
         }
+
+        else if(hit.collider.tag == "Enemy") {
+            RaycastHit2D newHit = Physics2D.Raycast(hit.point, realPlayerPosition, laserLength, objectLayers);
+            print(newHit.point);
+
+            // TODO
+            // check direction that the enemy is aiming, add/subtract number of the hit.point coordinate used below, based on direction, so that newHit origin is inside "Enemy" instead of outside
+            if(newHit.collider.tag == "Player") {
+                Debug.DrawRay(hit.point, realPlayerPosition * laserLength, Color.green);
+                enableAutoAttack = true;
+            }
+
+            else {
+                Debug.DrawRay(hit.point, realPlayerPosition * laserLength, Color.red);
+                enableAutoAttack = false;
+            }
+        }
+
         else {
             Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.red);
-            enableAutoAttack = false;
+            enableAutoAttack = false;            
         }
     }
 }
