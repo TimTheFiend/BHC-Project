@@ -36,17 +36,21 @@ public class RoomDrawer : MonoBehaviour
         halfWidth = (int)width / 2;
 
 
-        PrintContent();
+        DrawRoom(new Vector2Int(0, 1));
+        DrawRoom(new Vector2Int(-1, -1));
+        DrawRoom(new Vector2Int(1, 2));
+        
     }
 
-    //Printer indhold af tilmap, startende med venstre bund hjørne, og arbejder sig op, venstre mod højre
-    //X incrementeres først, når den når til "højre-væg", går vi y+1, osv.
-    private void PrintContent() {
+    //
+    private void DrawRoom(Vector2Int roomCenter) {
         for (int x = -halfWidth; x < halfWidth; x++) {
             for (int y = -halfHeight; y < halfHeight; y++) {
-                if (tilemap.GetTile(new Vector3Int(x, y, 0)) != null) {
-                    gridWalls.SetTile(new Vector3Int(x + width, y, 0), tile);
+                TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
+                if (tile == null) {
+                    continue;
                 }
+                gridWalls.SetTile(new Vector3Int(x + (width * roomCenter.x) , y + (height * roomCenter.y), 0), tile);
             }
         }
     }
