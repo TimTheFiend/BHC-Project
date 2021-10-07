@@ -7,8 +7,11 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class DoorObject : MonoBehaviour
 {
+    public bool isOpen = false;
+
     private void OnTriggerEnter2D(Collider2D collision) {
-        print(collision.name);
+        if (isOpen) {
+            print("Trigger: " + collision.name);
+        }
     }
-    
 }
