@@ -10,7 +10,7 @@ public class RoomDrawer : MonoBehaviour {
     public List<GameObject> dungeonRooms;
 
 
-    public GameObject door;
+    public TileBase door;
     public List<Vector2> doorPos;
 
     //Object vi tegner på.
@@ -18,6 +18,8 @@ public class RoomDrawer : MonoBehaviour {
     private Grid grid;  //NOTE: bliver nok ikke brugt
     //Tilemap for Walls
     private Tilemap gridWalls;
+    //Tilemap for Doors
+    private Tilemap gridDoors;
     //Tilemap for Floor
     private Tilemap gridFloor;
 
@@ -29,6 +31,15 @@ public class RoomDrawer : MonoBehaviour {
     private const int totalHeight = 12;
     private int halfWidth;
     private int halfHeight;
+
+    public List<Vector2Int> roomsPos = new List<Vector2Int>() {
+        new Vector2Int(1, 1),
+        new Vector2Int(1, 2),
+        new Vector2Int(1, 3),
+        new Vector2Int(0, 3),
+        new Vector2Int(0, 1),
+        //new Vector2Int(-2, -0)
+    };
 
     private void Awake() {
         #region Singleton Pattern
@@ -46,10 +57,13 @@ public class RoomDrawer : MonoBehaviour {
         grid = activeGrid.GetComponent<Grid>();
         gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
+        gridDoors = activeGrid.transform.Find("Doors").GetComponent<Tilemap>();
 
         //Sæt half værdier
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
+
+        DrawDungeonRooms(roomsPos);
     }
 
     /* Funktioner */
@@ -78,8 +92,7 @@ public class RoomDrawer : MonoBehaviour {
         }
         #endregion
 
-        //NOTE: Joakim har kode til rum skiftning.
-        SpawnDoorsInRoom(roomCenter);
+        DrawDoors(roomCenter);
 
         //Tilføjelse af `roomObjects` til `room`
         foreach (GameObject item in roomObjects) {
@@ -92,17 +105,42 @@ public class RoomDrawer : MonoBehaviour {
         }
     }
 
-    private void SpawnDoorsInRoom(Vector2Int roomCenter) {
+    private void SpawnDoorsAsGameObjects(Vector2Int roomCenter) {
         doorPos = new List<Vector2>() {
             new Vector2(0f, 5.5f),
             new Vector2(0f, -5.5f),
             new Vector2(7.5f, 0f),
             new Vector2(-7.5f, 0f),
         };
+
+
         foreach (Vector2 pos in doorPos) {
-            Vector2 vector2 = new Vector2(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));         
+            Vector2 vector2 = new Vector2(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
+            
             Instantiate(door, vector2, Quaternion.identity);
         }
+    }
+
+    private void DrawDoors(Vector2Int roomCenter) {
+        //Liste af hvor dørene skal tegnes henne
+        List<Vector2Int> doorPos = new List<Vector2Int>() {
+            new Vector2Int(0, 5), //Up
+            new Vector2Int(-1, 5), //Up
+            new Vector2Int(0, -6), //Down
+            new Vector2Int(-1, -6), //Down
+            new Vector2Int(-8, 0), //Left
+            new Vector2Int(-8, -1), //Left
+            new Vector2Int(7, 0), //Right
+            new Vector2Int(7, -1), //Right
+        };
+
+        foreach (Vector2Int pos in doorPos) {
+            //Vector2Int vector2Int = new Vector2Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
+            gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
+        }
+        
+        //gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
+
     }
 
     public void DrawDungeonRooms(List<Vector2Int> roomPositions) {
