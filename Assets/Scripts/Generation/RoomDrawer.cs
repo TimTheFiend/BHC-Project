@@ -11,7 +11,7 @@ public class RoomDrawer : MonoBehaviour {
 
 
     public TileBase door;
-    public List<Vector2> doorPos;
+    public List<Vector2Int> doorPos;
 
     //Object vi tegner på.
     public GameObject activeGrid;
@@ -32,13 +32,20 @@ public class RoomDrawer : MonoBehaviour {
     private int halfWidth;
     private int halfHeight;
 
-    public List<Vector2Int> roomsPos = new List<Vector2Int>() {
+    public List<Vector2Int> minimapRoomPos = new List<Vector2Int>() {
         new Vector2Int(1, 1),
         new Vector2Int(1, 2),
         new Vector2Int(1, 3),
         new Vector2Int(0, 3),
         new Vector2Int(0, 1),
         //new Vector2Int(-2, -0)
+    };
+
+    public List<Vector2Int> OverUnderHøjreVenstre = new List<Vector2Int>() {
+        new Vector2Int (0,1),
+        new Vector2Int (0,-1),
+        new Vector2Int (1,0),
+        new Vector2Int (-1,0),
     };
 
     private void Awake() {
@@ -63,7 +70,8 @@ public class RoomDrawer : MonoBehaviour {
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
 
-        DrawDungeonRooms(roomsPos);
+        DrawDungeonRooms(minimapRoomPos);
+        
     }
 
     /* Funktioner */
@@ -92,7 +100,7 @@ public class RoomDrawer : MonoBehaviour {
         }
         #endregion
 
-        DrawDoors(roomCenter);
+        DoorPlacement();
 
         //Tilføjelse af `roomObjects` til `room`
         foreach (GameObject item in roomObjects) {
@@ -106,12 +114,12 @@ public class RoomDrawer : MonoBehaviour {
     }
 
     private void SpawnDoorsAsGameObjects(Vector2Int roomCenter) {
-        doorPos = new List<Vector2>() {
-            new Vector2(0f, 5.5f),
-            new Vector2(0f, -5.5f),
-            new Vector2(7.5f, 0f),
-            new Vector2(-7.5f, 0f),
-        };
+        //doorPos = new List<Vector2>() {
+        //    new Vector2(0f, 5.5f),
+        //    new Vector2(0f, -5.5f),
+        //    new Vector2(7.5f, 0f),
+        //    new Vector2(-7.5f, 0f),
+        //};
 
 
         foreach (Vector2 pos in doorPos) {
@@ -138,6 +146,8 @@ public class RoomDrawer : MonoBehaviour {
             //Vector2Int vector2Int = new Vector2Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
             gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
         }
+
+        
         
         //gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
 
@@ -154,6 +164,17 @@ public class RoomDrawer : MonoBehaviour {
             //Kald DrawRoom med roomPosition og `room`
             DrawRoom(pos, roomToDraw);
             //Gør dette indtil alle `roomPositions` er blevet tegnet.
+        }
+    }
+
+    public void DoorPlacement() {
+        foreach (var Pos in minimapRoomPos) {
+            foreach (var retning in OverUnderHøjreVenstre) {
+                //minimapRoomPos.Contains(Pos + retning);
+                if (minimapRoomPos.Contains(Pos + retning) == true) {
+                    print(Pos + retning);
+                }
+            }
         }
     }
 }
