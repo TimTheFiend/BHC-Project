@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyMovementController : MovingObject
 {
     //public bool enableAutoMove = false;
@@ -20,12 +21,12 @@ public class EnemyMovementController : MovingObject
     //            yield return new WaitForEndOfFrame();
     //        }
     //        if(enableAutoMove) {
-    //            Move();
+    //            //Move();
     //        }
     //    }
     //}
 
     //public void RandomDirection() {
-
+    //    print(transform.position);
     //}
 }
