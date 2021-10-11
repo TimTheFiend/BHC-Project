@@ -8,6 +8,8 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Debug")]
     public bool isDebug = true;
+    public bool hasSeed = false;
+    public int rngSeed;
 
     [Header("Generation variables")]
     [Range(1, 10)] public int dungeonLevel = 1;
@@ -54,7 +56,6 @@ public class DungeonGenerator : MonoBehaviour
     public void StartGeneration() {
         if (isDebug) {
             DebugStartGeneration();
-            return;
         }
     }
 
@@ -77,10 +78,11 @@ public class DungeonGenerator : MonoBehaviour
             if (minimapQueue.Count == 0) {
                 return false;
             }
+
             Vector2Int currentRoom = minimapQueue.Dequeue();
             foreach (Vector2Int direction in GetCardinalDirections()) {
                 //Random chance to stop
-                if (Random.value > 0.5f) {
+                if (Random.value > randomRoomGiveUp) {
                     //Room for more rooms
                     if (minimapPositions.Count < maxAmountRooms) {
                         Vector2Int newRoom = currentRoom + direction;
@@ -130,6 +132,11 @@ public class DungeonGenerator : MonoBehaviour
         /* Reset collections */
         minimapPositions.Clear();
         minimapQueue.Clear();
+        /* Set seed */
+        if (!hasSeed) {
+            rngSeed = (int)System.DateTime.Now.Ticks;
+        }
+        Random.InitState(rngSeed);
         /* Reset number of rooms to generate */
         GetMaxAmountRooms();
     }
