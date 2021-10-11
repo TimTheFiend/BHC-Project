@@ -43,7 +43,6 @@ public class MovingObject : MonoBehaviour
         moveDirection = newDirection;
     }
 
-
     /// <summary>
     /// checking if you can dash
     /// </summary>
@@ -54,7 +53,7 @@ public class MovingObject : MonoBehaviour
     }
 
     /// <summary>
-    /// Looking at the way u want to dash, and dashes
+    /// Looking at the way you want to dash, and dashes
     /// </summary>
     /// <returns></returns>
     protected virtual IEnumerator Dash() {

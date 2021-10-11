@@ -5,6 +5,7 @@ using UnityEngine;
 public class ProjectileEntity : MonoBehaviour
 {
     public GameObject parent;
+    public float damage = 10f;
     public float projectileSpeed = 2.5f;
     public ProjectileFlags projectileFlags;
 
@@ -18,8 +19,13 @@ public class ProjectileEntity : MonoBehaviour
             return;
         }
 
-        print("HIT");
-        OnHit();
+        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy") {
+            collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
+            OnHit();
+        }
+
+
+        //print(collision.gameObject.tag);
     }
 
     private void OnHit() {
@@ -27,6 +33,7 @@ public class ProjectileEntity : MonoBehaviour
         if (projectileFlags.HasFlag(ProjectileFlags.Piercing)) {
             return;
         }
+        
         Destroy(gameObject);
     }
 
