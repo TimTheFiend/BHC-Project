@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,8 +21,8 @@ public class DungeonGenerator : MonoBehaviour
     public int maxAmountRooms;
 
     [Header("Minimap variables")]
-    public List<Vector2Int> minimapPositions = new List<Vector2Int>();
-    public Queue<Vector2Int> minimapQueue = new Queue<Vector2Int>();
+    public List<RoomObject> minimapPositions = new List<RoomObject>();
+    public Queue<RoomObject> minimapQueue = new Queue<RoomObject>();
 
     [Header("Generation Variables")]
     [SerializeField, Range(0.0f, 1.0f)]
@@ -64,8 +65,8 @@ public class DungeonGenerator : MonoBehaviour
             InitialiseVariables();
             if (GenerateDungeonLayout()) {
                 print($"Generate: {maxAmountRooms}\tDeadends: {minAmountDeadends}\tAttempts: {i}");
-                foreach (Vector2Int pos in minimapPositions) {
-                    print($"room: {pos}");
+                foreach (RoomObject pos in minimapPositions) {
+                    print(pos.DebugPrint() + $"{pos.index}");
                 }
                 break;
             }
@@ -73,28 +74,25 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     private bool GenerateDungeonLayout() {
-        AddRoomToLayout(GetStartRoom);
+        //AddRoomToLayout(GetStartRoom);
+        AddRoomToLayout(RoomObject.StartRoom(maxLayoutWidth, maxLayoutHeight));
         while (true) {
             if (minimapQueue.Count == 0) {
                 return false;
             }
 
-            Vector2Int currentRoom = minimapQueue.Dequeue();
-            foreach (Vector2Int direction in GetCardinalDirections()) {
+            RoomObject currentRoom = minimapQueue.Dequeue();
+            foreach (RoomObject newRoom in currentRoom.GetAdjacentRooms()) {
                 //Random chance to stop
                 if (Random.value > randomRoomGiveUp) {
                     //Room for more rooms
                     if (minimapPositions.Count < maxAmountRooms) {
-                        Vector2Int newRoom = currentRoom + direction;
                         //If inside bounds
-                        if (0 <= newRoom.x &&
-                            newRoom.x <= maxLayoutWidth &&
-                            0 <= newRoom.y &&
-                            newRoom.y <= maxLayoutHeight) {
+                        if (newRoom.InsideBounds(maxLayoutWidth, maxLayoutHeight)) {
                             //Room isn't already in the list
                             if (!minimapPositions.Contains(newRoom)) {
                                 if (HasNoAdjacentRooms(newRoom)) {
-                                    AddRoomToLayout(newRoom);
+                                    AddRoomToLayout(newRoom, currentRoom);
                                 }
                             }
                         }
@@ -109,23 +107,16 @@ public class DungeonGenerator : MonoBehaviour
         return false;
     }
 
-    private bool HasNoAdjacentRooms(Vector2Int room) {
+    private bool HasNoAdjacentRooms(RoomObject room) {
         int counter = -1; //-1 to balance the neighbour it came from
 
-        foreach (Vector2Int direction in GetCardinalDirections()) {
-            if (minimapPositions.Contains(room + direction)) {
+        foreach (RoomObject newRoom in room.GetAdjacentRooms()) {
+            if (minimapPositions.Contains(newRoom)) {
                 counter++;
             }
         }
 
         return counter < 1;
-    }
-
-    private IEnumerable<Vector2Int> GetCardinalDirections() {
-        yield return Vector2Int.up;
-        yield return Vector2Int.right;
-        yield return Vector2Int.down;
-        yield return Vector2Int.left;
     }
 
     private void InitialiseVariables() {
@@ -146,18 +137,19 @@ public class DungeonGenerator : MonoBehaviour
         maxAmountRooms = Mathf.RoundToInt(3.33f * dungeonLevel + minAmountDeadends);
     }
 
-    private void AddRoomToLayout(Vector2Int roomPos) {
-        minimapPositions.Add(roomPos);
-        minimapQueue.Enqueue(roomPos);
+    private void AddRoomToLayout(RoomObject newRoom) {
+        newRoom.index = minimapPositions.Count;
+        minimapPositions.Add(newRoom);
+        minimapQueue.Enqueue(newRoom);
     }
 
-    private Vector2Int GetStartRoom {
-        get {
-            //startRoom isn't in a corner, or directly next to a corner
-            if (Random.value > 0.5f) {
-                return new Vector2Int(Random.Range(2, maxLayoutWidth - 1), Random.value > 0.5f ? 0 : maxLayoutHeight);
-            }
-            return new Vector2Int(Random.value > 0.5f ? 0 : maxLayoutWidth, Random.Range(2, maxLayoutHeight - 1));
-        }
+    private void AddRoomToLayout(RoomObject newRoom, RoomObject parentRoom) {
+        /* Set DoorLayout */
+        DoorLayout parent;
+        newRoom.SetDoor(newRoom.GetDoorFromRoom(parentRoom, out parent), true);
+        minimapPositions[parentRoom.index].SetDoor(parent, true);
+        //parentRoom.SetDoor(parent, true);
+
+        AddRoomToLayout(newRoom);
     }
 }
