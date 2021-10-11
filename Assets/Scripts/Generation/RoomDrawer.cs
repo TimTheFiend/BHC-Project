@@ -172,7 +172,7 @@ public class RoomDrawer : MonoBehaviour {
             foreach (var retning in OverUnderHøjreVenstre) {
                 //minimapRoomPos.Contains(Pos + retning);
                 if (minimapRoomPos.Contains(Pos + retning) == true) {
-                    print(Pos + retning);
+                    //print(Pos + retning);
                 }
             }
         }
