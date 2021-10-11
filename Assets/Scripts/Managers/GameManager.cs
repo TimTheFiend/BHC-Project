@@ -9,8 +9,14 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
 
+    private void Start() {
+        DungeonGenerator.Instance.StartGeneration();
+    }
+
     private void Awake() {
+
         #region Singleton Pattern
+
         if (instance == null) {
             instance = this;
         }
@@ -18,7 +24,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        #endregion
+
+        #endregion Singleton Pattern
     }
 
     /// <summary>
@@ -36,6 +43,4 @@ public class GameManager : MonoBehaviour
         }
         print($"{value} - {keys[Random.Range(0, keys.Count)]}");
     }
-
-
 }

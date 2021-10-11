@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class RoomDrawer : MonoBehaviour {
+public class RoomDrawer : MonoBehaviour
+{
     public static RoomDrawer instance = null;
 
     //Indeholder rum til tegning.
     public List<GameObject> dungeonRooms;
-
 
     public TileBase door;
     public List<Vector2Int> doorPos;
@@ -49,7 +49,9 @@ public class RoomDrawer : MonoBehaviour {
     };
 
     private void Awake() {
+
         #region Singleton Pattern
+
         if (instance == null) {
             instance = this;
         }
@@ -57,7 +59,8 @@ public class RoomDrawer : MonoBehaviour {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-        #endregion
+
+        #endregion Singleton Pattern
     }
 
     private void Start() {
@@ -70,24 +73,27 @@ public class RoomDrawer : MonoBehaviour {
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
 
-        DrawDungeonRooms(minimapRoomPos);
-        
+        //DrawDungeonRooms(minimapRoomPos);
     }
 
     /* Funktioner */
 
     //`GameObject room` == prefab NewRoom
     private void DrawRoom(Vector2Int roomCenter, GameObject room) {
+
         #region Hentning af variabler fra `room`
+
         Tilemap tilemap = room.GetComponent<Tilemap>();
         List<GameObject> roomObjects = new List<GameObject>();
 
         foreach (Transform obj in room.transform.GetChild(0).transform) {
             roomObjects.Add(obj.gameObject);
         }
-        #endregion
+
+        #endregion Hentning af variabler fra `room`
 
         #region Tegning af `room` ind i `gridWalls` samt `floor`
+
         for (int x = -halfWidth; x < halfWidth; x++) {
             for (int y = -halfHeight; y < halfHeight; y++) {
                 TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
@@ -98,7 +104,8 @@ public class RoomDrawer : MonoBehaviour {
                 gridFloor.SetTile(new Vector3Int(x + (totalWidth * roomCenter.x), y + (totalHeight * roomCenter.y), 0), floorSprites[0]);
             }
         }
-        #endregion
+
+        #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
         DoorPlacement();
 
@@ -121,10 +128,9 @@ public class RoomDrawer : MonoBehaviour {
         //    new Vector2(-7.5f, 0f),
         //};
 
-
         foreach (Vector2 pos in doorPos) {
             Vector2 vector2 = new Vector2(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
-            
+
             Instantiate(door, vector2, Quaternion.identity);
         }
     }
@@ -147,10 +153,7 @@ public class RoomDrawer : MonoBehaviour {
             gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
         }
 
-        
-        
         //gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
-
     }
 
     public void DrawDungeonRooms(List<Vector2Int> roomPositions) {
