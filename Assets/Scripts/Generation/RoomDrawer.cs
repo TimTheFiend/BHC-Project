@@ -48,14 +48,6 @@ public class RoomDrawer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         #endregion Singleton Pattern
 
-        doorPositions = new Dictionary<DoorLayout, List<Vector2Int>>();
-        doorPositions.Add(DoorLayout.Up, new List<Vector2Int>() { new Vector2Int(0, 5), new Vector2Int(-1, 5) });
-        doorPositions.Add(DoorLayout.Down, new List<Vector2Int>() { new Vector2Int(0, -6), new Vector2Int(-1, -6) });
-        doorPositions.Add(DoorLayout.Left, new List<Vector2Int>() { new Vector2Int(-8, 0), new Vector2Int(-8, -1) });
-        doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
-    }
-
-    private void Start() {
         grid = activeGrid.GetComponent<Grid>();
         gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
@@ -64,6 +56,16 @@ public class RoomDrawer : MonoBehaviour
         //Sæt half værdier
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
+
+        doorPositions = new Dictionary<DoorLayout, List<Vector2Int>>();
+        doorPositions.Add(DoorLayout.Up, new List<Vector2Int>() { new Vector2Int(0, 5), new Vector2Int(-1, 5) });
+        doorPositions.Add(DoorLayout.Down, new List<Vector2Int>() { new Vector2Int(0, -6), new Vector2Int(-1, -6) });
+        doorPositions.Add(DoorLayout.Left, new List<Vector2Int>() { new Vector2Int(-8, 0), new Vector2Int(-8, -1) });
+        doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
+    }
+
+    private void Start() {
+        
 
         /* Sætter doorPositions */
 

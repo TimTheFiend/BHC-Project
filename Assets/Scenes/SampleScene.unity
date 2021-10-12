@@ -231,9 +231,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 540755758}
-  - component: {fileID: 540755757}
   - component: {fileID: 540755760}
   - component: {fileID: 540755759}
+  - component: {fileID: 540755757}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -283,9 +283,9 @@ MonoBehaviour:
   isDebug: 0
   hasSeed: 0
   rngSeed: -1565143487
-  dungeonLevel: 6
-  maxLayoutWidth: 9
-  maxLayoutHeight: 8
+  dungeonLevel: 1
+  maxLayoutWidth: 6
+  maxLayoutHeight: 5
   minAmountDeadends: 6
   maxAmountRooms: 26
 --- !u!114 &540755760
