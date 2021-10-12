@@ -13,28 +13,28 @@ public class RoomDrawer : MonoBehaviour
 
     [Header("Door-related variables")]
     public TileBase door;  //TileBase for door
+    public GameObject doorObj; //NOTE: bruges til at tegne døre som gameobject SKAL IKKE BRUGES ENDNU
 
-    Dictionary<DoorLayout, List<Vector2Int>> doorPositions = new Dictionary<DoorLayout, List<Vector2Int>>();
-
+    [SerializeField] Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
     [Header("Grid & Tilemaps")]
     //Object vi tegner på.
     public GameObject activeGrid;
-    private Grid grid;  //NOTE: bliver nok ikke brugt
+    [SerializeField]private Grid grid;  //NOTE: bliver nok ikke brugt
     //Tilemap for Walls
-    private Tilemap gridWalls;
+    [SerializeField] private Tilemap gridWalls;
     //Tilemap for Doors
-    private Tilemap gridDoors;
+    [SerializeField] private Tilemap gridDoors;
     //Tilemap for Floor
-    private Tilemap gridFloor;
+    [SerializeField] private Tilemap gridFloor;
 
     //Liste af sprites
     public List<TileBase> floorSprites;
 
     //Et rums dimensioner er (16x12)
-    private const int totalWidth = 16;
-    private const int totalHeight = 12;
-    private int halfWidth;
-    private int halfHeight;
+    [SerializeField] private const int totalWidth = 16;
+    [SerializeField] private const int totalHeight = 12;
+    [SerializeField] private int halfWidth;
+    [SerializeField] private int halfHeight;
 
     private void Awake() {
         #region Singleton Pattern
@@ -46,8 +46,13 @@ public class RoomDrawer : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
-
         #endregion Singleton Pattern
+
+        doorPositions = new Dictionary<DoorLayout, List<Vector2Int>>();
+        doorPositions.Add(DoorLayout.Up, new List<Vector2Int>() { new Vector2Int(0, 5), new Vector2Int(-1, 5) });
+        doorPositions.Add(DoorLayout.Down, new List<Vector2Int>() { new Vector2Int(0, -6), new Vector2Int(-1, -6) });
+        doorPositions.Add(DoorLayout.Left, new List<Vector2Int>() { new Vector2Int(-8, 0), new Vector2Int(-8, -1) });
+        doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
     }
 
     private void Start() {
@@ -61,11 +66,13 @@ public class RoomDrawer : MonoBehaviour
         halfWidth = (int)totalWidth / 2;
 
         /* Sætter doorPositions */
-        doorPositions.Add(DoorLayout.Up, new List<Vector2Int>() { new Vector2Int(0, 5), new Vector2Int(-1, 5) });
-        doorPositions.Add(DoorLayout.Down, new List<Vector2Int>() { new Vector2Int(0, -6), new Vector2Int(-1, -6) });
-        doorPositions.Add(DoorLayout.Left, new List<Vector2Int>() { new Vector2Int(-8, 0), new Vector2Int(-8, -1) });
-        doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
 
+
+
+        foreach (var item in doorPositions.Keys) {
+            print(item);
+            print("KEY");
+        }
     }
 
     //Metode der bliver kaldt når et nyt level skal tegnes.
@@ -116,6 +123,8 @@ public class RoomDrawer : MonoBehaviour
         DrawDoors(roomObj);
 
         //TODO PlaceObjects() temp navn
+        SpawnObjects(roomObj, roomObjects);
+        //SpawnObjects(roomObj, dungeonRoom);
     }
     
     private void DrawDoors(RoomObject newRoom) {
@@ -140,5 +149,26 @@ public class RoomDrawer : MonoBehaviour
             gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * newRoom.x), pos.y + (totalHeight * newRoom.y), 0), door);
         }
     }
+
+
+    private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
+        foreach (GameObject item in objectsToSpawn) {
+            Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
+        }
+    }
+
+    private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
+
+        List<GameObject> objectsToSpawn = new List<GameObject>();
+        //Hent children fra `dungeonRoom`s første child
+        foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
+            objectsToSpawn.Add(child);
+        }
+        print(objectsToSpawn.Count);
+        //Identificer typen af gameobject
+
+        //Initialise gameobject
+    }
+
 
 }

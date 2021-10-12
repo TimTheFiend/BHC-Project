@@ -262,7 +262,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540755756}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -301,11 +301,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonRooms:
-  - {fileID: 1594548064913741331, guid: 1d11e1ce81596cd4d8cc757da6a121b8, type: 3}
+  - {fileID: 612981878781629852, guid: c93196a467ce4e844a9fb9e850e889e3, type: 3}
+  - {fileID: 4714099283584762678, guid: 63a67558637212c4a92e6d3e3ada4faa, type: 3}
+  - {fileID: 6445251118205748310, guid: dae65abcaae9b60458aacdd83e23641a, type: 3}
+  - {fileID: 2898389795856899761, guid: 5e412b464d2194f41947b24a0c7544e8, type: 3}
+  - {fileID: 567297059037690853, guid: f0f9d9836d117af4ead5bbfdb78a3281, type: 3}
+  - {fileID: 8393016877617188876, guid: 0e831b890f374954e8be393e685398bf, type: 3}
+  - {fileID: 1380629809465429732, guid: 1ea2ceb8e091f7141809af03529390bb, type: 3}
+  - {fileID: 4782447951913400167, guid: 008de9274c516e04c88bce6c108861ea, type: 3}
+  - {fileID: 4410668136131067713, guid: c8af1aeae81c37745a7d26208e99f632, type: 3}
+  - {fileID: 2102064985005644977, guid: 5153c3a50276b35449b1b62449fec6e2, type: 3}
   door: {fileID: 11400000, guid: c93f218f149668b47831ef5e600f531c, type: 2}
+  doorObj: {fileID: 0}
   activeGrid: {fileID: 1823938182}
+  grid: {fileID: 0}
+  gridWalls: {fileID: 0}
+  gridDoors: {fileID: 0}
+  gridFloor: {fileID: 0}
   floorSprites:
   - {fileID: 11400000, guid: 0175faf343390594c89183ccd1de2177, type: 2}
+  halfWidth: 0
+  halfHeight: 0
 --- !u!114 &627995532 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2648893194199602959, guid: 4eeaa86eb4ce7b04ca4e95d3e6ca2d61, type: 3}
