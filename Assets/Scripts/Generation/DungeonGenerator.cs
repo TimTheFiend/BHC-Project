@@ -64,12 +64,44 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < generationAttempts; i++) {
             InitialiseVariables();
             if (GenerateDungeonLayout()) {
+                Debug.ClearDeveloperConsole();
                 print($"Generate: {maxAmountRooms}\tDeadends: {minAmountDeadends}\tAttempts: {i}");
-                foreach (RoomObject pos in minimapPositions) {
-                    print(pos.DebugPrint() + $"{pos.index}");
+                foreach (RoomObject item in minimapPositions) {
+                    print(item.DebugPrint());
                 }
                 break;
             }
+        }
+    }
+
+    private void OnDrawGizmos() {
+        if (!isDebug) {
+            return;
+        }
+
+        Gizmos.color = Color.white;
+        for (int x = 0; x < maxLayoutWidth + 1; x++) {
+            for (int y = 0; y < maxLayoutHeight + 1; y++) {
+                if ((x + y) % 2 == 0) {
+                    Gizmos.color = Color.white;
+                }
+                else {
+                    Gizmos.color = Color.black;
+                }
+                Gizmos.DrawCube(new Vector3(x + 0.5f, y + 0.5f, 0f), new Vector3(1f, 1f, 0f));
+            }
+        }
+
+        for (int i = 0; i < minimapPositions.Count; i++) {
+            RoomObject room = minimapPositions[i];
+
+            if (i == 0) {
+                Gizmos.color = Color.magenta;
+            }
+            else {
+                Gizmos.color = i % 2 == 0 ? Color.red : Color.blue;
+            }
+            Gizmos.DrawCube(new Vector3(room.x + 0.5f, room.y + 0.5f, 0f), Vector3.one);
         }
     }
 
@@ -92,7 +124,7 @@ public class DungeonGenerator : MonoBehaviour
                             //Room isn't already in the list
                             if (!minimapPositions.Contains(newRoom)) {
                                 if (HasNoAdjacentRooms(newRoom)) {
-                                    AddRoomToLayout(newRoom, currentRoom);
+                                    currentRoom = AddRoomToLayout(newRoom, currentRoom);
                                 }
                             }
                         }
@@ -143,13 +175,19 @@ public class DungeonGenerator : MonoBehaviour
         minimapQueue.Enqueue(newRoom);
     }
 
-    private void AddRoomToLayout(RoomObject newRoom, RoomObject parentRoom) {
+    private RoomObject AddRoomToLayout(RoomObject newRoom, RoomObject parentRoom) {
         /* Set DoorLayout */
         DoorLayout parent;
-        newRoom.SetDoor(newRoom.GetDoorFromRoom(parentRoom, out parent), true);
-        minimapPositions[parentRoom.index].SetDoor(parent, true);
+
+        newRoom.SetDoor(newRoom.GetDoorLayoutFromOffset(parentRoom, out parent), true);
+        parentRoom.SetDoor(parent, true);
+
+        minimapPositions[parentRoom.index] = parentRoom;
+
         //parentRoom.SetDoor(parent, true);
 
         AddRoomToLayout(newRoom);
+
+        return parentRoom;
     }
 }

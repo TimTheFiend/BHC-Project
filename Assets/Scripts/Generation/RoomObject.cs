@@ -45,22 +45,24 @@ public struct RoomObject
         }
     }
 
-    public DoorLayout GetDoorFromRoom(RoomObject other, out DoorLayout oppositeDoor) {
-        Vector2Int difference = (other - this).center;
+    public bool IsDeadEnd {
+        get {
+            return false;
+        }
+    }
+
+    public DoorLayout GetDoorLayoutFromOffset(RoomObject other, out DoorLayout oppositeDoor) {
+        Vector2Int roomOffset = (this - other).center;
         DoorLayout door = DoorLayout.None;
 
-        if (difference == Vector2Int.up) {
+        if (roomOffset == Vector2Int.up)
             door = DoorLayout.Up;
-        }
-        else if (difference == Vector2Int.right) {
+        else if (roomOffset == Vector2Int.right)
             door = DoorLayout.Right;
-        }
-        else if (difference == Vector2Int.down) {
+        else if (roomOffset == Vector2Int.down)
             door = DoorLayout.Down;
-        }
-        else if (difference == Vector2Int.left) {
+        else if (roomOffset == Vector2Int.left)
             door = DoorLayout.Left;
-        }
 
         oppositeDoor = GetOppositeDoor(door);
         return door;
@@ -81,10 +83,15 @@ public struct RoomObject
                 return DoorLayout.Right;
 
             default:
+                Debug.LogException(new System.Exception("GetOppositeDoor() This error shouldn't happen"));
                 return DoorLayout.None;
         }
     }
 
+    /// <summary>
+    /// Gets the potential cardinally adjacent <see cref="RoomObject"/>.
+    /// </summary>
+    /// <returns>A carindally adjacent room.</returns>
     public IEnumerable<RoomObject> GetAdjacentRooms() {
         yield return new RoomObject(center.x + 1, center.y);
         yield return new RoomObject(center.x - 1, center.y);
@@ -102,6 +109,12 @@ public struct RoomObject
         return x >= 0 && x <= width && y >= 0 && y <= height;
     }
 
+    public override string ToString() {
+        return $"({center.x}, {center.y})";
+    }
+
+    #region Static functions
+
     /// <summary>
     /// Generates a start room for the player to spawn in.
     /// </summary>
@@ -115,14 +128,22 @@ public struct RoomObject
         return new RoomObject(Random.value > 0.5f ? 0 : width, Random.Range(2, height - 1));
     }
 
-    public override string ToString() {
-        return $"({center.x}, {center.y})";
-    }
-
+    /// <summary>
+    /// Change to the behavior of `==` comparisons.
+    /// </summary>
+    /// <param name="room1">A <see cref="RoomObject"/></param>
+    /// <param name="room2">A different <see cref="RoomObject"/></param>
+    /// <returns><see langword="true"/> if they're the same; otherwise <see langword="false"/>.</returns>
     public static bool operator ==(RoomObject room1, RoomObject room2) {
         return room1.center == room2.center;
     }
 
+    /// <summary>
+    /// Change to the behavior of `!=` comparisons.
+    /// </summary>
+    /// <param name="room1">A <see cref="RoomObject"/></param>
+    /// <param name="room2">A different <see cref="RoomObject"/></param>
+    /// <returns><see langword="true"/> if they're not the same; otherwise <see langword="false"/>.</returns>
     public static bool operator !=(RoomObject room1, RoomObject room2) {
         return !(room1.center == room2.center);
     }
@@ -131,7 +152,9 @@ public struct RoomObject
         return new RoomObject(r2.x - r1.x, r2.y - r1.y);
     }
 
-    #region stuff
+    #endregion Static functions
+
+    #region Only here to avoid "implementation warnings"
 
     public override bool Equals(object obj) {
         return obj is RoomObject @object &&
@@ -142,7 +165,7 @@ public struct RoomObject
         return 1242221860 + center.GetHashCode();
     }
 
-    #endregion stuff
+    #endregion Only here to avoid "implementation warnings"
 }
 
 [System.Flags]
