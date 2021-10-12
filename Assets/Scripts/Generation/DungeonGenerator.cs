@@ -57,6 +57,11 @@ public class DungeonGenerator : MonoBehaviour
     public void StartGeneration() {
         if (isDebug) {
             DebugStartGeneration();
+            //NOTE: temp 
+        }
+        else {
+            DebugStartGeneration();
+            RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
         }
     }
 
@@ -64,44 +69,13 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < generationAttempts; i++) {
             InitialiseVariables();
             if (GenerateDungeonLayout()) {
-                Debug.ClearDeveloperConsole();
-                print($"Generate: {maxAmountRooms}\tDeadends: {minAmountDeadends}\tAttempts: {i}");
-                foreach (RoomObject item in minimapPositions) {
-                    print(item.DebugPrint());
-                }
+                //Debug.ClearDeveloperConsole();
+                //print($"Generate: {maxAmountRooms}\tDeadends: {minAmountDeadends}\tAttempts: {i}");
+                //foreach (RoomObject item in minimapPositions) {
+                //    print(item.DebugPrint());
+                //}
                 break;
             }
-        }
-    }
-
-    private void OnDrawGizmos() {
-        if (!isDebug) {
-            return;
-        }
-
-        Gizmos.color = Color.white;
-        for (int x = 0; x < maxLayoutWidth + 1; x++) {
-            for (int y = 0; y < maxLayoutHeight + 1; y++) {
-                if ((x + y) % 2 == 0) {
-                    Gizmos.color = Color.white;
-                }
-                else {
-                    Gizmos.color = Color.black;
-                }
-                Gizmos.DrawCube(new Vector3(x + 0.5f, y + 0.5f, 0f), new Vector3(1f, 1f, 0f));
-            }
-        }
-
-        for (int i = 0; i < minimapPositions.Count; i++) {
-            RoomObject room = minimapPositions[i];
-
-            if (i == 0) {
-                Gizmos.color = Color.magenta;
-            }
-            else {
-                Gizmos.color = i % 2 == 0 ? Color.red : Color.blue;
-            }
-            Gizmos.DrawCube(new Vector3(room.x + 0.5f, room.y + 0.5f, 0f), Vector3.one);
         }
     }
 
@@ -135,8 +109,6 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
-
-        return false;
     }
 
     private bool HasNoAdjacentRooms(RoomObject room) {

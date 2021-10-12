@@ -5,14 +5,18 @@ using UnityEngine.Tilemaps;
 
 public class RoomDrawer : MonoBehaviour
 {
-    public static RoomDrawer instance = null;
+    public static RoomDrawer Instance = null;
 
     //Indeholder rum til tegning.
+    [Header("Pre-made rooms")]
     public List<GameObject> dungeonRooms;
 
-    public TileBase door;
-    public List<Vector2Int> doorPos;
+    [Header("Door-related variables")]
+    public TileBase door;  //TileBase for door
 
+    Dictionary<DoorLayout, List<Vector2Int>> doorPositions = new Dictionary<DoorLayout, List<Vector2Int>>();
+
+    [Header("Grid & Tilemaps")]
     //Object vi tegner på.
     public GameObject activeGrid;
     private Grid grid;  //NOTE: bliver nok ikke brugt
@@ -32,30 +36,13 @@ public class RoomDrawer : MonoBehaviour
     private int halfWidth;
     private int halfHeight;
 
-    public List<Vector2Int> minimapRoomPos = new List<Vector2Int>() {
-        new Vector2Int(1, 1),
-        new Vector2Int(1, 2),
-        new Vector2Int(1, 3),
-        new Vector2Int(0, 3),
-        new Vector2Int(0, 1),
-        //new Vector2Int(-2, -0)
-    };
-
-    public List<Vector2Int> OverUnderHøjreVenstre = new List<Vector2Int>() {
-        new Vector2Int (0,1),
-        new Vector2Int (0,-1),
-        new Vector2Int (1,0),
-        new Vector2Int (-1,0),
-    };
-
     private void Awake() {
-
         #region Singleton Pattern
 
-        if (instance == null) {
-            instance = this;
+        if (Instance == null) {
+            Instance = this;
         }
-        else if (instance != this) {
+        else if (Instance != this) {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
@@ -73,20 +60,37 @@ public class RoomDrawer : MonoBehaviour
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
 
-        //DrawDungeonRooms(minimapRoomPos);
+        /* Sætter doorPositions */
+        doorPositions.Add(DoorLayout.Up, new List<Vector2Int>() { new Vector2Int(0, 5), new Vector2Int(-1, 5) });
+        doorPositions.Add(DoorLayout.Down, new List<Vector2Int>() { new Vector2Int(0, -6), new Vector2Int(-1, -6) });
+        doorPositions.Add(DoorLayout.Left, new List<Vector2Int>() { new Vector2Int(-8, 0), new Vector2Int(-8, -1) });
+        doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
+
     }
 
-    /* Funktioner */
+    //Metode der bliver kaldt når et nyt level skal tegnes.
+    public void DrawDungeonRooms(List<RoomObject> roomPositions) {
+        foreach (RoomObject room in roomPositions) {
+            //Hent tilfældigt rum fra `dungeonRooms`
+            int index = Random.Range(0, dungeonRooms.Count);
+            //Hentning af rummet
+            GameObject roomToDraw = dungeonRooms[index];
+            //Fjern den fra listen (så den ikke bliver tegnet to gange
+            //dungeonRooms.RemoveAt(index);
+            //Kald DrawRoom med roomPosition og `room`
+            DrawRoom(room, roomToDraw);
+            //Gør dette indtil alle `roomPositions` er blevet tegnet.
+        }
+    }
 
-    //`GameObject room` == prefab NewRoom
-    private void DrawRoom(Vector2Int roomCenter, GameObject room) {
+    private void DrawRoom(RoomObject roomObj, GameObject dungeonRoom) {
 
         #region Hentning af variabler fra `room`
 
-        Tilemap tilemap = room.GetComponent<Tilemap>();
+        Tilemap tilemap = dungeonRoom.GetComponent<Tilemap>();
         List<GameObject> roomObjects = new List<GameObject>();
 
-        foreach (Transform obj in room.transform.GetChild(0).transform) {
+        foreach (Transform obj in dungeonRoom.transform.GetChild(0).transform) {
             roomObjects.Add(obj.gameObject);
         }
 
@@ -98,86 +102,43 @@ public class RoomDrawer : MonoBehaviour
             for (int y = -halfHeight; y < halfHeight; y++) {
                 TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
                 if (tile != null) {
-                    gridWalls.SetTile(new Vector3Int(x + (totalWidth * roomCenter.x), y + (totalHeight * roomCenter.y), 0), tile);
+                    gridWalls.SetTile(new Vector3Int(x + (totalWidth * roomObj.x), y + (totalHeight * roomObj.y), 0), tile);
                 }
                 //Tegner gulv en efter en
-                gridFloor.SetTile(new Vector3Int(x + (totalWidth * roomCenter.x), y + (totalHeight * roomCenter.y), 0), floorSprites[0]);
+                gridFloor.SetTile(new Vector3Int(x + (totalWidth * roomObj.x), y + (totalHeight * roomObj.y), 0), floorSprites[0]);
             }
         }
+
 
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
-        DoorPlacement();
+        /* Tegner døre */
+        DrawDoors(roomObj);
 
-        //Tilføjelse af `roomObjects` til `room`
-        foreach (GameObject item in roomObjects) {
-            Vector3 itemPos = new Vector3(item.transform.position.x + (totalWidth * roomCenter.x), item.transform.position.y + (totalHeight * roomCenter.y));
-            //TODO, ændr
-            List<Sprite> objectSprites = new List<Sprite>();
-            item.GetComponent<SpriteRenderer>().sprite = objectSprites[Random.Range(0, objectSprites.Count)];
-
-            Instantiate(item, itemPos, Quaternion.identity);
-        }
+        //TODO PlaceObjects() temp navn
     }
+    
+    private void DrawDoors(RoomObject newRoom) {
+        List<Vector2Int> doorPos = new List<Vector2Int>();
 
-    private void SpawnDoorsAsGameObjects(Vector2Int roomCenter) {
-        //doorPos = new List<Vector2>() {
-        //    new Vector2(0f, 5.5f),
-        //    new Vector2(0f, -5.5f),
-        //    new Vector2(7.5f, 0f),
-        //    new Vector2(-7.5f, 0f),
-        //};
-
-        foreach (Vector2 pos in doorPos) {
-            Vector2 vector2 = new Vector2(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
-
-            Instantiate(door, vector2, Quaternion.identity);
+        if (newRoom.doorLayout.HasFlag(DoorLayout.Up)) {
+            doorPos.AddRange(doorPositions[DoorLayout.Up]);
         }
-    }
-
-    private void DrawDoors(Vector2Int roomCenter) {
-        //Liste af hvor dørene skal tegnes henne
-        List<Vector2Int> doorPos = new List<Vector2Int>() {
-            new Vector2Int(0, 5), //Up
-            new Vector2Int(-1, 5), //Up
-            new Vector2Int(0, -6), //Down
-            new Vector2Int(-1, -6), //Down
-            new Vector2Int(-8, 0), //Left
-            new Vector2Int(-8, -1), //Left
-            new Vector2Int(7, 0), //Right
-            new Vector2Int(7, -1), //Right
-        };
-
+        if (newRoom.doorLayout.HasFlag(DoorLayout.Down)) { 
+            doorPos.AddRange(doorPositions[DoorLayout.Down]);
+        }
+        if (newRoom.doorLayout.HasFlag(DoorLayout.Left)) { 
+            doorPos.AddRange(doorPositions[DoorLayout.Left]);
+        }
+        if (newRoom.doorLayout.HasFlag(DoorLayout.Right)) { 
+            doorPos.AddRange(doorPositions[DoorLayout.Right]);
+        }
+        
+        //Det funker
         foreach (Vector2Int pos in doorPos) {
-            //Vector2Int vector2Int = new Vector2Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y));
-            gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
-        }
-
-        //gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * roomCenter.x), pos.y + (totalHeight * roomCenter.y), 0), door);
-    }
-
-    public void DrawDungeonRooms(List<Vector2Int> roomPositions) {
-        foreach (Vector2Int pos in roomPositions) {
-            //Hent tilfældigt rum fra `dungeonRooms`
-            int index = Random.Range(0, dungeonRooms.Count);
-            //Hentning af rummet
-            GameObject roomToDraw = dungeonRooms[index];
-            //Fjern den fra listen (så den ikke bliver tegnet to gange
-            dungeonRooms.RemoveAt(index);
-            //Kald DrawRoom med roomPosition og `room`
-            DrawRoom(pos, roomToDraw);
-            //Gør dette indtil alle `roomPositions` er blevet tegnet.
+            //print(pos);
+            gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * newRoom.x), pos.y + (totalHeight * newRoom.y), 0), door);
         }
     }
 
-    public void DoorPlacement() {
-        foreach (var Pos in minimapRoomPos) {
-            foreach (var retning in OverUnderHøjreVenstre) {
-                //minimapRoomPos.Contains(Pos + retning);
-                if (minimapRoomPos.Contains(Pos + retning) == true) {
-                    print(Pos + retning);
-                }
-            }
-        }
-    }
 }
