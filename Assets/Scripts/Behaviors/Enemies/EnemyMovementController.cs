@@ -85,6 +85,9 @@ public class EnemyMovementController : MovingObject
     }
 
     // is a random direction within a range of available directions
+    // TODO
+    // i stedet for at vælge én af de mindst 1 retninger, vælg en retning som er tilfældigt valgt
+    // fx, hvis alle højreretninger er blokeret(op og til højre(1, 1), højre(1, 0), ned og til højre(1, -1)), i stedet for KUN at gå op (0, 1), op og til venstre(-1, 1), venstre(-1, 0), ned og til venstre (-1, -1) eller ned(0, -1). vælg en float fra op (0, 1) til ned (0, -1)
     public Vector2 RandomAvailableDirection() {
         return availableDirections[Random.Range(0, availableDirections.Count)];
     }
@@ -97,9 +100,18 @@ public class EnemyMovementController : MovingObject
     /// </summary>
     public void CheckForWallHit() {
         for(int i = 0; i < directions.Count; i++) {
+            // cardinal directions
             if((directions[i].x != 0 && directions[i].y == 0) || (directions[i].x == 0 && directions[i].y != 0)) {
-                laserLength = 1.41f;
+                /* 
+                 * the distance from one point to the same point in an adjacent square of the same size is different depending on if you're moving diagonally or in a cardinal direction.
+                 * a square in a cardinal direction is 0.7 distance away, a square in a diagonal direction is 1 distance away.
+                 * in this example, we want the distance from the middle point to an adjacent diagonal square to be 2 distance away, ie. twice of 1, so 0.7 is doubled to 1.4.
+                 * an extra 0.01 is added to 1.4 to make 1.41 to make sure that the cardinal rayline hits the same point if standing next to an obstacle
+                 * (for some reason if the 0.01 isn't added, the diagonal rayline triggers before the cardinal one)
+                */
+                laserLength = 1.41f; 
             }
+            // diagonal directions
             else {
                 laserLength = 2f;
             }
