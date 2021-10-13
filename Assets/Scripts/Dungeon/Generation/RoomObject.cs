@@ -121,7 +121,7 @@ public struct RoomObject
     /// <param name="width">The layout's width.</param>
     /// <param name="height">The layout's height.</param>
     /// <returns>The starting room <see cref="RoomObject"/></returns>
-    public static RoomObject StartRoom(int width, int height) {
+    public static RoomObject GetStartRoom(int width, int height) {
         if (Random.value > 0.5f) {
             return new RoomObject(Random.Range(2, width - 1), Random.value > 0.5f ? 0 : height);
         }

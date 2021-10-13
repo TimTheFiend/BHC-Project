@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,11 +13,9 @@ public class RoomDrawer : MonoBehaviour
 
     [Header("Door-related variables")]
     public TileBase door;  //TileBase for door
-    public GameObject doorObj; //NOTE: bruges til at tegne døre som gameobject SKAL IKKE BRUGES ENDNU
+    public GameObject doorObj; //NOTE: bruges til at tegne dï¿½re som gameobject SKAL IKKE BRUGES ENDNU
 
-    [SerializeField] Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
-    [Header("Grid & Tilemaps")]
-    //Object vi tegner på.
+    //Object vi tegner pÃ¥.
     public GameObject activeGrid;
     [SerializeField]private Grid grid;  //NOTE: bliver nok ikke brugt
     //Tilemap for Walls
@@ -53,7 +51,7 @@ public class RoomDrawer : MonoBehaviour
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
         gridDoors = activeGrid.transform.Find("Doors").GetComponent<Tilemap>();
 
-        //Sæt half værdier
+        //SÃ¦t half vÃ¦rdier
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
 
@@ -67,7 +65,7 @@ public class RoomDrawer : MonoBehaviour
     private void Start() {
         
 
-        /* Sætter doorPositions */
+        /* Sï¿½tter doorPositions */
 
 
 
@@ -77,18 +75,18 @@ public class RoomDrawer : MonoBehaviour
         }
     }
 
-    //Metode der bliver kaldt når et nyt level skal tegnes.
+    //Metode der bliver kaldt nï¿½r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
         foreach (RoomObject room in roomPositions) {
-            //Hent tilfældigt rum fra `dungeonRooms`
+            //Hent tilfï¿½ldigt rum fra `dungeonRooms`
             int index = Random.Range(0, dungeonRooms.Count);
             //Hentning af rummet
             GameObject roomToDraw = dungeonRooms[index];
-            //Fjern den fra listen (så den ikke bliver tegnet to gange
+            //Fjern den fra listen (sï¿½ den ikke bliver tegnet to gange
             //dungeonRooms.RemoveAt(index);
             //Kald DrawRoom med roomPosition og `room`
             DrawRoom(room, roomToDraw);
-            //Gør dette indtil alle `roomPositions` er blevet tegnet.
+            //Gï¿½r dette indtil alle `roomPositions` er blevet tegnet.
         }
     }
 
@@ -121,7 +119,7 @@ public class RoomDrawer : MonoBehaviour
 
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
-        /* Tegner døre */
+        /* Tegner dï¿½re */
         DrawDoors(roomObj);
 
         //TODO PlaceObjects() temp navn
@@ -162,7 +160,7 @@ public class RoomDrawer : MonoBehaviour
     private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
 
         List<GameObject> objectsToSpawn = new List<GameObject>();
-        //Hent children fra `dungeonRoom`s første child
+        //Hent children fra `dungeonRoom`s fï¿½rste child
         foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
             objectsToSpawn.Add(child);
         }
@@ -171,6 +169,5 @@ public class RoomDrawer : MonoBehaviour
 
         //Initialise gameobject
     }
-
 
 }
