@@ -36,16 +36,35 @@ public static class DungeonLayout
     }
 
     //NOTE dårligt navn
-    public static Vector3Int GetWorldPositionFromRoom(RoomObject room) {
+    public static Vector3Int GetRoomCenterWorldPosition(RoomObject room) {
         return new Vector3Int(room.x * width, room.y * height, 0);
     }
 
-    public static Vector3Int GetWorldPositionFromRoom(RoomObject room, int xPos, int yPos) {
-        Vector3Int v = GetWorldPositionFromRoom(room);
+    public static Vector3Int GetRoomCenterWorldPosition(RoomObject room, int xPos, int yPos) {
+        Vector3Int v = GetRoomCenterWorldPosition(room);
         return new Vector3Int(xPos + v.x, yPos + v.y, 0);
     }
 
-    public static List<Vector2Int> GetTilemapDoorPosition(DoorLayout door) {
-        return doorTilemapPositions[door];
+    public static Vector3 GetWorldPosition(Vector3 obj, RoomObject room) {
+        return new Vector3(obj.x + (width * room.x), obj.y + (height * room.y));
+    }
+
+    public static List<Vector2Int> GetTilemapDoorPosition(RoomObject room) {
+        List<Vector2Int> doorsToDraw = new List<Vector2Int>();
+
+        if (room.doorLayout.HasFlag(DoorLayout.Up)) {
+            doorsToDraw.AddRange(doorTilemapPositions[DoorLayout.Up]);
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Down)) {
+            doorsToDraw.AddRange(doorTilemapPositions[DoorLayout.Down]);
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Left)) {
+            doorsToDraw.AddRange(doorTilemapPositions[DoorLayout.Left]);
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Right)) {
+            doorsToDraw.AddRange(doorTilemapPositions[DoorLayout.Right]);
+        }
+
+        return doorsToDraw;
     }
 }

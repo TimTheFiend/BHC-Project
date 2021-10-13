@@ -29,8 +29,8 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Generation Variables")]
     [SerializeField, Range(0.0f, 1.0f)]
-    private readonly float randomRoomGiveUp = 0.5f;
-    private int generationAttempts = 1000000;  //1 Million attempts. - Dr. Evil.
+    private float randomRoomGiveUp = 0.5f;
+    private int generationAttempts = 5000;  //1 Million attempts. - Dr. Evil.
 
     #region Start / Awake
 
@@ -66,35 +66,26 @@ public class DungeonGenerator : MonoBehaviour
             DebugStartGeneration();
             RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
         }
-        else {
-            AttemptGenerateLayout();
-        }
     }
 
     #region Starts Generation
 
-    private void AttemptGenerateLayout() {
-        for (int i = 0; i < generationAttempts; i++) {
-            InitialiseVariables();
-            if (GenerateDungeonLayout()) {
-            }
-        }
-    }
+
 
     private void DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
-            InitialiseVariables();
             if (GenerateDungeonLayout()) {
-                Debug.ClearDeveloperConsole();
+                //Debug.ClearDeveloperConsole();
                 print($"Generate: {maxAmountRooms}\tStartroom: {startRoom.ToString()}\tAttempts: {i}");
                 foreach (RoomObject item in minimapPositions) {
                     print(item.DebugPrint());
                 }
-                return;
+                break;
             }
         }
-
-        Debug.Log("didn't generate");
+        if (minimapPositions.Count != maxAmountRooms - 1) {
+           Debug.Log("didn't generate");
+        }
     }
 
     #endregion Starts Generation
@@ -102,25 +93,13 @@ public class DungeonGenerator : MonoBehaviour
     #region Procedural Generation
 
     private bool GenerateDungeonLayout() {
+        InitialiseVariables();
         while (true) {
             if (minimapQueue.Count == 0) {
                 return false;
             }
 
             RoomObject currentRoom = minimapQueue.Dequeue();
-
-            //foreach (RoomObject newRoom in currentRoom.GetAdjacentRooms()) {
-            //    if (Random.value > randomRoomGiveUp)
-            //        continue;
-            //    if (minimapPositions.Count >= maxAmountRooms)
-            //        continue;
-            //    if (!newRoom.InsideBounds(maxLayoutWidth, maxLayoutHeight))
-            //        continue;
-            //    if (minimapPositions.Contains(newRoom))
-            //        continue;
-            //    if (HasNoAdjacentRooms) {
-            //    }
-            //}
 
             foreach (RoomObject newRoom in currentRoom.GetAdjacentRooms()) {
                 //Random chance to stop
@@ -133,6 +112,7 @@ public class DungeonGenerator : MonoBehaviour
                             if (!minimapPositions.Contains(newRoom)) {
                                 if (HasNoAdjacentRooms(newRoom)) {
                                     currentRoom = AddRoomToLayout(newRoom, currentRoom);
+                                    
                                 }
                             }
                         }
@@ -160,10 +140,6 @@ public class DungeonGenerator : MonoBehaviour
         foreach (RoomObject newRoom in room.GetAdjacentRooms()) {
             if (minimapPositions.Contains(newRoom)) {
                 counter++;
-                //Doesn't have have to continue if it's already 1+
-                if (counter < 1) {
-                    return false;
-                }
             }
         }
 

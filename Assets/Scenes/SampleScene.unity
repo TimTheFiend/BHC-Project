@@ -284,10 +284,11 @@ MonoBehaviour:
   hasSeed: 0
   rngSeed: -1565143487
   dungeonLevel: 1
-  maxLayoutWidth: 6
-  maxLayoutHeight: 5
+  maxLayoutWidth: 8
+  maxLayoutHeight: 7
   minAmountDeadends: 6
   maxAmountRooms: 26
+  randomRoomGiveUp: 0.5
 --- !u!114 &540755760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,6 +504,9 @@ GameObject:
   - component: {fileID: 901287023}
   - component: {fileID: 901287025}
   - component: {fileID: 901287024}
+  - component: {fileID: 901287028}
+  - component: {fileID: 901287027}
+  - component: {fileID: 901287026}
   m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
@@ -665,6 +669,67 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!66 &901287026
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901287022}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 901287027}
+    m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+--- !u!19719996 &901287027
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901287022}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 1
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0.00001
+--- !u!50 &901287028
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 901287022}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &1143855603 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8220545942540863768, guid: 4eeaa86eb4ce7b04ca4e95d3e6ca2d61, type: 3}

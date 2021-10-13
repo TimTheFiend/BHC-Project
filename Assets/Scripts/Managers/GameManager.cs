@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private void Start() {
         DungeonGenerator.Instance.GenerateDungeon();
 
-        Vector3 v = DungeonLayout.GetWorldPositionFromRoom(DungeonGenerator.Instance.startRoom);
+        Vector3 v = DungeonLayout.GetRoomCenterWorldPosition(DungeonGenerator.Instance.startRoom);
         player.transform.position = new Vector3(v.x, v.y, 0f);
         Camera.main.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, Camera.main.transform.position.z);
     }

@@ -7,6 +7,8 @@ public class RoomDrawer : MonoBehaviour
 {
     public static RoomDrawer Instance = null;
 
+    Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
+
     //Indeholder rum til tegning.
     [Header("Pre-made rooms")]
     public List<GameObject> dungeonRooms;
@@ -109,10 +111,10 @@ public class RoomDrawer : MonoBehaviour
             for (int y = -halfHeight; y < halfHeight; y++) {
                 TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
                 if (tile != null) {
-                    gridWalls.SetTile(new Vector3Int(x + (totalWidth * roomObj.x), y + (totalHeight * roomObj.y), 0), tile);
+                    gridWalls.SetTile(DungeonLayout.GetRoomCenterWorldPosition(roomObj, x, y), tile);
                 }
                 //Tegner gulv en efter en
-                gridFloor.SetTile(new Vector3Int(x + (totalWidth * roomObj.x), y + (totalHeight * roomObj.y), 0), floorSprites[0]);
+                gridFloor.SetTile(DungeonLayout.GetRoomCenterWorldPosition(roomObj, x, y), floorSprites[0]);
             }
         }
 
@@ -123,37 +125,25 @@ public class RoomDrawer : MonoBehaviour
         DrawDoors(roomObj);
 
         //TODO PlaceObjects() temp navn
+        if (roomObj == DungeonGenerator.Instance.startRoom) {
+            return;
+        }
         SpawnObjects(roomObj, roomObjects);
         //SpawnObjects(roomObj, dungeonRoom);
     }
     
+    //BRUGER TILEMAP
     private void DrawDoors(RoomObject newRoom) {
-        List<Vector2Int> doorPos = new List<Vector2Int>();
-
-        if (newRoom.doorLayout.HasFlag(DoorLayout.Up)) {
-            doorPos.AddRange(doorPositions[DoorLayout.Up]);
-        }
-        if (newRoom.doorLayout.HasFlag(DoorLayout.Down)) { 
-            doorPos.AddRange(doorPositions[DoorLayout.Down]);
-        }
-        if (newRoom.doorLayout.HasFlag(DoorLayout.Left)) { 
-            doorPos.AddRange(doorPositions[DoorLayout.Left]);
-        }
-        if (newRoom.doorLayout.HasFlag(DoorLayout.Right)) { 
-            doorPos.AddRange(doorPositions[DoorLayout.Right]);
-        }
-        
-        //Det funker
-        foreach (Vector2Int pos in doorPos) {
-            //print(pos);
-            gridDoors.SetTile(new Vector3Int(pos.x + (totalWidth * newRoom.x), pos.y + (totalHeight * newRoom.y), 0), door);
+        foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
+            gridDoors.SetTile(DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), door);
         }
     }
 
 
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
         foreach (GameObject item in objectsToSpawn) {
-            Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
+            Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
+            //Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
         }
     }
 
@@ -166,7 +156,7 @@ public class RoomDrawer : MonoBehaviour
         }
         print(objectsToSpawn.Count);
         //Identificer typen af gameobject
-
+        //
         //Initialise gameobject
     }
 
