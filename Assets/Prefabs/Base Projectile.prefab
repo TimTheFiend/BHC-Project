@@ -93,11 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e4346d951e6561458af3de82401d646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parent: {fileID: 0}
   damage: 15
-  layer:
-    serializedVersion: 2
-    m_Bits: 128
   projectileSpeed: 8
+  projectileFlags: 0
 --- !u!212 &4425211245093217538
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -135,7 +134,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -772725651
+  m_SortingLayerID: 654732793
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -1229858627709956937, guid: 30fe0b6d66e92f549ba754d15a83446d, type: 3}

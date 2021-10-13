@@ -19,7 +19,7 @@ public class MovingObject : MonoBehaviour
 
     public Vector2 moveDirection;
 
-    private void Start() {
+    protected virtual void Start() {
         rbody = GetComponent<Rigidbody2D>();
     }
 
