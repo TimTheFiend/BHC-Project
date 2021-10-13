@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -13,7 +13,7 @@ public class RoomDrawer : MonoBehaviour
     public TileBase door;
     public List<Vector2Int> doorPos;
 
-    //Object vi tegner på.
+    //Object vi tegner pÃ¥.
     public GameObject activeGrid;
     private Grid grid;  //NOTE: bliver nok ikke brugt
     //Tilemap for Walls
@@ -41,7 +41,7 @@ public class RoomDrawer : MonoBehaviour
         //new Vector2Int(-2, -0)
     };
 
-    public List<Vector2Int> OverUnderHøjreVenstre = new List<Vector2Int>() {
+    public List<Vector2Int> OverUnderHÃ¸jreVenstre = new List<Vector2Int>() {
         new Vector2Int (0,1),
         new Vector2Int (0,-1),
         new Vector2Int (1,0),
@@ -69,7 +69,7 @@ public class RoomDrawer : MonoBehaviour
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
         gridDoors = activeGrid.transform.Find("Doors").GetComponent<Tilemap>();
 
-        //Sæt half værdier
+        //SÃ¦t half vÃ¦rdier
         halfHeight = (int)totalHeight / 2;
         halfWidth = (int)totalWidth / 2;
 
@@ -109,10 +109,10 @@ public class RoomDrawer : MonoBehaviour
 
         DoorPlacement();
 
-        //Tilføjelse af `roomObjects` til `room`
+        //TilfÃ¸jelse af `roomObjects` til `room`
         foreach (GameObject item in roomObjects) {
             Vector3 itemPos = new Vector3(item.transform.position.x + (totalWidth * roomCenter.x), item.transform.position.y + (totalHeight * roomCenter.y));
-            //TODO, ændr
+            //TODO, Ã¦ndr
             List<Sprite> objectSprites = new List<Sprite>();
             item.GetComponent<SpriteRenderer>().sprite = objectSprites[Random.Range(0, objectSprites.Count)];
 
@@ -136,7 +136,7 @@ public class RoomDrawer : MonoBehaviour
     }
 
     private void DrawDoors(Vector2Int roomCenter) {
-        //Liste af hvor dørene skal tegnes henne
+        //Liste af hvor dÃ¸rene skal tegnes henne
         List<Vector2Int> doorPos = new List<Vector2Int>() {
             new Vector2Int(0, 5), //Up
             new Vector2Int(-1, 5), //Up
@@ -158,21 +158,21 @@ public class RoomDrawer : MonoBehaviour
 
     public void DrawDungeonRooms(List<Vector2Int> roomPositions) {
         foreach (Vector2Int pos in roomPositions) {
-            //Hent tilfældigt rum fra `dungeonRooms`
+            //Hent tilfÃ¦ldigt rum fra `dungeonRooms`
             int index = Random.Range(0, dungeonRooms.Count);
             //Hentning af rummet
             GameObject roomToDraw = dungeonRooms[index];
-            //Fjern den fra listen (så den ikke bliver tegnet to gange
+            //Fjern den fra listen (sÃ¥ den ikke bliver tegnet to gange
             dungeonRooms.RemoveAt(index);
             //Kald DrawRoom med roomPosition og `room`
             DrawRoom(pos, roomToDraw);
-            //Gør dette indtil alle `roomPositions` er blevet tegnet.
+            //GÃ¸r dette indtil alle `roomPositions` er blevet tegnet.
         }
     }
 
     public void DoorPlacement() {
         foreach (var Pos in minimapRoomPos) {
-            foreach (var retning in OverUnderHøjreVenstre) {
+            foreach (var retning in OverUnderHÃ¸jreVenstre) {
                 //minimapRoomPos.Contains(Pos + retning);
                 if (minimapRoomPos.Contains(Pos + retning) == true) {
                     print(Pos + retning);
