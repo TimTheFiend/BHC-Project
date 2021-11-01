@@ -9,6 +9,9 @@ public class PlayerController : CharacterObject
     public PlayerAttackController pAttack;
     public int coins = 0;
 
+    //For moving between rooms
+    public bool canUseDoors = true;  //True because the player starts in an empty room.
+
     private void Start() {
         pMovement = GetComponent<PlayerMovementController>();
         pAttack = GetComponent<PlayerAttackController>();
