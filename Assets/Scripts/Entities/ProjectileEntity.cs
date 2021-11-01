@@ -12,6 +12,8 @@ public class ProjectileEntity : MonoBehaviour
     public void SpawnProjectile(GameObject spawnObject, Transform weaponTransfrom, ForceMode2D forceMode) {
         parent = spawnObject;
         GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * projectileSpeed, forceMode);
+        //For better managing hierarchy.
+        transform.SetParent(parent.transform);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {

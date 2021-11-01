@@ -129,8 +129,12 @@ public class RoomDrawer : MonoBehaviour
 
 
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
+        //Managing hierarchy and spawning.
+        Transform roomHolder = new GameObject(newRoom.ToString()).transform;
+
         foreach (GameObject item in objectsToSpawn) {
-            Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
+            GameObject instance = Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
+            instance.transform.SetParent(roomHolder);
             //Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
         }
     }

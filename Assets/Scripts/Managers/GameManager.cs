@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerObj;
     public PlayerController player;
 
+    public GameObject mob; // TEMP
+
     private void Start() {
         DungeonGenerator.Instance.GenerateDungeon();
 
@@ -40,12 +42,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void MovePlayerToRoom() {
+    public void PrepareMovementBetweenRooms() {
+        #region Figure out where to
         Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, playerRoomPosition);
 
         playerRoomPosition = new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y);
+        #endregion
 
-        CameraManager.instance.MoveToRoom(newRoom);
+        //So the player isn't in a loop between the two rooms
         player.canUseDoors = false;
+
+        #region Prepare spawning of mobs
+        Transform roomHolder = GameObject.Find(playerRoomPosition.ToString()).transform;
+
+        foreach (Transform obj in roomHolder) {
+            obj.gameObject.SetActive(false);
+        }
+        #endregion
+
+        //Move camera
+        CameraManager.instance.MoveToRoom(newRoom);
     }
+
+
 }

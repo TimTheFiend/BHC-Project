@@ -60,7 +60,8 @@ public class CameraManager : MonoBehaviour
 
     public void MoveToRoom(Vector2 room) {
         Vector3 newPlayerPos = player.position;
-        bool isHorizontal = Mathf.Abs(room.x) > room.y;
+
+        bool isHorizontal = Mathf.Abs(room.x) > Mathf.Abs(room.y);
         bool isPositive = isHorizontal ? room.x > 0f : room.y > 0f;
         if (isHorizontal) {
             newPlayerPos.x += isPositive ? playerMoveIntoRoom : -playerMoveIntoRoom;
@@ -68,7 +69,6 @@ public class CameraManager : MonoBehaviour
         else {
             newPlayerPos.y += isPositive ? playerMoveIntoRoom : -playerMoveIntoRoom;
         }
-
 
         StartCoroutine(MoveCamera(new Vector3(room.x * totalWidth, room.y * totalHeight), newPlayerPos));
     }
@@ -97,6 +97,7 @@ public class CameraManager : MonoBehaviour
         player.gameObject.SetActive(false);
         player.position = movePlayerToPos;
 
+
         #region Transitions camera to new room
         Vector3 startPos = transform.position;
         Vector3 position = transform.position + newPos;
@@ -112,6 +113,8 @@ public class CameraManager : MonoBehaviour
         transform.position = position;
         isCameraTransitioning = false;
         #endregion
+        
+        //GameManager.instance
 
         player.gameObject.SetActive(true);
     }

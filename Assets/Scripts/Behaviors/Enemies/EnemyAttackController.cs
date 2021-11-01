@@ -17,6 +17,10 @@ public class EnemyAttackController : AttackingObject
         rb2D = GetComponent<Rigidbody2D>();
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
         StartCoroutine(AutoAttackCoroutine());
+
+        if (playerPosition == null) {
+            playerPosition = GameManager.instance.playerObj.transform;
+        }
     }
 
     public IEnumerator AutoAttackCoroutine() {

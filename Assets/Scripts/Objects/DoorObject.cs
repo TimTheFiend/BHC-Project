@@ -11,7 +11,7 @@ public class DoorObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (isOpen && collision.gameObject.GetComponent<PlayerController>().canUseDoors) {
-            GameManager.instance.MovePlayerToRoom();
+            GameManager.instance.PrepareMovementBetweenRooms();
         }
     }
 }
