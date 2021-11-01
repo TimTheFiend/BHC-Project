@@ -70,13 +70,12 @@ public class DungeonGenerator : MonoBehaviour
 
     #region Starts Generation
 
-
-
     private void DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
                 //Debug.ClearDeveloperConsole();
                 print($"Generate: {maxAmountRooms}\tStartroom: {startRoom.ToString()}\tAttempts: {i}");
+                GameManager.instance.playerRoomPosition = startRoom;
                 foreach (RoomObject item in minimapPositions) {
                     print(item.DebugPrint());
                 }
@@ -84,7 +83,7 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
         if (minimapPositions.Count != maxAmountRooms - 1) {
-           Debug.Log("didn't generate");
+           //Debug.Log("didn't generate");
         }
     }
 

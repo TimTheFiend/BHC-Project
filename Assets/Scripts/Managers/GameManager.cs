@@ -9,14 +9,15 @@ public class GameManager : MonoBehaviour
     [Tooltip("Used to keep track of Player's position in relation to the minimap.")]
     public RoomObject playerRoomPosition;
     [Tooltip("The player object.")]
-    public GameObject player;
+    public GameObject playerObj;
+    public PlayerController player;
 
     private void Start() {
         DungeonGenerator.Instance.GenerateDungeon();
 
         Vector3 v = DungeonLayout.GetRoomCenterWorldPosition(DungeonGenerator.Instance.startRoom);
-        player.transform.position = new Vector3(v.x, v.y, 0f);
-        Camera.main.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, Camera.main.transform.position.z);
+        playerObj.transform.position = new Vector3(v.x, v.y, 0f);
+        Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
     }
 
     private void Awake() {
@@ -33,11 +34,18 @@ public class GameManager : MonoBehaviour
 
         #endregion Singleton Pattern
 
-        if (player == null) {
-            player = GameObject.Find("Player");
+        if (playerObj == null) {
+            playerObj = GameObject.Find("Player");
+            player = playerObj.GetComponent<PlayerController>();
         }
     }
 
-    public void GenerateDungeon() {
+    public void MovePlayerToRoom() {
+        Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, playerRoomPosition);
+
+        playerRoomPosition = new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y);
+
+        CameraManager.instance.MoveToRoom(newRoom);
+        player.canUseDoors = false;
     }
 }
