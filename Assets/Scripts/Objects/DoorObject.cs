@@ -10,7 +10,7 @@ public class DoorObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (isOpen) {
-            print("Trigger: " + collision.name);
+            GameManager.instance.MovePlayerToRoom();
         }
     }
 }

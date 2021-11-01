@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GenerateDungeon() {
+    public void MovePlayerToRoom() {
+        Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(player.transform.position, playerRoomPosition);
+
+        playerRoomPosition = new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y);
+
+        CameraManager.instance.MoveToRoom(newRoom);
     }
 }

@@ -31,8 +31,8 @@ public class RoomDrawer : MonoBehaviour
     public List<TileBase> floorSprites;
 
     //Et rums dimensioner er (16x12)
-    [SerializeField] private const int totalWidth = 16;
-    [SerializeField] private const int totalHeight = 12;
+    [SerializeField] public readonly int totalWidth = 16;
+    [SerializeField] public readonly int totalHeight = 12;
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
 
@@ -64,18 +64,6 @@ public class RoomDrawer : MonoBehaviour
         doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
     }
 
-    private void Start() {
-        
-
-        /* S�tter doorPositions */
-
-
-
-        foreach (var item in doorPositions.Keys) {
-            print(item);
-            print("KEY");
-        }
-    }
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
