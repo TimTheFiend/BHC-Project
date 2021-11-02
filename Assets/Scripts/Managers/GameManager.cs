@@ -8,13 +8,14 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Used to keep track of Player's position in relation to the minimap.")]
     public RoomObject playerRoomPosition;
+
     [Tooltip("The player object.")]
     public GameObject playerObj;
+
     public PlayerController player;
 
     public GameObject mob; // TEMP
-    Transform roomHolder;
-
+    private Transform roomHolder;
 
     private void Start() {
         DungeonGenerator.Instance.GenerateDungeon();
@@ -45,22 +46,30 @@ public class GameManager : MonoBehaviour
     }
 
     public void PrepareMovementBetweenRooms() {
+
         #region Figure out where to
+
         Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, playerRoomPosition);
 
         playerRoomPosition = new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y);
-        #endregion
+
+        //Addition
+        CurrentDungeon.UpdatePlayerPosition(playerRoomPosition);
+
+        #endregion Figure out where to
 
         //So the player isn't in a loop between the two rooms
         player.canUseDoors = false;
 
         #region Prepare spawning of mobs
+
         roomHolder = GameObject.Find(playerRoomPosition.ToString()).transform;
 
         foreach (Transform obj in roomHolder) {
             obj.gameObject.SetActive(false);
         }
-        #endregion
+
+        #endregion Prepare spawning of mobs
 
         //Move camera
         CameraManager.instance.MoveToRoom(newRoom);
@@ -76,5 +85,8 @@ public class GameManager : MonoBehaviour
                 Destroy(obj.gameObject);
             }
         }
+    }
+
+    public void DeactivateCurrentRoom() {
     }
 }

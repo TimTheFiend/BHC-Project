@@ -12,12 +12,11 @@ public class PlayerController : CharacterObject
     //For moving between rooms
     public bool canUseDoors = true;  //True because the player starts in an empty room.
 
-    private void Start() {
+    protected override void Start() {
+        base.Start();
+
         pMovement = GetComponent<PlayerMovementController>();
         pAttack = GetComponent<PlayerAttackController>();
-
-        //TODO fix
-        currentHP = maxHP;
     }
 
     public void OnMovement(InputAction.CallbackContext _context) {

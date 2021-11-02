@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
-
 
 public class EnemyMovementController : MovingObject
 {
@@ -20,7 +18,7 @@ public class EnemyMovementController : MovingObject
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
-        
+
         #region adds directions to directions list
 
         var upRightAngle = new Vector2(1f, 1f).normalized;
@@ -42,10 +40,11 @@ public class EnemyMovementController : MovingObject
         directions.Add(leftAngle);
         directions.Add(upLeftAngle);
 
-        #endregion
+        #endregion adds directions to directions list
+
         wallLayer = LayerMask.GetMask("Walls");
 
-        //StartCoroutine(AutoMoveCoroutine());
+        StartCoroutine(AutoMoveCoroutine());
     }
 
     public IEnumerator AutoMoveCoroutine() {
@@ -95,14 +94,12 @@ public class EnemyMovementController : MovingObject
             yield return new WaitForEndOfFrame();
         }
 
-
         isMovingCurrently = false;
     }
 
     //public IEnumerator AutoMoveCoroutine() {
     //    while (true) {
     //        if (enableAutoMove) {
-
     //            Vector2 newDirection = RandomDirection();
 
     //            // if isHittingWall is set to false
@@ -125,7 +122,6 @@ public class EnemyMovementController : MovingObject
     //        }
     //    }
     //}
-
 
     // is a completely random direction
     public Vector2 RandomDirection() {
@@ -181,7 +177,6 @@ public class EnemyMovementController : MovingObject
                     availableDirections.Remove(directions[i]);
                 }
                 isHittingWall = true;
-
             }
             // if the collider does not hit something
             else {
@@ -198,8 +193,8 @@ public class EnemyMovementController : MovingObject
     protected override void FixedUpdate() {
         base.FixedUpdate();
         CheckForWallHit();
-        if (isMovingCurrently == false) {
-            StartCoroutine(AutoMoveRoutine());
-        }
+        //if (isMovingCurrently == false) {
+        //    StartCoroutine(AutoMoveRoutine());
+        //}
     }
 }

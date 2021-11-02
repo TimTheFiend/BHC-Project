@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 868873540697339379}
   - component: {fileID: 868873540697339380}
   - component: {fileID: 868873540697339381}
-  - component: {fileID: 868873540697339377}
+  - component: {fileID: -58275278302649940}
   - component: {fileID: 868873540697339376}
   - component: {fileID: -2304056363292953660}
   m_Layer: 7
@@ -122,7 +122,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868873540697339382}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -134,8 +134,8 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!114 &868873540697339377
+  m_Constraints: 4
+--- !u!114 &-58275278302649940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,11 +144,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 868873540697339382}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4034b6640d35c074397b2dbc172206bb, type: 3}
+  m_Script: {fileID: 11500000, guid: c1aeda05127dffe4cb3bcc8c9e421bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 100
+  maxHP: 20
   currentHP: 0
+  eAttack: {fileID: 0}
+  eMovement: {fileID: 0}
 --- !u!114 &868873540697339376
 MonoBehaviour:
   m_ObjectHideFlags: 0
