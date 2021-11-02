@@ -15,6 +15,8 @@ public class EnemyMovementController : MovingObject
 
     [Range(2f, 10f)] public float autoMoveTimer;
 
+    public bool isMovingCurrently = false;
+
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
@@ -43,28 +45,25 @@ public class EnemyMovementController : MovingObject
         #endregion
         wallLayer = LayerMask.GetMask("Walls");
 
-        StartCoroutine(AutoMoveCoroutine());
+        //StartCoroutine(AutoMoveCoroutine());
     }
 
     public IEnumerator AutoMoveCoroutine() {
         while (true) {
-            if (enableAutoMove) {
+            Vector2 newDirection = RandomDirection();
 
-                Vector2 newDirection = RandomDirection();
-
-                // if isHittingWall is set to false
-                if (!isHittingWall) {
-                    // set newDirection to a random direction
-                    newDirection = RandomDirection();
-                }
-                // if isHittingWall is set to false
-                else {
-                    // set newDirection to a random direction within a range of available directions
-                    newDirection = RandomAvailableDirection();
-                }
-
-                UpdateMoveDirection(newDirection);
+            // if isHittingWall is set to false
+            if (!isHittingWall) {
+                // set newDirection to a random direction
+                newDirection = RandomDirection();
             }
+            // if isHittingWall is set to false
+            else {
+                // set newDirection to a random direction within a range of available directions
+                newDirection = RandomAvailableDirection();
+            }
+
+            UpdateMoveDirection(newDirection);
             float time = 0f;
             while (time < autoMoveTimer) {
                 time += Time.deltaTime;
@@ -73,12 +72,67 @@ public class EnemyMovementController : MovingObject
         }
     }
 
+    public IEnumerator AutoMoveRoutine() {
+        isMovingCurrently = true;
+
+        Vector2 newDirection = RandomDirection();
+
+        // if isHittingWall is set to false
+        if (!isHittingWall) {
+            // set newDirection to a random direction
+            newDirection = RandomDirection();
+        }
+        // if isHittingWall is set to false
+        else {
+            // set newDirection to a random direction within a range of available directions
+            newDirection = RandomAvailableDirection();
+        }
+
+        UpdateMoveDirection(newDirection);
+        float time = 0f;
+        while (time < autoMoveTimer) {
+            time += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+
+        isMovingCurrently = false;
+    }
+
+    //public IEnumerator AutoMoveCoroutine() {
+    //    while (true) {
+    //        if (enableAutoMove) {
+
+    //            Vector2 newDirection = RandomDirection();
+
+    //            // if isHittingWall is set to false
+    //            if (!isHittingWall) {
+    //                // set newDirection to a random direction
+    //                newDirection = RandomDirection();
+    //            }
+    //            // if isHittingWall is set to false
+    //            else {
+    //                // set newDirection to a random direction within a range of available directions
+    //                newDirection = RandomAvailableDirection();
+    //            }
+
+    //            UpdateMoveDirection(newDirection);
+    //        }
+    //        float time = 0f;
+    //        while (time < autoMoveTimer) {
+    //            time += Time.deltaTime;
+    //            yield return new WaitForEndOfFrame();
+    //        }
+    //    }
+    //}
+
+
     // is a completely random direction
     public Vector2 RandomDirection() {
         float min = -1;
         float max = 1;
 
-        return new Vector2(Random.Range(min, max), Random.Range(min, max));
+        return new Vector2(Random.Range((int)min, (int)max + 1), Random.Range((int)min, (int)max + 1));
     }
 
     /// is a random direction within a range of available directions
@@ -100,13 +154,13 @@ public class EnemyMovementController : MovingObject
         for (int i = 0; i < directions.Count; i++) {
             // cardinal directions
             if ((directions[i].x != 0 && directions[i].y == 0) || (directions[i].x == 0 && directions[i].y != 0)) {
-                /* 
-                 * the distance from one point to the same point in an adjacent square of the same size is different depending on if you're moving diagonally or in a cardinal direction.
-                 * a square in a cardinal direction is 0.7 distance away, a square in a diagonal direction is 1 distance away.
-                 * in this example, we want the distance from the middle point to an adjacent diagonal square to be 2 distance away, ie. twice of 1, so 0.7 is doubled to 1.4.
-                 * an extra 0.01 is added to 1.4 to make 1.41 to make sure that the cardinal rayline hits the same point if standing next to an obstacle
-                 * (for some reason if the 0.01 isn't added, the diagonal rayline triggers before the cardinal one)
-                */
+                ///
+                ///the distance from one point to the same point in an adjacent square of the same size is different depending on if you're moving diagonally or in a cardinal direction.
+                ///a square in a cardinal direction is 0.7 distance away, a square in a diagonal direction is 1 distance away.
+                ///in this example, we want the distance from the middle point to an adjacent diagonal square to be 2 distance away, ie. twice of 1, so 0.7 is doubled to 1.4.
+                /// an extra 0.01 is added to 1.4 to make 1.41 to make sure that the cardinal rayline hits the same point if standing next to an obstacle
+                ///(for some reason if the 0.01 isn't added, the diagonal rayline triggers before the cardinal one)
+                ///
                 laserLength = 1.41f;
             }
             // diagonal directions
@@ -143,6 +197,9 @@ public class EnemyMovementController : MovingObject
 
     protected override void FixedUpdate() {
         base.FixedUpdate();
-        //CheckForWallHit();
+        CheckForWallHit();
+        if (isMovingCurrently == false) {
+            StartCoroutine(AutoMoveRoutine());
+        }
     }
 }

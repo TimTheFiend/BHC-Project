@@ -191,7 +191,8 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0}
   enableAutoMove: 0
   isHittingWall: 0
-  autoMoveTimer: 0
+  autoMoveTimer: 2
+  isMovingCurrently: 0
 --- !u!1001 &868873541385342232
 PrefabInstance:
   m_ObjectHideFlags: 0
