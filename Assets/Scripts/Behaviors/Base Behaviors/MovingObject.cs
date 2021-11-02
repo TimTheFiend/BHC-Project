@@ -6,7 +6,7 @@ using UnityEngine;
 public class MovingObject : MonoBehaviour
 {
     [Header("Component references")]
-    [SerializeField] private Rigidbody2D rbody;
+    [SerializeField] protected Rigidbody2D rbody;
 
     [Header("Movement vars")]
     [Range(1.0f, 10f)] public float movementSpeed = 5f;
@@ -23,7 +23,7 @@ public class MovingObject : MonoBehaviour
         rbody = GetComponent<Rigidbody2D>();
     }
 
-    private void FixedUpdate() {
+    protected virtual void FixedUpdate() {
         Move(moveDirection);
     }
 

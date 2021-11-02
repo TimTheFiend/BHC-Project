@@ -272,6 +272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerObj: {fileID: 0}
   player: {fileID: 0}
+  mob: {fileID: 868873540697339382, guid: 9d7e525f40e256a419ce7430db27d9c5, type: 3}
 --- !u!4 &540755758
 Transform:
   m_ObjectHideFlags: 0

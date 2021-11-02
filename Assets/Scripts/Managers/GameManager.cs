@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public PlayerController player;
 
     public GameObject mob; // TEMP
+    Transform roomHolder;
+
 
     private void Start() {
         DungeonGenerator.Instance.GenerateDungeon();
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
         player.canUseDoors = false;
 
         #region Prepare spawning of mobs
-        Transform roomHolder = GameObject.Find(playerRoomPosition.ToString()).transform;
+        roomHolder = GameObject.Find(playerRoomPosition.ToString()).transform;
 
         foreach (Transform obj in roomHolder) {
             obj.gameObject.SetActive(false);
@@ -64,5 +66,15 @@ public class GameManager : MonoBehaviour
         CameraManager.instance.MoveToRoom(newRoom);
     }
 
-
+    public void ActivateCurrentRoom() {
+        print(playerRoomPosition);
+        foreach (Transform obj in roomHolder) {
+            if (obj.gameObject.tag == "SpawnerMob") {
+                GameObject instance = Instantiate(mob, obj.position, Quaternion.identity);
+                instance.transform.SetParent(roomHolder);
+                instance.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
+                Destroy(obj.gameObject);
+            }
+        }
+    }
 }

@@ -114,8 +114,9 @@ public class CameraManager : MonoBehaviour
         isCameraTransitioning = false;
         #endregion
         
-        //GameManager.instance
-
         player.gameObject.SetActive(true);
+
+        GameManager.instance.ActivateCurrentRoom();
+        //Call GameManager to activate AI
     }
 }

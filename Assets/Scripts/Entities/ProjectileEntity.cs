@@ -17,7 +17,7 @@ public class ProjectileEntity : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject == parent) {
+        if (collision.gameObject.tag == parent.tag) {
             return;
         }
 

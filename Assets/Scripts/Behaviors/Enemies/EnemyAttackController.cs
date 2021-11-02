@@ -12,25 +12,25 @@ public class EnemyAttackController : AttackingObject
     Rigidbody2D rb2D;
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         rb2D = GetComponent<Rigidbody2D>();
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
-        StartCoroutine(AutoAttackCoroutine());
 
         if (playerPosition == null) {
-            playerPosition = GameManager.instance.playerObj.transform;
+            playerPosition = GameManager.instance.player.transform;
         }
+
+        StartCoroutine(AutoAttackCoroutine());
     }
 
     public IEnumerator AutoAttackCoroutine() {
-        while(true) {
+        while (true) {
             float time = 0f;
-            while(time < autoAttackTimer) {
+            while (time < autoAttackTimer) {
                 time += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
-            if(enableAutoAttack) {
+            if (enableAutoAttack) {
                 activeWeapon.AttemptAttack();
             }
         }
@@ -51,18 +51,18 @@ public class EnemyAttackController : AttackingObject
         RaycastHit2D hit = Physics2D.Raycast(transform.position, realPlayerPosition, laserLength, objectLayers);
 
         // if the ray hits the player
-        if(hit.collider.tag == "Player") {
+        if (hit.collider.tag == "Player") {
             Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.green);
             enableAutoAttack = true;
         }
 
         // if the ray hits an enemy
-        else if(hit.collider.tag == "Enemy") {
+        else if (hit.collider.tag == "Enemy") {
             float newOriginX = hit.point.x;
             float newOriginY = hit.point.y;
 
             // following ifs changes newOriginX and newOriginY to be slightly inside the enemy the ray has hit.
-            if(playerPosition.position.x > hit.point.x) {
+            if (playerPosition.position.x > hit.point.x) {
                 // right
                 newOriginX = newOriginX + 0.1f;
             }
@@ -71,7 +71,7 @@ public class EnemyAttackController : AttackingObject
                 newOriginX = newOriginX - 0.1f;
             }
 
-            if(playerPosition.position.y > hit.point.y) {
+            if (playerPosition.position.y > hit.point.y) {
                 // up
                 newOriginY = newOriginY + 0.1f;
             }
@@ -86,7 +86,7 @@ public class EnemyAttackController : AttackingObject
             RaycastHit2D newHit = Physics2D.Raycast(newOriginPoint, realPlayerPosition, laserLength, objectLayers);
 
             // if the new ray hits the player
-            if(newHit.collider.tag == "Player") {
+            if (newHit.collider.tag == "Player") {
                 Debug.DrawRay(newOriginPoint, realPlayerPosition * laserLength, Color.green);
                 enableAutoAttack = true;
             }
@@ -101,7 +101,7 @@ public class EnemyAttackController : AttackingObject
         // if the ray does not hit the player
         else {
             Debug.DrawRay(transform.position, realPlayerPosition * laserLength, Color.red);
-            enableAutoAttack = false;            
+            enableAutoAttack = false;
         }
     }
 }
