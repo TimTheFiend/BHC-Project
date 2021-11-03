@@ -11,18 +11,21 @@ public class ProjectileEntity : MonoBehaviour
 
     public void SpawnProjectile(GameObject spawnObject, Transform weaponTransfrom, ForceMode2D forceMode) {
         parent = spawnObject;
+        if(parent.tag == "Enemy") {
+            GetComponent<SpriteRenderer>().color = Color.red;
+        }
         GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * projectileSpeed, forceMode);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject == parent) {
+        if (collision.tag == parent.tag) {
             return;
         }
 
         if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy") {
             collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
-            OnHit();
         }
+        OnHit();
 
 
         //print(collision.gameObject.tag);
