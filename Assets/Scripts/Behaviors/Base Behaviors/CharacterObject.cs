@@ -8,7 +8,7 @@ public class CharacterObject : MonoBehaviour
     public float maxHP = 100f;
     public float currentHP;
 
-    private void Start() {
+    protected virtual void Start() {
         currentHP = maxHP;
     }
 
@@ -20,7 +20,7 @@ public class CharacterObject : MonoBehaviour
 
     public void LoseHealth(float healthLost) {
         currentHP -= healthLost;
-        if(isDead) {
+        if (isDead) {
             Die();
         }
     }
@@ -31,7 +31,7 @@ public class CharacterObject : MonoBehaviour
 
     public void RecoverHealth(float healthRecovered) {
         currentHP += healthRecovered;
-        if(currentHP > maxHP) {
+        if (currentHP > maxHP) {
             currentHP = maxHP;
         }
     }
@@ -43,10 +43,10 @@ public class CharacterObject : MonoBehaviour
     /// <param name="totalDuration">How long it will take/be active</param>
     /// <param name="totalTicks">how many times you will get health</param>
     /// <returns></returns>
-    public IEnumerator RecoverHealthOvertime(float totalAmount, float totalDuration, int totalTicks){
+    public IEnumerator RecoverHealthOvertime(float totalAmount, float totalDuration, int totalTicks) {
         //timeUntilHeal is to calculate how long it will take to gaining the total health
         float timeUntilHeal = totalDuration / totalTicks;
-        for (int i = 0; i < totalTicks; i++){
+        for (int i = 0; i < totalTicks; i++) {
             yield return new WaitForSeconds(timeUntilHeal);
 
             RecoverHealth(totalAmount / totalTicks);
@@ -60,13 +60,13 @@ public class CharacterObject : MonoBehaviour
     /// <param name="totalDuration">How long it will take/be active</param>
     /// <param name="totalTicks">how many times you will take dmg</param>
     /// <returns></returns>
-    public IEnumerator LoseHealthOvertime(float totalAmount, float totalDuration, int totalTicks){
+    public IEnumerator LoseHealthOvertime(float totalAmount, float totalDuration, int totalTicks) {
         //timeUntilDamaged is to calculate how long will take to take the total dmg
         float timeUntilDamaged = totalDuration / totalTicks;
         for (int i = 0; i < totalTicks; i++) {
             yield return new WaitForSeconds(timeUntilDamaged);
 
             LoseHealth(totalAmount / totalTicks);
-        }       
+        }
     }
 }

@@ -6,16 +6,18 @@ using UnityEngine;
 [System.Serializable]
 public class DungeonGenerator : MonoBehaviour
 {
-    public static DungeonGenerator Instance = null;
+    public static DungeonGenerator instance = null;
 
     [Header("Debug")]
     [Tooltip("Prints out additional data if `true`.")]
     public bool isDebug;
+
     public bool hasSeed;
     public int rngSeed;
 
     [Header("Generation variables")]
     [Range(1, 10)] public int dungeonLevel = 1;
+
     [Range(5, 10)] public int maxLayoutWidth = 6;
     [Range(5, 10)] public int maxLayoutHeight = 5;
     public readonly int _minAmountDeadendsPerFloor = 5;
@@ -24,13 +26,15 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Minimap variables")]
     public RoomObject startRoom;
+
     public List<RoomObject> minimapPositions = new List<RoomObject>();
     public Queue<RoomObject> minimapQueue = new Queue<RoomObject>();
 
     [Header("Generation Variables")]
     [SerializeField, Range(0.0f, 1.0f)]
     private float randomRoomGiveUp = 0.5f;
-    private int generationAttempts = 5000;  //1 Million attempts. - Dr. Evil.
+
+    private int generationAttempts = 15000;
 
     #region Start / Awake
 
@@ -44,10 +48,10 @@ public class DungeonGenerator : MonoBehaviour
 
         #region Singleton Pattern
 
-        if (Instance == null) {
-            Instance = this;
+        if (instance == null) {
+            instance = this;
         }
-        else if (Instance != this) {
+        else if (instance != this) {
             Destroy(this);
         }
         DontDestroyOnLoad(gameObject);
@@ -57,40 +61,39 @@ public class DungeonGenerator : MonoBehaviour
 
     #endregion Start / Awake
 
+    /// <summary>
+    /// Starts the process of generating a new dungeon layout.
+    /// </summary>
     public void GenerateDungeon() {
-        if (isDebug) {
-            DebugStartGeneration();
-            //NOTE: temp 
-        }
-        else {
-            DebugStartGeneration();
-            RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
-        }
+        DebugStartGeneration();
     }
 
-    #region Starts Generation
-
+    /// <summary>
+    /// Attempts to generate the dungeon.
+    /// </summary>
     private void DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
-                //Debug.ClearDeveloperConsole();
-                print($"Generate: {maxAmountRooms}\tStartroom: {startRoom.ToString()}\tAttempts: {i}");
-                GameManager.instance.playerRoomPosition = startRoom;
-                foreach (RoomObject item in minimapPositions) {
-                    print(item.DebugPrint());
-                }
-                break;
+                OnSuccessfulGeneration();
+                return;
             }
         }
-        if (minimapPositions.Count != maxAmountRooms - 1) {
-           //Debug.Log("didn't generate");
-        }
+        Debug.Log("Couldn't generate layout.");
     }
 
-    #endregion Starts Generation
+    private void OnSuccessfulGeneration() {
+        minimapQueue.Clear();
+
+        RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
+        GameManager.instance.SetCurrentPlayerPosition(startRoom);
+    }
 
     #region Procedural Generation
 
+    /// <summary>
+    /// Generates a layout with certain criteria that has to be fulfilled in order to be valid.
+    /// </summary>
+    /// <returns><c>true</c> if the generation is valid for use; otherwise <c>false</c>.</returns>
     private bool GenerateDungeonLayout() {
         InitialiseVariables();
         while (true) {
@@ -111,7 +114,6 @@ public class DungeonGenerator : MonoBehaviour
                             if (!minimapPositions.Contains(newRoom)) {
                                 if (HasNoAdjacentRooms(newRoom)) {
                                     currentRoom = AddRoomToLayout(newRoom, currentRoom);
-                                    
                                 }
                             }
                         }
@@ -207,39 +209,4 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     #endregion Add Room To Layout
-
-    #region DrawGizmos
-
-    private void OnDrawGizmos() {
-        if (!isDebug) {
-            return;
-        }
-
-        Gizmos.color = Color.white;
-        for (int x = 0; x < maxLayoutWidth + 1; x++) {
-            for (int y = 0; y < maxLayoutHeight + 1; y++) {
-                if ((x + y) % 2 == 0) {
-                    Gizmos.color = Color.white;
-                }
-                else {
-                    Gizmos.color = Color.black;
-                }
-                Gizmos.DrawCube(new Vector3(x + 0.5f, y + 0.5f, 0f), new Vector3(1f, 1f, 0f));
-            }
-        }
-
-        for (int i = 0; i < minimapPositions.Count; i++) {
-            RoomObject room = minimapPositions[i];
-
-            if (i == 0) {
-                Gizmos.color = Color.magenta;
-            }
-            else {
-                Gizmos.color = i % 2 == 0 ? Color.red : Color.blue;
-            }
-            Gizmos.DrawCube(new Vector3(room.x + 0.5f, room.y + 0.5f, 0f), Vector3.one);
-        }
-    }
-
-    #endregion DrawGizmos
 }
