@@ -64,18 +64,6 @@ public class RoomDrawer : MonoBehaviour
         doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
     }
 
-    private void Start() {
-        
-
-        /* S�tter doorPositions */
-
-
-
-        foreach (var item in doorPositions.Keys) {
-            print(item);
-            print("KEY");
-        }
-    }
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
@@ -122,7 +110,9 @@ public class RoomDrawer : MonoBehaviour
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
         /* Tegner d�re */
-        DrawDoors(roomObj);
+        //NOTE Udkommenter når DrawDoorsAsObjects virker
+        //DrawDoors(roomObj);
+        DrawDoorsAsObjects(roomObj);
 
         //TODO PlaceObjects() temp navn
         if (roomObj == DungeonGenerator.Instance.startRoom) {
@@ -131,14 +121,14 @@ public class RoomDrawer : MonoBehaviour
         SpawnObjects(roomObj, roomObjects);
         //SpawnObjects(roomObj, dungeonRoom);
     }
-    
-    //BRUGER TILEMAP
-    private void DrawDoors(RoomObject newRoom) {
-        foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
-            gridDoors.SetTile(DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), door);
-        }
-    }
 
+    private void DrawDoorsAsObjects(RoomObject newRoom) {      
+        foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
+            GameObject toInstantiate = Instantiate(doorObj, DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), Quaternion.identity);
+            
+        }
+        //Sådan spawner man dør
+    }
 
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
         foreach (GameObject item in objectsToSpawn) {
@@ -146,18 +136,4 @@ public class RoomDrawer : MonoBehaviour
             //Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
         }
     }
-
-    private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
-
-        List<GameObject> objectsToSpawn = new List<GameObject>();
-        //Hent children fra `dungeonRoom`s f�rste child
-        foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
-            objectsToSpawn.Add(child);
-        }
-        print(objectsToSpawn.Count);
-        //Identificer typen af gameobject
-        //
-        //Initialise gameobject
-    }
-
 }

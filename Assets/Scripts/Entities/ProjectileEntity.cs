@@ -37,19 +37,6 @@ public class ProjectileEntity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    //NOTE: Not in use
-    //public void ChangeFlags(ProjectileFlags flag, bool state) {
-    //    switch (state) {
-    //        case true:
-    //            projectileFlags |= flag;
-    //            return;
-
-    //        case false:
-    //            projectileFlags &= ~flag;
-    //            return;
-    //    }
-    //}
-
     private void OnCollisionEnter2D(Collision2D collision) {
         print(collision.gameObject);
     }
