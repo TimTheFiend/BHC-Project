@@ -6,19 +6,25 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null; // Singleton
 
-    [Tooltip("Used to keep track of Player's position in relation to the minimap.")]
-    public RoomObject playerRoomPosition;
     [Tooltip("The player object.")]
     public GameObject playerObj;
+
     public PlayerController player;
 
-    private void Start() {
-        DungeonGenerator.Instance.GenerateDungeon();
+    [Header("Room-to-Room movement")]
+    public bool canUseDoors = true;  //`true` because the player starts in an empty room.
 
-        Vector3 v = DungeonLayout.GetRoomCenterWorldPosition(DungeonGenerator.Instance.startRoom);
-        playerObj.transform.position = new Vector3(v.x, v.y, 0f);
-        Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
-    }
+    [Tooltip("Used to keep track of Player's position in relation to the minimap.")]
+    public RoomObject playerRoomPosition = new RoomObject(-1, -1);
+
+    public Transform activePlayerRoom;
+
+    [Tooltip("Contains a list of rooms the player has visited, and is not currently in.")]
+    public HashSet<RoomObject> exploredRooms = new HashSet<RoomObject>();  //Only contains unique.
+
+    public GameObject mob;
+
+    #region Awake, Start
 
     private void Awake() {
 
@@ -40,12 +46,68 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void MovePlayerToRoom() {
-        Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, playerRoomPosition);
+    private void Start() {
+        DungeonGenerator.instance.GenerateDungeon();
 
-        playerRoomPosition = new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y);
+        Vector3 v = DungeonLayout.GetRoomCenterWorldPosition(DungeonGenerator.instance.startRoom);
+        playerObj.transform.position = new Vector3(v.x, v.y, 0f);
+        Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
+    }
+
+    #endregion Awake, Start
+
+    #region In regards to movement between rooms, and activation.
+
+    //When moving between rooms, set current playerRoomPosition, and add room to exploredRooms
+    public void SetCurrentPlayerPosition(RoomObject room) {
+        if (exploredRooms.Count == 0) {
+            playerRoomPosition = room;
+
+            exploredRooms.Add(playerRoomPosition);
+            canUseDoors = true;
+            return;
+        }
+
+        //false if the room isn't in the list; true if it is.
+        canUseDoors = !exploredRooms.Add(room);
+        playerRoomPosition = room;
+    }
+
+    //WIP
+    public void ActivateCurrentRoom() {
+        activePlayerRoom = GameObject.Find(playerRoomPosition.ToString()).transform;
+
+        //Find transform for activePlayerRoom;
+        foreach (Transform obj in activePlayerRoom) {
+            if (obj.gameObject.tag == "SpawnerMob") {
+                GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
+                spawn.transform.SetParent(activePlayerRoom);
+                spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
+                Destroy(obj.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
+    /// </summary>
+    public void IsActiveRoomCompleted() {
+        if (activePlayerRoom.childCount > 1) {
+            return;
+        }
+        canUseDoors = true;
+    }
+
+    /// <summary>
+    /// Prepares the movement between rooms, by calculating which room the player is going towards.
+    /// </summary>
+    public void PrepareMovementBetweenRooms() {
+        Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, playerRoomPosition);
+        //Set new room.
+        SetCurrentPlayerPosition(new RoomObject((int)newRoom.x + playerRoomPosition.x, (int)newRoom.y + playerRoomPosition.y));
 
         CameraManager.instance.MoveToRoom(newRoom);
-        player.canUseDoors = false;
     }
+
+    #endregion In regards to movement between rooms, and activation.
 }

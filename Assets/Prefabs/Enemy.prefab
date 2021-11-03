@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 868873540697339379}
   - component: {fileID: 868873540697339380}
   - component: {fileID: 868873540697339381}
-  - component: {fileID: 868873540697339377}
   - component: {fileID: 868873540697339376}
   m_Layer: 7
   m_Name: Enemy
@@ -73,8 +72,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 2053536561
-  m_SortingLayer: 2
+  m_SortingLayerID: 654732793
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 8053763019214627727, guid: 67c6f60a12702f04d909a4dc78928eaf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -134,20 +133,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &868873540697339377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 868873540697339382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4034b6640d35c074397b2dbc172206bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 100
-  currentHP: 0
 --- !u!114 &868873540697339376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5355636817226271974, guid: c8574908809a4d54f853a233261883e1, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5355636817226271974, guid: c8574908809a4d54f853a233261883e1, type: 3}
       propertyPath: m_SortingLayerID

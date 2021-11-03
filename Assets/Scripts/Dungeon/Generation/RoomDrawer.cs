@@ -7,7 +7,7 @@ public class RoomDrawer : MonoBehaviour
 {
     public static RoomDrawer Instance = null;
 
-    Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
+    private Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
 
     //Indeholder rum til tegning.
     [Header("Pre-made rooms")]
@@ -15,15 +15,20 @@ public class RoomDrawer : MonoBehaviour
 
     [Header("Door-related variables")]
     public TileBase door;  //TileBase for door
+
     public GameObject doorObj; //NOTE: bruges til at tegne d�re som gameobject SKAL IKKE BRUGES ENDNU
 
     //Object vi tegner på.
     public GameObject activeGrid;
-    [SerializeField]private Grid grid;  //NOTE: bliver nok ikke brugt
+
+    [SerializeField] private Grid grid;  //NOTE: bliver nok ikke brugt
+
     //Tilemap for Walls
     [SerializeField] private Tilemap gridWalls;
+
     //Tilemap for Doors
     [SerializeField] private Tilemap gridDoors;
+
     //Tilemap for Floor
     [SerializeField] private Tilemap gridFloor;
 
@@ -32,11 +37,13 @@ public class RoomDrawer : MonoBehaviour
 
     //Et rums dimensioner er (16x12)
     [SerializeField] public readonly int totalWidth = 16;
+
     [SerializeField] public readonly int totalHeight = 12;
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
 
     private void Awake() {
+
         #region Singleton Pattern
 
         if (Instance == null) {
@@ -46,6 +53,7 @@ public class RoomDrawer : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
         #endregion Singleton Pattern
 
         grid = activeGrid.GetComponent<Grid>();
@@ -64,10 +72,11 @@ public class RoomDrawer : MonoBehaviour
         doorPositions.Add(DoorLayout.Right, new List<Vector2Int>() { new Vector2Int(7, 0), new Vector2Int(7, -1) });
     }
 
-
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
         foreach (RoomObject room in roomPositions) {
+            Transform roomHolder = new GameObject(room.ToString()).transform;
+
             //Hent tilf�ldigt rum fra `dungeonRooms`
             int index = Random.Range(0, dungeonRooms.Count);
             //Hentning af rummet
@@ -106,20 +115,19 @@ public class RoomDrawer : MonoBehaviour
             }
         }
 
-
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
         /* Tegner d�re */
         DrawDoors(roomObj);
 
         //TODO PlaceObjects() temp navn
-        if (roomObj == DungeonGenerator.Instance.startRoom) {
+        if (roomObj == DungeonGenerator.instance.startRoom) {
             return;
         }
         SpawnObjects(roomObj, roomObjects);
         //SpawnObjects(roomObj, dungeonRoom);
     }
-    
+
     //BRUGER TILEMAP
     private void DrawDoors(RoomObject newRoom) {
         foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
@@ -127,16 +135,16 @@ public class RoomDrawer : MonoBehaviour
         }
     }
 
-
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
+        Transform roomHolder = GameObject.Find(newRoom.ToString()).transform;
+
         foreach (GameObject item in objectsToSpawn) {
-            Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
-            //Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
+            GameObject toSpawn = Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
+            toSpawn.transform.SetParent(roomHolder);
         }
     }
 
     private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
-
         List<GameObject> objectsToSpawn = new List<GameObject>();
         //Hent children fra `dungeonRoom`s f�rste child
         foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
@@ -147,5 +155,4 @@ public class RoomDrawer : MonoBehaviour
         //
         //Initialise gameobject
     }
-
 }

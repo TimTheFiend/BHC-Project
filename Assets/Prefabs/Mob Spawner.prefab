@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2911365711349765377}
   m_Layer: 0
   m_Name: Mob Spawner
-  m_TagString: Untagged
+  m_TagString: SpawnerMob
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
