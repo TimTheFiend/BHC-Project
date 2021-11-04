@@ -21,7 +21,7 @@ public class DungeonGenerator : MonoBehaviour
     [Range(5, 10)] public int maxLayoutWidth = 6;
     [Range(5, 10)] public int maxLayoutHeight = 5;
     public readonly int _minAmountDeadendsPerFloor = 5;
-    public int minAmountDeadends = 5;
+    public int minAmountDeadends = 3;
     public int maxAmountRooms;
 
     [Header("Minimap variables")]
@@ -74,21 +74,79 @@ public class DungeonGenerator : MonoBehaviour
     private void DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
-                OnSuccessfulGeneration();
-                return;
+                if (HasEnoughDeadends()) {
+                    AssignRoomTypes();
+
+                    foreach (RoomObject room in minimapPositions) {
+                        print($"{room.ToString()} - {room.IsDeadEnd} - {room.type}");
+                    }
+                    RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
+                    GameManager.instance.SetCurrentPlayerPosition(startRoom);
+                    return;
+                }
             }
         }
-        Debug.Log("Couldn't generate layout.");
     }
 
-    private void OnSuccessfulGeneration() {
-        minimapQueue.Clear();
+    #region Deadends assignment
 
-        RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
-        GameManager.instance.SetCurrentPlayerPosition(startRoom);
+    /// Make sure there's enough deadends
+    private bool HasEnoughDeadends() {
+        int deadendCounter = 0;
+        foreach (RoomObject room in minimapPositions) {
+            if (room.IsDeadEnd && room != startRoom) {
+                deadendCounter++;
+                //No reason to keep going if true
+                if (deadendCounter >= minAmountDeadends) {
+                    return true;
+                }
+            }
+        }
+        return deadendCounter >= minAmountDeadends;
     }
 
-    #region Procedural Generation
+    /// <summary>
+    /// Assigns certain rooms a new roomtype that are needed for a complet level.
+    /// </summary>
+    private void AssignRoomTypes() {
+        //Reverse the list to get the room furthest away from start pos.
+        List<RoomObject> reversedPos = minimapPositions.ToList();
+        reversedPos.Reverse();
+
+        Queue<RoomType> roomsNeeded = GetSpecialRoomsToAdd();
+
+        //Assign start room
+        RoomObject _startRoom = minimapPositions.SingleOrDefault(r => r.center == startRoom.center);
+        _startRoom.type = RoomType.StartRoom;
+        minimapPositions[_startRoom.index] = _startRoom;
+
+        //Assign rest of special rooms
+        for (int i = 0; i < reversedPos.Count; i++) {
+            if (roomsNeeded.Count == 0) {
+                break;
+            }
+            if (reversedPos[i].IsDeadEnd) {
+                RoomObject deadEnd = reversedPos[i];
+                deadEnd.type = roomsNeeded.Dequeue();
+                minimapPositions[deadEnd.index] = deadEnd;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Temporary helper method for AssignRoomTypes
+    /// </summary>
+    private Queue<RoomType> GetSpecialRoomsToAdd() {
+        Queue<RoomType> queue = new Queue<RoomType>();
+        queue.Enqueue(RoomType.Boss);
+        queue.Enqueue(RoomType.Item);
+
+        return queue;
+    }
+
+    #endregion Deadends assignment
+
+    #region Generating the layout.
 
     /// <summary>
     /// Generates a layout with certain criteria that has to be fulfilled in order to be valid.
@@ -126,7 +184,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    #endregion Procedural Generation
+    #endregion Generating the layout.
 
     #region Helper functions
 
@@ -168,7 +226,7 @@ public class DungeonGenerator : MonoBehaviour
 
     //NOTE: needs expansion.
     private void GetMaxAmountRooms() {
-        minAmountDeadends = Random.Range(_minAmountDeadendsPerFloor, _minAmountDeadendsPerFloor + 1 + 1); //+1 +1 because exclusive, and for variation.
+        //minAmountDeadends = Random.Range(_minAmountDeadendsPerFloor, _minAmountDeadendsPerFloor + 1 + 1); //+1 +1 because exclusive, and for variation.
         maxAmountRooms = Mathf.RoundToInt(3.33f * dungeonLevel + minAmountDeadends);
     }
 

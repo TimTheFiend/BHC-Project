@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 0}
-  damage: 15
+  damage: 100
   projectileSpeed: 8
   projectileFlags: 0
 --- !u!212 &4425211245093217538

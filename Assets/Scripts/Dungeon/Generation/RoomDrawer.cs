@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class RoomDrawer : MonoBehaviour
 {
-    public static RoomDrawer Instance = null;
+    public static RoomDrawer instance = null;
 
     private Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
 
@@ -46,10 +46,10 @@ public class RoomDrawer : MonoBehaviour
 
         #region Singleton Pattern
 
-        if (Instance == null) {
-            Instance = this;
+        if (instance == null) {
+            instance = this;
         }
-        else if (Instance != this) {
+        else if (instance != this) {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
@@ -75,14 +75,16 @@ public class RoomDrawer : MonoBehaviour
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
         foreach (RoomObject room in roomPositions) {
+            //Laver nyt transform til at holde fast i potentielle objekter indeni.
             Transform roomHolder = new GameObject(room.ToString()).transform;
+            //Sætter `roomHolder` til at være i midten af rummet den hører til.
+            roomHolder.position = DungeonLayout.GetRoomCenterWorldPosition(room);
 
             //Hent tilf�ldigt rum fra `dungeonRooms`
             int index = Random.Range(0, dungeonRooms.Count);
             //Hentning af rummet
             GameObject roomToDraw = dungeonRooms[index];
             //Fjern den fra listen (s� den ikke bliver tegnet to gange
-            //dungeonRooms.RemoveAt(index);
             //Kald DrawRoom med roomPosition og `room`
             DrawRoom(room, roomToDraw);
             //G�r dette indtil alle `roomPositions` er blevet tegnet.
@@ -135,7 +137,13 @@ public class RoomDrawer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Spawns new GameObject, and sets its parent to be the <see cref="Transform"/> of which minimapPosition it is.
+    /// </summary>
+    /// <param name="newRoom">Room that is being drawn.</param>
+    /// <param name="objectsToSpawn">List of objects belonging to that room.</param>
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
+        //Get `Transform` for the object being spawned.
         Transform roomHolder = GameObject.Find(newRoom.ToString()).transform;
 
         foreach (GameObject item in objectsToSpawn) {
