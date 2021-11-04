@@ -69,6 +69,26 @@ public static class DungeonLayout
         return doorsToDraw;
     }
 
+    public static List<Vector2> GetDoorPositions(RoomObject room) {
+        List<Vector2> doorsToDraw = new List<Vector2>();
+        float vertical = 5.5f;
+        float horizontal = 7.5f;
+
+        if (room.doorLayout.HasFlag(DoorLayout.Up)) {
+            doorsToDraw.Add(new Vector2(0f, vertical));
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Down)) {
+            doorsToDraw.Add(new Vector2(0f, -vertical));
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Left)) {
+            doorsToDraw.Add(new Vector2(-horizontal, 0f));
+        }
+        if (room.doorLayout.HasFlag(DoorLayout.Right)) {
+            doorsToDraw.Add(new Vector2(horizontal, 0f));
+        }
+
+        return doorsToDraw;
+    }
 
     public static Vector2 GetActivatedDoorDirection(Vector3 player, RoomObject currentRoom) {
         float height = CameraManager.instance.totalHeight;
