@@ -120,7 +120,9 @@ public class RoomDrawer : MonoBehaviour
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
         /* Tegner d�re */
-        DrawDoors(roomObj);
+        //NOTE Udkommenter når DrawDoorsAsObjects virker
+        //DrawDoors(roomObj);
+        DrawDoorsAsObjects(roomObj);
 
         //TODO PlaceObjects() temp navn
         if (roomObj == DungeonGenerator.instance.startRoom) {
@@ -129,13 +131,16 @@ public class RoomDrawer : MonoBehaviour
         SpawnObjects(roomObj, roomObjects);
         //SpawnObjects(roomObj, dungeonRoom);
     }
-
+ 
     //BRUGER TILEMAP
     private void DrawDoors(RoomObject newRoom) {
         foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
-            gridDoors.SetTile(DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), door);
+            GameObject toInstantiate = Instantiate(doorObj, DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), Quaternion.identity);
+            
         }
+        //Sådan spawner man dør
     }
+
 
     /// <summary>
     /// Spawns new GameObject, and sets its parent to be the <see cref="Transform"/> of which minimapPosition it is.
@@ -150,17 +155,5 @@ public class RoomDrawer : MonoBehaviour
             GameObject toSpawn = Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
             toSpawn.transform.SetParent(roomHolder);
         }
-    }
-
-    private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
-        List<GameObject> objectsToSpawn = new List<GameObject>();
-        //Hent children fra `dungeonRoom`s f�rste child
-        foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
-            objectsToSpawn.Add(child);
-        }
-        print(objectsToSpawn.Count);
-        //Identificer typen af gameobject
-        //
-        //Initialise gameobject
     }
 }

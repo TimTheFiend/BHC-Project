@@ -28,4 +28,16 @@ public class RangedWeaponEntity : WeaponEntity
 
         isAttacking = false;
     }
+
+    public void UpgradeProjectile(WeaponUpgrade upgrade)
+    {
+        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().damage);
+        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().projectileSpeed);
+
+        projectileObject.GetComponent<ProjectileEntity>().damage += upgrade.damage;
+        projectileObject.GetComponent<ProjectileEntity>().projectileSpeed += upgrade.speed;
+
+        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().damage);
+        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().projectileSpeed);
+    }
 }
