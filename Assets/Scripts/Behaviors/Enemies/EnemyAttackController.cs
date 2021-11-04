@@ -7,7 +7,7 @@ public class EnemyAttackController : AttackingObject
 {
     public Transform playerPosition;
     public bool enableAutoAttack = false;
-    [Range(2f, 10f)] public float autoAttackTimer;
+    [Range(0.1f, 10f)] public float autoAttackTimer;
 
     Rigidbody2D rb2D;
 

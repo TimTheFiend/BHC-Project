@@ -49,6 +49,7 @@ public static class DungeonLayout
         return new Vector3(obj.x + (width * room.x), obj.y + (height * room.y));
     }
 
+    //Returns the positions of the doors that gets drawn into the tilemap.
     public static List<Vector2Int> GetTilemapDoorPosition(RoomObject room) {
         List<Vector2Int> doorsToDraw = new List<Vector2Int>();
 
@@ -66,5 +67,21 @@ public static class DungeonLayout
         }
 
         return doorsToDraw;
+    }
+
+
+    public static Vector2 GetActivatedDoorDirection(Vector3 player, RoomObject currentRoom) {
+        float height = CameraManager.instance.totalHeight;
+        float width = CameraManager.instance.totalWidth;
+
+        Vector3 relativePos = new Vector3(player.x - (width * currentRoom.x), player.y - (height * currentRoom.y));
+
+        bool isHorizontal = Mathf.Abs(relativePos.x) > Mathf.Abs(relativePos.y);
+        bool isPositive = isHorizontal ? relativePos.x > 0f : relativePos.y > 0f;
+
+        if (isHorizontal) {
+            return isPositive ? Vector2.right : Vector2.left;
+        }
+        return isPositive ? Vector2.up : Vector2.down;
     }
 }

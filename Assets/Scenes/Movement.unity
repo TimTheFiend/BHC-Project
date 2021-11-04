@@ -272,6 +272,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerObj: {fileID: 0}
   player: {fileID: 0}
+  canUseDoors: 1
+  activePlayerRoom: {fileID: 0}
+  mob: {fileID: 3143482212241901864, guid: 0ac7f302dbe914a4883155150915ebb7, type: 3}
 --- !u!4 &540755758
 Transform:
   m_ObjectHideFlags: 0
@@ -525,7 +528,7 @@ GameObject:
   - component: {fileID: 901287028}
   - component: {fileID: 901287027}
   - component: {fileID: 901287026}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
