@@ -17,7 +17,6 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Generation variables")]
     [Range(1, 10)] public int dungeonLevel = 1;
-
     [Range(5, 10)] public int maxLayoutWidth = 6;
     [Range(5, 10)] public int maxLayoutHeight = 5;
     public readonly int _minAmountDeadendsPerFloor = 5;
@@ -26,7 +25,6 @@ public class DungeonGenerator : MonoBehaviour
 
     [Header("Minimap variables")]
     public RoomObject startRoom;
-
     public List<RoomObject> minimapPositions = new List<RoomObject>();
     public Queue<RoomObject> minimapQueue = new Queue<RoomObject>();
 
@@ -75,17 +73,20 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
                 if (HasEnoughDeadends()) {
-                    AssignRoomTypes();
-
-                    foreach (RoomObject room in minimapPositions) {
-                        print($"{room.ToString()} - {room.IsDeadEnd} - {room.type}");
-                    }
-                    RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
-                    GameManager.instance.SetCurrentPlayerPosition(startRoom);
-                    return;
+                    CompleteGeneration();
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// When the generation is valid, this calls the last functions to start gameplay.
+    /// </summary>
+    private void CompleteGeneration() {
+        AssignRoomTypes();
+
+        RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
+        GameManager.instance.SetCurrentPlayerPosition(startRoom);
     }
 
     #region Deadends assignment
