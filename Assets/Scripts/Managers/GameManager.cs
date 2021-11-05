@@ -85,6 +85,10 @@ public class GameManager : MonoBehaviour
                 spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
                 Destroy(obj.gameObject);
             }
+            //TODO fix doors
+            //else if (obj.gameObject.tag == "Door") {
+            //    obj.GetComponent<DoorObject>().ActivateDoor(false);
+            //}
         }
     }
 
@@ -92,10 +96,21 @@ public class GameManager : MonoBehaviour
     /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
     /// </summary>
     public void IsActiveRoomCompleted() {
-        if (activePlayerRoom.childCount > 1) {
-            return;
+        print("check room");
+        int enemyCounter = -1;
+        foreach (Transform obj in activePlayerRoom) {
+            if (obj.gameObject.tag == "Enemy") {
+                enemyCounter++;
+            }
         }
-        canUseDoors = true;
+        if (enemyCounter == 0) {
+            canUseDoors = true;
+            foreach (Transform door in activePlayerRoom) {
+                if (door.gameObject.tag == "Door") {
+                    door.gameObject.GetComponent<DoorObject>().ActiveRoomIsCompleted();
+                }
+            }
+        }
     }
 
     /// <summary>

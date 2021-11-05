@@ -21,7 +21,7 @@ public class RangedWeaponEntity : WeaponEntity
     protected override IEnumerator Attack() {
         isAttacking = true;
 
-        GameObject toInstantiate = Instantiate(projectileObject, transform.position, transform.rotation);
+        GameObject toInstantiate = (GameObject)Instantiate(projectileObject, transform.position, transform.rotation);
 
         toInstantiate.GetComponent<ProjectileEntity>().SpawnProjectile(parent, transform, ForceMode2D.Impulse);
         yield return new WaitForSeconds(attackCooldown);
@@ -29,8 +29,7 @@ public class RangedWeaponEntity : WeaponEntity
         isAttacking = false;
     }
 
-    public void UpgradeProjectile(WeaponUpgrade upgrade)
-    {
+    public void UpgradeProjectile(WeaponUpgrade upgrade) {
         Debug.Log(projectileObject.GetComponent<ProjectileEntity>().damage);
         Debug.Log(projectileObject.GetComponent<ProjectileEntity>().projectileSpeed);
 

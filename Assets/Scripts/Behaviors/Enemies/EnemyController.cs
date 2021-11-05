@@ -15,7 +15,7 @@ public class EnemyController : CharacterObject
     }
 
     protected override void Die() {
-        GameManager.instance.IsActiveRoomCompleted();
         base.Die();
+        GameManager.instance.IsActiveRoomCompleted();
     }
 }

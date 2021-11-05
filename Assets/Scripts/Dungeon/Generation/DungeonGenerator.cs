@@ -63,20 +63,23 @@ public class DungeonGenerator : MonoBehaviour
     /// Starts the process of generating a new dungeon layout.
     /// </summary>
     public void GenerateDungeon() {
-        DebugStartGeneration();
+        Debug.Assert(DebugStartGeneration() == true, "Couldn't generate layout.");
     }
 
     /// <summary>
     /// Attempts to generate the dungeon.
     /// </summary>
-    private void DebugStartGeneration() {
+    private bool DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
                 if (HasEnoughDeadends()) {
                     CompleteGeneration();
+                    return true;
                 }
             }
         }
+
+        return false;
     }
 
     /// <summary>

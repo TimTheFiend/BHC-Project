@@ -307,7 +307,7 @@ MonoBehaviour:
   dungeonLevel: 1
   maxLayoutWidth: 8
   maxLayoutHeight: 7
-  minAmountDeadends: 6
+  minAmountDeadends: 3
   maxAmountRooms: 26
   randomRoomGiveUp: 0.5
 --- !u!114 &540755760
@@ -334,7 +334,7 @@ MonoBehaviour:
   - {fileID: 4410668136131067713, guid: c8af1aeae81c37745a7d26208e99f632, type: 3}
   - {fileID: 2102064985005644977, guid: 5153c3a50276b35449b1b62449fec6e2, type: 3}
   door: {fileID: 11400000, guid: c93f218f149668b47831ef5e600f531c, type: 2}
-  doorObj: {fileID: 0}
+  doorObj: {fileID: 1420009668040789852, guid: eedc6cf9899a1444aa02f5cfb737fd12, type: 3}
   activeGrid: {fileID: 1823938182}
   grid: {fileID: 0}
   gridWalls: {fileID: 0}
@@ -342,8 +342,6 @@ MonoBehaviour:
   gridFloor: {fileID: 0}
   floorSprites:
   - {fileID: 11400000, guid: 0175faf343390594c89183ccd1de2177, type: 2}
-  halfWidth: 0
-  halfHeight: 0
 --- !u!114 &627995532 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2648893194199602959, guid: 4eeaa86eb4ce7b04ca4e95d3e6ca2d61, type: 3}
@@ -1201,7 +1199,6 @@ GameObject:
   - component: {fileID: 1749027888}
   - component: {fileID: 1749027887}
   - component: {fileID: 1749027886}
-  - component: {fileID: 1749027885}
   m_Layer: 0
   m_Name: Doors
   m_TagString: Untagged
@@ -1223,19 +1220,6 @@ Transform:
   m_Father: {fileID: 1823938184}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1749027885
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1749027883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76ddafea0d6540540bf625cc8dcdc140, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isOpen: 1
 --- !u!66 &1749027886
 CompositeCollider2D:
   m_ObjectHideFlags: 0
