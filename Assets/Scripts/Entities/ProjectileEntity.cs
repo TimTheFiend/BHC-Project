@@ -11,32 +11,30 @@ public class ProjectileEntity : MonoBehaviour
 
     public void SpawnProjectile(GameObject spawnObject, Transform weaponTransfrom, ForceMode2D forceMode) {
         parent = spawnObject;
-        if(parent.tag == "Enemy") {
+        if (parent.tag == "Enemy") {
             GetComponent<SpriteRenderer>().color = Color.red;
         }
         GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * projectileSpeed, forceMode);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.tag == parent.tag) {
-            return;
+        //If parent is not dead
+        if (parent != null) {
+            //Check if projectile hits the object that spawned it.
+            if (collision.gameObject.tag == parent.tag) {
+                return;
+            }
         }
 
-        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "BreakableObject") {
+        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "BreakableObject") {
             collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
         }
         OnHit();
-
 
         //print(collision.gameObject.tag);
     }
 
     private void OnHit() {
-        // Check to see if destroy self.
-        if (projectileFlags.HasFlag(ProjectileFlags.Piercing)) {
-            return;
-        }
-        
         Destroy(gameObject);
     }
 

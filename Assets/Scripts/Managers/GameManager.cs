@@ -105,10 +105,11 @@ public class GameManager : MonoBehaviour
         }
         if (enemyCounter == 0) {
             canUseDoors = true;
-        }
-
-        foreach (Transform door in activePlayerRoom) {
-            door.gameObject.GetComponent<DoorObject>().ActivateDoor(true);
+            foreach (Transform door in activePlayerRoom) {
+                if (door.gameObject.tag == "Door") {
+                    door.gameObject.GetComponent<DoorObject>().ActiveRoomIsCompleted();
+                }
+            }
         }
     }
 

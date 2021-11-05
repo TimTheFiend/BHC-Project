@@ -79,7 +79,6 @@ public class CameraManager : MonoBehaviour
 
         StartCoroutine(MoveCamera(new Vector3(room.x * totalWidth, room.y * totalHeight), newPlayerPos));
         //Attempt to activate the objects inside the room.
-        GameManager.instance.ActivateCurrentRoom();
     }
 
     private IEnumerator MoveCamera(Vector3 newPos, Vector3 movePlayerToPos) {

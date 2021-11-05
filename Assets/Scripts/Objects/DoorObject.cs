@@ -25,8 +25,16 @@ public class DoorObject : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = isOpen ? doorOpen : doorClosed;
     }
 
+    public void ActiveRoomIsCompleted() {
+        GetComponent<SpriteRenderer>().sprite = doorOpen;
+    }
+
+    public void LockDoors() {
+        GetComponent<SpriteRenderer>().sprite = doorClosed;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (GameManager.instance.canUseDoors) {
+        if (GameManager.instance.canUseDoors && collision.gameObject.tag == "Player") {
             GameManager.instance.PrepareMovementBetweenRooms();
         }
     }
