@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class RoomDrawer : MonoBehaviour
 {
-    public static RoomDrawer Instance = null;
+    public static RoomDrawer instance = null;
 
     Dictionary<DoorLayout, List<Vector2Int>> doorPositions;
 
@@ -40,11 +40,11 @@ public class RoomDrawer : MonoBehaviour
     {
         #region Singleton Pattern
 
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
         }
-        else if (Instance != this)
+        else if (instance != this)
         {
             Destroy(gameObject);
         }
