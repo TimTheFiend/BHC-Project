@@ -8,6 +8,7 @@ public struct RoomObject
 
     private Vector2Int _center;
     public DoorLayout doorLayout;
+    public RoomType type;
 
     public int index;
 
@@ -19,15 +20,23 @@ public struct RoomObject
     public int x => center.x;
     public int y => center.y;
 
+    #region Constructors
+
     public RoomObject(int x, int y) {
         _center = new Vector2Int(x, y);
         doorLayout = DoorLayout.None;
+        type = RoomType.Normal;
 
         index = -1;
     }
 
     public RoomObject(int x, int y, int index) : this(x, y) {
     }
+
+    public RoomObject(Vector2 position) : this((int)position.x, (int)position.y) {
+    }
+
+    #endregion Constructors
 
     public string DebugPrint() {
         return $"{this}\tDoors: {doorLayout}";
@@ -47,6 +56,9 @@ public struct RoomObject
 
     public bool IsDeadEnd {
         get {
+            if (((int)doorLayout) == 1 || ((int)doorLayout) == 2 || ((int)doorLayout) == 4 || ((int)doorLayout) == 8) {
+                return true;
+            }
             return false;
         }
     }
@@ -176,4 +188,12 @@ public enum DoorLayout
     Right = 2,
     Down = 4,
     Left = 8
+}
+
+public enum RoomType
+{
+    StartRoom,
+    Normal,
+    Boss,
+    Item
 }

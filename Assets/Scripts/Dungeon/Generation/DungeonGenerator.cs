@@ -6,11 +6,12 @@ using UnityEngine;
 [System.Serializable]
 public class DungeonGenerator : MonoBehaviour
 {
-    public static DungeonGenerator Instance = null;
+    public static DungeonGenerator instance = null;
 
     [Header("Debug")]
     [Tooltip("Prints out additional data if `true`.")]
     public bool isDebug;
+
     public bool hasSeed;
     public int rngSeed;
 
@@ -19,7 +20,7 @@ public class DungeonGenerator : MonoBehaviour
     [Range(5, 10)] public int maxLayoutWidth = 6;
     [Range(5, 10)] public int maxLayoutHeight = 5;
     public readonly int _minAmountDeadendsPerFloor = 5;
-    public int minAmountDeadends = 5;
+    public int minAmountDeadends = 3;
     public int maxAmountRooms;
 
     [Header("Minimap variables")]
@@ -30,7 +31,8 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Generation Variables")]
     [SerializeField, Range(0.0f, 1.0f)]
     private float randomRoomGiveUp = 0.5f;
-    private int generationAttempts = 5000;  //1 Million attempts. - Dr. Evil.
+
+    private int generationAttempts = 15000;
 
     #region Start / Awake
 
@@ -44,10 +46,10 @@ public class DungeonGenerator : MonoBehaviour
 
         #region Singleton Pattern
 
-        if (Instance == null) {
-            Instance = this;
+        if (instance == null) {
+            instance = this;
         }
-        else if (Instance != this) {
+        else if (instance != this) {
             Destroy(this);
         }
         DontDestroyOnLoad(gameObject);
@@ -57,40 +59,100 @@ public class DungeonGenerator : MonoBehaviour
 
     #endregion Start / Awake
 
+    /// <summary>
+    /// Starts the process of generating a new dungeon layout.
+    /// </summary>
     public void GenerateDungeon() {
-        if (isDebug) {
-            DebugStartGeneration();
-            //NOTE: temp 
-        }
-        else {
-            DebugStartGeneration();
-            RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
-        }
+        DebugStartGeneration();
     }
 
-    #region Starts Generation
-
+    /// <summary>
+    /// Attempts to generate the dungeon.
+    /// </summary>
     private void DebugStartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
-                //Debug.ClearDeveloperConsole();
-                print($"Generate: {maxAmountRooms}\tStartroom: {startRoom.ToString()}\tAttempts: {i}");
-                GameManager.instance.playerRoomPosition = startRoom;
-                foreach (RoomObject item in minimapPositions) {
-                    print(item.DebugPrint());
+                if (HasEnoughDeadends()) {
+                    CompleteGeneration();
                 }
-                break;
             }
-        }
-        if (minimapPositions.Count != maxAmountRooms - 1) {
-           //Debug.Log("didn't generate");
         }
     }
 
-    #endregion Starts Generation
+    /// <summary>
+    /// When the generation is valid, this calls the last functions to start gameplay.
+    /// </summary>
+    private void CompleteGeneration() {
+        AssignRoomTypes();
 
-    #region Procedural Generation
+        RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
+        GameManager.instance.SetCurrentPlayerPosition(startRoom);
+    }
 
+    #region Deadends assignment
+
+    /// Make sure there's enough deadends
+    private bool HasEnoughDeadends() {
+        int deadendCounter = 0;
+        foreach (RoomObject room in minimapPositions) {
+            if (room.IsDeadEnd && room != startRoom) {
+                deadendCounter++;
+                //No reason to keep going if true
+                if (deadendCounter >= minAmountDeadends) {
+                    return true;
+                }
+            }
+        }
+        return deadendCounter >= minAmountDeadends;
+    }
+
+    /// <summary>
+    /// Assigns certain rooms a new roomtype that are needed for a complet level.
+    /// </summary>
+    private void AssignRoomTypes() {
+        //Reverse the list to get the room furthest away from start pos.
+        List<RoomObject> reversedPos = minimapPositions.ToList();
+        reversedPos.Reverse();
+
+        Queue<RoomType> roomsNeeded = GetSpecialRoomsToAdd();
+
+        //Assign start room
+        RoomObject _startRoom = minimapPositions.SingleOrDefault(r => r.center == startRoom.center);
+        _startRoom.type = RoomType.StartRoom;
+        minimapPositions[_startRoom.index] = _startRoom;
+
+        //Assign rest of special rooms
+        for (int i = 0; i < reversedPos.Count; i++) {
+            if (roomsNeeded.Count == 0) {
+                break;
+            }
+            if (reversedPos[i].IsDeadEnd) {
+                RoomObject deadEnd = reversedPos[i];
+                deadEnd.type = roomsNeeded.Dequeue();
+                minimapPositions[deadEnd.index] = deadEnd;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Temporary helper method for AssignRoomTypes
+    /// </summary>
+    private Queue<RoomType> GetSpecialRoomsToAdd() {
+        Queue<RoomType> queue = new Queue<RoomType>();
+        queue.Enqueue(RoomType.Boss);
+        queue.Enqueue(RoomType.Item);
+
+        return queue;
+    }
+
+    #endregion Deadends assignment
+
+    #region Generating the layout.
+
+    /// <summary>
+    /// Generates a layout with certain criteria that has to be fulfilled in order to be valid.
+    /// </summary>
+    /// <returns><c>true</c> if the generation is valid for use; otherwise <c>false</c>.</returns>
     private bool GenerateDungeonLayout() {
         InitialiseVariables();
         while (true) {
@@ -111,7 +173,6 @@ public class DungeonGenerator : MonoBehaviour
                             if (!minimapPositions.Contains(newRoom)) {
                                 if (HasNoAdjacentRooms(newRoom)) {
                                     currentRoom = AddRoomToLayout(newRoom, currentRoom);
-                                    
                                 }
                             }
                         }
@@ -124,7 +185,7 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    #endregion Procedural Generation
+    #endregion Generating the layout.
 
     #region Helper functions
 
@@ -166,7 +227,7 @@ public class DungeonGenerator : MonoBehaviour
 
     //NOTE: needs expansion.
     private void GetMaxAmountRooms() {
-        minAmountDeadends = Random.Range(_minAmountDeadendsPerFloor, _minAmountDeadendsPerFloor + 1 + 1); //+1 +1 because exclusive, and for variation.
+        //minAmountDeadends = Random.Range(_minAmountDeadendsPerFloor, _minAmountDeadendsPerFloor + 1 + 1); //+1 +1 because exclusive, and for variation.
         maxAmountRooms = Mathf.RoundToInt(3.33f * dungeonLevel + minAmountDeadends);
     }
 
@@ -207,39 +268,4 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     #endregion Add Room To Layout
-
-    #region DrawGizmos
-
-    private void OnDrawGizmos() {
-        if (!isDebug) {
-            return;
-        }
-
-        Gizmos.color = Color.white;
-        for (int x = 0; x < maxLayoutWidth + 1; x++) {
-            for (int y = 0; y < maxLayoutHeight + 1; y++) {
-                if ((x + y) % 2 == 0) {
-                    Gizmos.color = Color.white;
-                }
-                else {
-                    Gizmos.color = Color.black;
-                }
-                Gizmos.DrawCube(new Vector3(x + 0.5f, y + 0.5f, 0f), new Vector3(1f, 1f, 0f));
-            }
-        }
-
-        for (int i = 0; i < minimapPositions.Count; i++) {
-            RoomObject room = minimapPositions[i];
-
-            if (i == 0) {
-                Gizmos.color = Color.magenta;
-            }
-            else {
-                Gizmos.color = i % 2 == 0 ? Color.red : Color.blue;
-            }
-            Gizmos.DrawCube(new Vector3(room.x + 0.5f, room.y + 0.5f, 0f), Vector3.one);
-        }
-    }
-
-    #endregion DrawGizmos
 }

@@ -19,7 +19,7 @@ public class RoomDrawer : MonoBehaviour
 
     //Object vi tegner på.
     public GameObject activeGrid;
-    [SerializeField]private Grid grid;  //NOTE: bliver nok ikke brugt
+    [SerializeField] private Grid grid;  //NOTE: bliver nok ikke brugt
     //Tilemap for Walls
     [SerializeField] private Tilemap gridWalls;
     //Tilemap for Doors
@@ -31,18 +31,21 @@ public class RoomDrawer : MonoBehaviour
     public List<TileBase> floorSprites;
 
     //Et rums dimensioner er (16x12)
-    [SerializeField] public readonly int totalWidth = 16;
-    [SerializeField] public readonly int totalHeight = 12;
+    [SerializeField] private const int totalWidth = 16;
+    [SerializeField] private const int totalHeight = 12;
     [SerializeField] private int halfWidth;
     [SerializeField] private int halfHeight;
 
-    private void Awake() {
+    private void Awake()
+    {
         #region Singleton Pattern
 
-        if (Instance == null) {
+        if (Instance == null)
+        {
             Instance = this;
         }
-        else if (Instance != this) {
+        else if (Instance != this)
+        {
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
@@ -66,8 +69,10 @@ public class RoomDrawer : MonoBehaviour
 
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
-    public void DrawDungeonRooms(List<RoomObject> roomPositions) {
-        foreach (RoomObject room in roomPositions) {
+    public void DrawDungeonRooms(List<RoomObject> roomPositions)
+    {
+        foreach (RoomObject room in roomPositions)
+        {
             //Hent tilf�ldigt rum fra `dungeonRooms`
             int index = Random.Range(0, dungeonRooms.Count);
             //Hentning af rummet
@@ -80,14 +85,16 @@ public class RoomDrawer : MonoBehaviour
         }
     }
 
-    private void DrawRoom(RoomObject roomObj, GameObject dungeonRoom) {
+    private void DrawRoom(RoomObject roomObj, GameObject dungeonRoom)
+    {
 
         #region Hentning af variabler fra `room`
 
         Tilemap tilemap = dungeonRoom.GetComponent<Tilemap>();
         List<GameObject> roomObjects = new List<GameObject>();
 
-        foreach (Transform obj in dungeonRoom.transform.GetChild(0).transform) {
+        foreach (Transform obj in dungeonRoom.transform.GetChild(0).transform)
+        {
             roomObjects.Add(obj.gameObject);
         }
 
@@ -95,10 +102,13 @@ public class RoomDrawer : MonoBehaviour
 
         #region Tegning af `room` ind i `gridWalls` samt `floor`
 
-        for (int x = -halfWidth; x < halfWidth; x++) {
-            for (int y = -halfHeight; y < halfHeight; y++) {
+        for (int x = -halfWidth; x < halfWidth; x++)
+        {
+            for (int y = -halfHeight; y < halfHeight; y++)
+            {
                 TileBase tile = tilemap.GetTile(new Vector3Int(x, y, 0));
-                if (tile != null) {
+                if (tile != null)
+                {
                     gridWalls.SetTile(DungeonLayout.GetRoomCenterWorldPosition(roomObj, x, y), tile);
                 }
                 //Tegner gulv en efter en
@@ -110,42 +120,35 @@ public class RoomDrawer : MonoBehaviour
         #endregion Tegning af `room` ind i `gridWalls` samt `floor`
 
         /* Tegner d�re */
-        DrawDoors(roomObj);
+        //NOTE Udkommenter når DrawDoorsAsObjects virker
+        //DrawDoors(roomObj);
+        DrawDoorsAsObjects(roomObj);
 
         //TODO PlaceObjects() temp navn
-        if (roomObj == DungeonGenerator.Instance.startRoom) {
+        if (roomObj == DungeonGenerator.instance.startRoom)
+        {
             return;
         }
         SpawnObjects(roomObj, roomObjects);
         //SpawnObjects(roomObj, dungeonRoom);
     }
-    
-    //BRUGER TILEMAP
-    private void DrawDoors(RoomObject newRoom) {
-        foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom)) {
-            gridDoors.SetTile(DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), door);
+
+    private void DrawDoorsAsObjects(RoomObject newRoom)
+    {
+        foreach (Vector2Int pos in DungeonLayout.GetTilemapDoorPosition(newRoom))
+        {
+            GameObject toInstantiate = Instantiate(doorObj, DungeonLayout.GetRoomCenterWorldPosition(newRoom, pos.x, pos.y), Quaternion.identity);
+
         }
+        //Sådan spawner man dør
     }
 
-
-    private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
-        foreach (GameObject item in objectsToSpawn) {
+    private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn)
+    {
+        foreach (GameObject item in objectsToSpawn)
+        {
             Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
             //Instantiate(item, new Vector3(item.transform.position.x + (totalWidth * newRoom.x), item.transform.position.y + (totalHeight * newRoom.y)), Quaternion.identity);
         }
     }
-
-    private void SpawnObjects(RoomObject newRoom, GameObject dungeonRoom) {
-
-        List<GameObject> objectsToSpawn = new List<GameObject>();
-        //Hent children fra `dungeonRoom`s f�rste child
-        foreach (GameObject child in dungeonRoom.transform.GetChild(0).transform) {
-            objectsToSpawn.Add(child);
-        }
-        print(objectsToSpawn.Count);
-        //Identificer typen af gameobject
-        //
-        //Initialise gameobject
-    }
-
 }

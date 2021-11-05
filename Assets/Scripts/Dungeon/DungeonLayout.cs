@@ -10,7 +10,7 @@ public static class DungeonLayout
 
     private static Dictionary<DoorLayout, List<Vector2Int>> doorTilemapPositions;
 
-    private static Dictionary<DoorLayout, Vector2> doorGameObjectPositions;
+    public static Dictionary<DoorLayout, Vector2> doorGameObjectPositions;
 
     static DungeonLayout() {
 
