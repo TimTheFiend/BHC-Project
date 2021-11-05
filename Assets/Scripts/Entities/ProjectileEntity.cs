@@ -22,7 +22,7 @@ public class ProjectileEntity : MonoBehaviour
             return;
         }
 
-        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy") {
+        if(collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "BreakableObject") {
             collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
         }
         OnHit();
