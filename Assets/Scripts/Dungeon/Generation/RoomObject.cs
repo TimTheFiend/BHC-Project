@@ -192,6 +192,7 @@ public enum DoorLayout
 
 public enum RoomType
 {
+    Null,
     StartRoom,
     Normal,
     Boss,
