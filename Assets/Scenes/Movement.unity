@@ -273,8 +273,14 @@ MonoBehaviour:
   playerObj: {fileID: 0}
   player: {fileID: 0}
   canUseDoors: 1
-  activePlayerRoom: {fileID: 0}
+  activeRoom: {fileID: 0}
+  mobsInActiveRoom: 0
   mob: {fileID: 3143482212241901864, guid: 0ac7f302dbe914a4883155150915ebb7, type: 3}
+  itemUpgrade: {fileID: 5506231725334241965, guid: bfa8b7100eac5174f8deae679c6e5aab, type: 3}
+  upgradeObjects:
+  - {fileID: 11400000, guid: 3ee0806ea8aba584c94e91eb106c5eb2, type: 2}
+  bosses:
+  - {fileID: 4764236248724102337, guid: addc75095a6430a4db0ea361c1f677f8, type: 3}
 --- !u!4 &540755758
 Transform:
   m_ObjectHideFlags: 0
@@ -323,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonRooms:
+  - {fileID: 1201902355016325831, guid: fc00e624a074bad4190e2aebf71d523e, type: 3}
   - {fileID: 612981878781629852, guid: c93196a467ce4e844a9fb9e850e889e3, type: 3}
   - {fileID: 4714099283584762678, guid: 63a67558637212c4a92e6d3e3ada4faa, type: 3}
   - {fileID: 6445251118205748310, guid: dae65abcaae9b60458aacdd83e23641a, type: 3}
@@ -1032,7 +1039,6 @@ MonoBehaviour:
   weaponAngle: 0
   canAttack: 1
   attackCooldown: 0.5
-  flipAbility: 1
 --- !u!114 &1293312840
 MonoBehaviour:
   m_ObjectHideFlags: 0

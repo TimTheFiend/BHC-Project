@@ -22,21 +22,9 @@ public class RangedWeaponEntity : WeaponEntity
         isAttacking = true;
 
         GameObject toInstantiate = (GameObject)Instantiate(projectileObject, transform.position, transform.rotation);
-
-        toInstantiate.GetComponent<ProjectileEntity>().SpawnProjectile(parent, transform, ForceMode2D.Impulse);
+        toInstantiate.GetComponent<ProjectileEntity>().SpawnProjectile(parent, weaponStats, transform, ForceMode2D.Impulse);
         yield return new WaitForSeconds(attackCooldown);
 
         isAttacking = false;
-    }
-
-    public void UpgradeProjectile(WeaponUpgrade upgrade) {
-        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().damage);
-        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().projectileSpeed);
-
-        projectileObject.GetComponent<ProjectileEntity>().damage += upgrade.damage;
-        projectileObject.GetComponent<ProjectileEntity>().projectileSpeed += upgrade.speed;
-
-        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().damage);
-        Debug.Log(projectileObject.GetComponent<ProjectileEntity>().projectileSpeed);
     }
 }

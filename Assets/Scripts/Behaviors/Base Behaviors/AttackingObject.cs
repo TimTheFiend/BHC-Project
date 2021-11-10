@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class AttackingObject : MonoBehaviour
 {
     public WeaponEntity activeWeapon;
@@ -19,6 +18,10 @@ public class AttackingObject : MonoBehaviour
     private void FixedUpdate() {
         UpdateTrackingData();
         MoveWeapon();
+    }
+
+    protected virtual void SetWeaponStats() {
+        activeWeapon.weaponStats = WeaponStats.EnemyDefault();
     }
 
     public virtual void AttemptAttack() {

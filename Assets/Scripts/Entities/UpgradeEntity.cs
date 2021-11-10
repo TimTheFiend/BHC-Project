@@ -7,42 +7,35 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class UpgradeEntity : MonoBehaviour
 {
-    public WeaponUpgrade weaponUpgrade;
+    public WeaponStats weaponUpgrade;
+    public UpgradeObject upgradeObject;
 
     //Kun for at give weaponUpgrade værdier
-    private void Start()
-    {
-        weaponUpgrade = new WeaponUpgrade(100, 5);
+    private void Start() {
+        weaponUpgrade = new WeaponStats(25f, 12f);
+
+        if (upgradeObject.sprite != null) {
+            GetComponent<SpriteRenderer>().sprite = upgradeObject.sprite;
+        }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
+    public void SetValues(UpgradeObject stats) {
+        upgradeObject = stats;
+
+        GetComponent<SpriteRenderer>().sprite = upgradeObject.sprite;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.tag == "Player") {
             GameObject player = collision.gameObject;
 
-            (player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).UpgradeProjectile(weaponUpgrade);
+            Debug.Log((player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats);
+            if (upgradeObject.IsWeaponUpgrade) {
+                (player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats.UpgradeStats(upgradeObject.weaponStats);
+            }
+            Debug.Log((player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats);
 
             Destroy(gameObject);
         }
     }
-}
-
-
-/* STRUCTS */
-public struct WeaponUpgrade
-{
-    public float damage;
-    public float speed;
-
-    public WeaponUpgrade(float damage, float speed)
-    {
-        this.damage = damage;
-        this.speed = speed;
-    }
-}
-
-public struct CharacterUpgrade
-{
-    //TODO
 }

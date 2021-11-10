@@ -25,6 +25,10 @@ public class GameManager : MonoBehaviour
     public HashSet<RoomObject> completedRooms = new HashSet<RoomObject>();  //Only contains unique.
 
     public GameObject mob;
+    public GameObject itemUpgrade;
+
+    public List<UpgradeObject> upgradeObjects = new List<UpgradeObject>();
+    public List<GameObject> bosses = new List<GameObject>();
 
     #region Awake, Start
 
@@ -93,6 +97,41 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ActivatePlayerRoom() {
         mobsInActiveRoom = 0;
+
+        switch (activePlayerRoom.type) {
+            case RoomType.Null:
+                Debug.LogError("Current Room is set as type: NULL");
+                break;
+
+            case RoomType.StartRoom:
+                break;
+
+            case RoomType.Normal:
+                ActivatePlayerRoomNormal();
+                break;
+
+            case RoomType.Boss:
+                ActivatePlayerRoomBoss();
+                break;
+
+            case RoomType.Item:
+                ActivatePlayerRoomItem();
+                break;
+
+            default:
+                break;
+        }
+
+        foreach (Transform obj in activeRoom) {
+            if (obj.gameObject.tag == "Door") {
+                obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
+            }
+        }
+    }
+
+    #region Activate different types of room
+
+    private void ActivatePlayerRoomNormal() {
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "SpawnerMob" && canUseDoors == false) {
                 GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
@@ -102,11 +141,25 @@ public class GameManager : MonoBehaviour
 
                 mobsInActiveRoom++;
             }
-            else if (obj.gameObject.tag == "Door") {
-                obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
-            }
         }
     }
+
+    private void ActivatePlayerRoomBoss() {
+        GameObject bossToSpawn = Instantiate(bosses[0], activeRoom.position, Quaternion.identity);
+
+        bossToSpawn.GetComponent<EnemyAttackController>().playerPosition = player.transform;
+    }
+
+    private void ActivatePlayerRoomItem() {
+        GameObject upgradeToSpawn = Instantiate(itemUpgrade, activeRoom.position, Quaternion.identity);
+
+        //TODO Add randomness
+        //int index = Random.Range(0, upgradeObjects.Count + 1);
+        //Remove the upgrade from the pool afterwards.
+        upgradeToSpawn.GetComponent<UpgradeEntity>().SetValues(upgradeObjects[0]);
+    }
+
+    #endregion Activate different types of room
 
     /// <summary>
     /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.

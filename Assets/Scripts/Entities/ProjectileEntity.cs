@@ -5,16 +5,17 @@ using UnityEngine;
 public class ProjectileEntity : MonoBehaviour
 {
     public GameObject parent;
-    public float damage = 10f;
-    public float projectileSpeed = 2.5f;
+    public WeaponStats stats;
     public ProjectileFlags projectileFlags;
 
-    public void SpawnProjectile(GameObject spawnObject, Transform weaponTransfrom, ForceMode2D forceMode) {
+    public void SpawnProjectile(GameObject spawnObject, WeaponStats stats, Transform weaponTransfrom, ForceMode2D forceMode) {
         parent = spawnObject;
+        this.stats = stats;
+
         if (parent.tag == "Enemy") {
             GetComponent<SpriteRenderer>().color = Color.red;
         }
-        GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * projectileSpeed, forceMode);
+        GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * this.stats.speed, forceMode);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -27,11 +28,9 @@ public class ProjectileEntity : MonoBehaviour
         }
 
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "BreakableObject") {
-            collision.gameObject.GetComponent<CharacterObject>().LoseHealth(damage);
+            collision.gameObject.GetComponent<CharacterObject>().LoseHealth(stats.damage);
         }
         OnHit();
-
-        //print(collision.gameObject.tag);
     }
 
     private void OnHit() {
