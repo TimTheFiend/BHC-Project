@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttackController : AttackingObject
 {
-    public bool flipAbility = false;
-
     private void Start() {
         activeWeapon = transform.GetChild(0).GetComponent<WeaponEntity>();
         //weaponTransform = transform.GetChild(0).transform;
         //ChangeProjectile();
+        SetWeaponStats();
+    }
+
+    protected override void SetWeaponStats() {
+        activeWeapon.weaponStats = WeaponStats.PlayerDefault();
     }
 
     public override void UpdateTrackingData() {
