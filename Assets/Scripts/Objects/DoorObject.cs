@@ -23,21 +23,11 @@ public class DoorObject : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = this.isOpen ? doorOpen : doorClosed;
     }
 
-    /* OLD */
-
     public void ActivateDoor(bool hasChanged) {
         if (hasChanged) {
             isOpen = !isOpen;
         }
         GetComponent<SpriteRenderer>().sprite = isOpen ? doorOpen : doorClosed;
-    }
-
-    public void ActiveRoomIsCompleted() {
-        GetComponent<SpriteRenderer>().sprite = doorOpen;
-    }
-
-    public void LockDoors() {
-        GetComponent<SpriteRenderer>().sprite = doorClosed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
