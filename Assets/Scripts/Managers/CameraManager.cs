@@ -110,6 +110,6 @@ public class CameraManager : MonoBehaviour
         player.gameObject.SetActive(true);
 
         //Call GameManager to activate AI
-        GameManager.instance.ActivateCurrentRoom();
+        GameManager.instance.ActivatePlayerRoom();
     }
 }
