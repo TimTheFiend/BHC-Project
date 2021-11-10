@@ -85,7 +85,7 @@ public class DungeonGenerator : MonoBehaviour
     private void CompleteGeneration() {
         AssignRoomTypes();
 
-        RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
+        RoomDrawer.Instance.DrawDungeonRooms(minimapPositions);
         GameManager.instance.SetCurrentPlayerPosition(startRoom);
     }
 
