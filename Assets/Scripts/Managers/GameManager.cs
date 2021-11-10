@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public RoomObject activePlayerRoom = new RoomObject(-1, -1);
 
     public Transform activeRoom;
+    [SerializeField] private int mobsInActiveRoom;
 
     [Tooltip("Contains a list of rooms the player has visited, and is not currently in.")]
     public HashSet<RoomObject> exploredRooms = new HashSet<RoomObject>();  //Only contains unique.
@@ -64,83 +65,70 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
     }
 
-    public void UpdateCurrentPlayerPosition(RoomObject newRoom) {
-        /*
-         * How to organise rooms
-         * 1. Get newRoom.
-         * 1a. if playerRoomPosition == null, it's the starting room -> OPEN
-         * 2. If RoomType == (Normal || Boss) -> CLOSE and ActivateRoom
-         * 3. Add playerRoomPosition to completedRooms.
-         * 4. Set newRoom to be playerRoomPosition
-         */
-        Debug.Assert(activePlayerRoom != newRoom, "activePlayerPosition is the same as the room that's attempting to be entered");
-        //Mark newRoom as explored
-        exploredRooms.Add(newRoom);
-
-        activeRoom = GameObject.Find(newRoom.ToString()).transform;
-        Debug.Assert(activeRoom != null, "activePlayerRoom (Transform) is null");
-
+    public void PlayerActivatedRoomMovement(RoomObject newRoom) {
         activePlayerRoom = newRoom;
+        exploredRooms.Add(activePlayerRoom);
 
-        Debug.Log($"{activePlayerRoom} - {activePlayerRoom.type}");
-        /*newRoom has been:
-         *      - Added to exploredRooms
-         *      - set to be the activePlayerRoom
-         *Found and set the value for activeRoom
-         */
-
-        switch (activePlayerRoom.type) {
-            case RoomType.Null:
-                Debug.LogError("activePlayerPosition is of type Null, something went wrong.");
-                break;
-
-            case RoomType.StartRoom:
-                canUseDoors = true;
-                break;
-
-            case RoomType.Normal:
-                canUseDoors = completedRooms.Contains(activePlayerRoom);
-                break;
-
-            case RoomType.Boss:
-                canUseDoors = completedRooms.Contains(activePlayerRoom);
-                break;
-
-            case RoomType.Item:
-                canUseDoors = true;
-                break;
-
-            default:
-                break;
+        if (activePlayerRoom.type == RoomType.StartRoom || activePlayerRoom.type == RoomType.Item) {
+            completedRooms.Add(activePlayerRoom);
         }
 
-        //If this is the first room
-        if (completedRooms.Count == 0) {
-            //TODO
-        }
+        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
 
-        /* POST start-of-level room fuckery. */
-        if (canUseDoors) {
-            //If true, only the doors needs to be activated.
-        }
+        SetCanUseDoors();
     }
 
-    private void AttemptActivateRoom(bool isRoomCompleted) {
-        foreach (Transform child in activeRoom) {
-            if (isRoomCompleted) {
+    /// <summary>
+    /// Sets the value of canUseDoors.
+    /// </summary>
+    private void SetCanUseDoors() {
+        Debug.Log(activePlayerRoom.type);
+        canUseDoors = activePlayerRoom.type == RoomType.StartRoom
+                   || activePlayerRoom.type == RoomType.Item
+                   || completedRooms.Contains(activePlayerRoom);
+    }
+
+    /// <summary>
+    /// Activates GameObjects inside the activeRoom.
+    /// </summary>
+    public void ActivatePlayerRoom() {
+        mobsInActiveRoom = 0;
+        foreach (Transform obj in activeRoom) {
+            if (obj.gameObject.tag == "SpawnerMob" && canUseDoors == false) {
+                GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
+                spawn.transform.SetParent(activeRoom);
+                spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
+                Destroy(obj.gameObject);
+
+                mobsInActiveRoom++;
+            }
+            else if (obj.gameObject.tag == "Door") {
+                obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
             }
         }
     }
 
-    private void ActivateMob(Transform transform) {
-    }
+    /// <summary>
+    /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
+    /// </summary>
+    public void IsActiveRoomCompleted() {
+        mobsInActiveRoom--;
 
-    private void ActivateDoor(Transform transform) {
+        if (mobsInActiveRoom == 0) {
+            completedRooms.Add(activePlayerRoom);
+            SetCanUseDoors();
+
+            foreach (Transform door in activeRoom) {
+                if (door.gameObject.CompareTag("Door")) {
+                    door.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
+                }
+            }
+        }
     }
 
     #region In regards to movement between rooms, and activation.
 
-    //When moving between rooms, set current playerRoomPosition, and add room to exploredRooms
+    //NOTE: Only gets called once after the generation of the dungeon.
     public void SetCurrentPlayerPosition(RoomObject room) {
         if (exploredRooms.Count == 0) {
             activePlayerRoom = room;
@@ -155,63 +143,14 @@ public class GameManager : MonoBehaviour
         activePlayerRoom = room;
     }
 
-    public void AttemptActivateRoom(RoomObject room) {
-        if (room.type == RoomType.StartRoom || room.type == RoomType.Item) {
-            canUseDoors = true;
-        }
-        else {
-            canUseDoors = completedRooms.Contains(room);
-        }
-        //ActivateDoors(canUseDoors);
-    }
-
-    private void CompleteCurrentRoom() {
-        completedRooms.Add(activePlayerRoom);
-    }
-
-    //WIP
-    public void ActivateCurrentRoom() {
-        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
-
-        //Find transform for activePlayerRoom;
-        foreach (Transform obj in activeRoom) {
-            if (obj.gameObject.tag == "SpawnerMob") {
-                GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
-                spawn.transform.SetParent(activeRoom);
-                spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
-                Destroy(obj.gameObject);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
-    /// </summary>
-    public void IsActiveRoomCompleted() {
-        print("check room");
-        int enemyCounter = -1;
-        foreach (Transform obj in activeRoom) {
-            if (obj.gameObject.tag == "Enemy") {
-                enemyCounter++;
-            }
-        }
-        if (enemyCounter == 0) {
-            canUseDoors = true;
-            foreach (Transform door in activeRoom) {
-                if (door.gameObject.tag == "Door") {
-                    door.gameObject.GetComponent<DoorObject>().ActiveRoomIsCompleted();
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// Prepares the movement between rooms, by calculating which room the player is going towards.
     /// </summary>
     public void PrepareMovementBetweenRooms() {
         Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, activePlayerRoom);
         //Set new room.
-        SetCurrentPlayerPosition(new RoomObject((int)newRoom.x + activePlayerRoom.x, (int)newRoom.y + activePlayerRoom.y));
+        //SetCurrentPlayerPosition(new RoomObject((int)newRoom.x + activePlayerRoom.x, (int)newRoom.y + activePlayerRoom.y));
+        PlayerActivatedRoomMovement(DungeonGenerator.instance.GetActiveRoom(new RoomObject((int)newRoom.x + activePlayerRoom.x, (int)newRoom.y + activePlayerRoom.y)));
 
         CameraManager.instance.MoveToRoom(newRoom);
     }

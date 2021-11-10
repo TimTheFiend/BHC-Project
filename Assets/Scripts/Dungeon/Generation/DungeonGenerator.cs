@@ -88,6 +88,10 @@ public class DungeonGenerator : MonoBehaviour
     private void CompleteGeneration() {
         AssignRoomTypes();
 
+        foreach (RoomObject item in minimapPositions) {
+            Debug.Log($"{item} - { item.type}");
+        }
+
         RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
         GameManager.instance.SetCurrentPlayerPosition(startRoom);
     }
@@ -271,4 +275,8 @@ public class DungeonGenerator : MonoBehaviour
     }
 
     #endregion Add Room To Layout
+
+    public RoomObject GetActiveRoom(RoomObject room) {
+        return minimapPositions.Where(r => r == room).SingleOrDefault();
+    }
 }

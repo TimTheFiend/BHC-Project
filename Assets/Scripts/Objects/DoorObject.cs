@@ -18,6 +18,13 @@ public class DoorObject : MonoBehaviour
         ActivateDoor(false);
     }
 
+    public void SetDoorState(bool isOpen) {
+        this.isOpen = isOpen;
+        GetComponent<SpriteRenderer>().sprite = this.isOpen ? doorOpen : doorClosed;
+    }
+
+    /* OLD */
+
     public void ActivateDoor(bool hasChanged) {
         if (hasChanged) {
             isOpen = !isOpen;
