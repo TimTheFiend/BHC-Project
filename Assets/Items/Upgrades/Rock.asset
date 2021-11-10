@@ -16,3 +16,5 @@ MonoBehaviour:
   IsWeaponUpgrade: 1
   Damage: 50
   Speed: -5
+  Life: 0
+  MovementSpeed: 0

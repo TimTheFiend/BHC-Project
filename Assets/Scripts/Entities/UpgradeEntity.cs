@@ -19,6 +19,12 @@ public class UpgradeEntity : MonoBehaviour
         }
     }
 
+    public void SetValues(UpgradeObject stats) {
+        upgradeObject = stats;
+
+        GetComponent<SpriteRenderer>().sprite = upgradeObject.sprite;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Player") {
             GameObject player = collision.gameObject;

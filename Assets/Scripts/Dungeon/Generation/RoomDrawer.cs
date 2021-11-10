@@ -123,7 +123,6 @@ public class RoomDrawer : MonoBehaviour
             return;
         }
         SpawnObjects(roomObj, roomObjects);
-        //SpawnObjects(roomObj, dungeonRoom);
     }
 
     private void DrawDoorsAsObjects(RoomObject newRoom) {
@@ -135,6 +134,9 @@ public class RoomDrawer : MonoBehaviour
     }
 
     private void SpawnObjects(RoomObject newRoom, List<GameObject> objectsToSpawn) {
+        if (newRoom.type != RoomType.Normal) {
+            return;
+        }
         foreach (GameObject item in objectsToSpawn) {
             GameObject toInstantiate = Instantiate(item, DungeonLayout.GetWorldPosition(item.transform.position, newRoom), Quaternion.identity);
             toInstantiate.transform.SetParent(roomHolder);
