@@ -18,6 +18,8 @@ public class PlayerController : CharacterObject
 
         //TODO fix
         currentHP = maxHP;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void OnMovement(InputAction.CallbackContext _context) {

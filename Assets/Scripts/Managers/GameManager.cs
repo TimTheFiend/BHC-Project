@@ -53,12 +53,19 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
+        StartNewDungeonFloor();
+    }
+
+    #endregion Awake, Start
+
+    /// <summary>
+    /// Starts generating a new dungeon floor.
+    /// </summary>
+    private void StartNewDungeonFloor() {
         DungeonGenerator.instance.GenerateDungeon();
 
         OnDungeonGenerationComplete();
     }
-
-    #endregion Awake, Start
 
     /// <summary>
     /// Helper method for moving Player and Camera to the start room.
@@ -67,19 +74,6 @@ public class GameManager : MonoBehaviour
         Vector3 v = DungeonLayout.GetRoomCenterWorldPosition(DungeonGenerator.instance.startRoom);
         playerObj.transform.position = new Vector3(v.x, v.y, 0f);
         Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
-    }
-
-    public void PlayerActivatedRoomMovement(RoomObject newRoom) {
-        activePlayerRoom = newRoom;
-        exploredRooms.Add(activePlayerRoom);
-
-        if (activePlayerRoom.type == RoomType.StartRoom || activePlayerRoom.type == RoomType.Item) {
-            completedRooms.Add(activePlayerRoom);
-        }
-
-        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
-
-        SetCanUseDoors();
     }
 
     /// <summary>
@@ -92,8 +86,10 @@ public class GameManager : MonoBehaviour
                    || completedRooms.Contains(activePlayerRoom);
     }
 
+    #region Activate Rooms
+
     /// <summary>
-    /// Activates GameObjects inside the activeRoom.
+    /// Activates GameObjects inside the activeRoom. Is called from <see cref="CameraManager"/>
     /// </summary>
     public void ActivatePlayerRoom() {
         mobsInActiveRoom = 0;
@@ -125,6 +121,24 @@ public class GameManager : MonoBehaviour
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "Door") {
                 obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
+    /// </summary>
+    public void IsActiveRoomCompleted() {
+        mobsInActiveRoom--;
+
+        if (mobsInActiveRoom == 0) {
+            completedRooms.Add(activePlayerRoom);
+            SetCanUseDoors();
+
+            foreach (Transform door in activeRoom) {
+                if (door.gameObject.CompareTag("Door")) {
+                    door.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
+                }
             }
         }
     }
@@ -161,25 +175,26 @@ public class GameManager : MonoBehaviour
 
     #endregion Activate different types of room
 
-    /// <summary>
-    /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
-    /// </summary>
-    public void IsActiveRoomCompleted() {
-        mobsInActiveRoom--;
-
-        if (mobsInActiveRoom == 0) {
-            completedRooms.Add(activePlayerRoom);
-            SetCanUseDoors();
-
-            foreach (Transform door in activeRoom) {
-                if (door.gameObject.CompareTag("Door")) {
-                    door.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
-                }
-            }
-        }
-    }
+    #endregion Activate Rooms
 
     #region In regards to movement between rooms, and activation.
+
+    /// <summary>
+    /// Sets the newRoom to be the activePlayerRoom, and handles any rooms that aren't of type <see cref="RoomType.Normal"/>.
+    /// </summary>
+    /// <param name="newRoom">The room the player is going to enter.</param>
+    public void PlayerActivatedRoomMovement(RoomObject newRoom) {
+        activePlayerRoom = newRoom;
+        exploredRooms.Add(activePlayerRoom);
+
+        if (activePlayerRoom.type == RoomType.StartRoom || activePlayerRoom.type == RoomType.Item) {
+            completedRooms.Add(activePlayerRoom);
+        }
+
+        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
+
+        SetCanUseDoors();
+    }
 
     //NOTE: Only gets called once after the generation of the dungeon.
     public void SetCurrentPlayerPosition(RoomObject room) {
