@@ -38,10 +38,19 @@ public struct RoomObject
 
     #endregion Constructors
 
+    /// <summary>
+    /// Prints out the objects position, and the position of the doors
+    /// </summary>
+    /// <returns>debug message.</returns>
     public string DebugPrint() {
         return $"{this}\tDoors: {doorLayout}";
     }
 
+    /// <summary>
+    /// Adds, or removes, a flag from <see cref="doorLayout"/>
+    /// </summary>
+    /// <param name="door"><see cref="DoorLayout"/> value</param>
+    /// <param name="state">if <c>true</c> it's added; otherwise it's removed.</param>
     public void SetDoor(DoorLayout door, bool state) {
         switch (state) {
             case true:
@@ -54,6 +63,9 @@ public struct RoomObject
         }
     }
 
+    /// <summary>
+    /// Lazy way to check if the object only has 1 (one) door.
+    /// </summary>
     public bool IsDeadEnd {
         get {
             if (((int)doorLayout) == 1 || ((int)doorLayout) == 2 || ((int)doorLayout) == 4 || ((int)doorLayout) == 8) {
@@ -63,6 +75,12 @@ public struct RoomObject
         }
     }
 
+    /// <summary>
+    /// Sets the <see cref="DoorLayout"/> value on both the new <see cref="RoomObject"/>, and the parent.
+    /// </summary>
+    /// <param name="other">The new room.</param>
+    /// <param name="oppositeDoor">The door opposite, I.E. the parent's <see cref="DoorLayout"/></param>
+    /// <returns></returns>
     public DoorLayout GetDoorLayoutFromOffset(RoomObject other, out DoorLayout oppositeDoor) {
         Vector2Int roomOffset = (this - other).center;
         DoorLayout door = DoorLayout.None;
@@ -80,6 +98,11 @@ public struct RoomObject
         return door;
     }
 
+    /// <summary>
+    /// Returns the door opposite of the parameter
+    /// </summary>
+    /// <param name="door">The door that you want the opposite of</param>
+    /// <returns>The door directly opposite.</returns>
     public DoorLayout GetOppositeDoor(DoorLayout door) {
         switch (door) {
             case DoorLayout.Up:
@@ -180,6 +203,9 @@ public struct RoomObject
     #endregion Only here to avoid "implementation warnings"
 }
 
+/// <summary>
+/// Indicates which positions the door(s) are located.
+/// </summary>
 [System.Flags]
 public enum DoorLayout
 {
@@ -190,6 +216,9 @@ public enum DoorLayout
     Left = 8
 }
 
+/// <summary>
+/// Specifies which type of room the <see cref="RoomObject"/> is going to be.
+/// </summary>
 public enum RoomType
 {
     Null,

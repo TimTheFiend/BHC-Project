@@ -21,7 +21,6 @@ public class CameraManager : MonoBehaviour
 
     [Header("Camera variables")]
     [SerializeField] private float cameraWidth;
-
     [SerializeField] private float cameraHeight;
     public float totalWidth => cameraWidth * 2;
     public float totalHeight => cameraHeight * 2;
@@ -81,6 +80,11 @@ public class CameraManager : MonoBehaviour
         //Attempt to activate the objects inside the room.
     }
 
+    /// <summary>
+    /// Transitions the camera to the new room, and deactivating the player until panning is complete.
+    /// </summary>
+    /// <param name="newPos">Position to move to</param>
+    /// <param name="movePlayerToPos">Position to reactivate the player in</param>
     private IEnumerator MoveCamera(Vector3 newPos, Vector3 movePlayerToPos) {
         Debug.Assert(movePlayerToPos != player.position, "The position to move the player is the same as the current");
 
@@ -109,7 +113,7 @@ public class CameraManager : MonoBehaviour
         //Re-activate the player.
         player.gameObject.SetActive(true);
 
-        //Call GameManager to activate AI
+        //Call GameManager to activate AI, after the player has control, and the camera has finished panning.
         GameManager.instance.ActivatePlayerRoom();
     }
 }
