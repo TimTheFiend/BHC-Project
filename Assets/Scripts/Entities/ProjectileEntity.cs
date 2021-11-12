@@ -6,28 +6,33 @@ public class ProjectileEntity : MonoBehaviour
 {
     public GameObject parent;
     public WeaponStats stats;
-    public ProjectileFlags projectileFlags;
+    private string parentTag;  //In case the parent dies prior to this object destroying.
 
-    public void SpawnProjectile(GameObject spawnObject, WeaponStats stats, Transform weaponTransfrom, ForceMode2D forceMode) {
-        parent = spawnObject;
+    /// <summary>
+    /// Sets the object's properties and references.
+    /// </summary>
+    /// <param name="parentObject">Object that spawns this.</param>
+    /// <param name="stats">Stats of this object</param>
+    /// <param name="weaponTransfrom">Position in which to spawn this object.</param>
+    /// <param name="forceMode">How this object is pushed, currently only one kind is used.</param>
+    public void SpawnProjectile(GameObject parentObject, WeaponStats stats, Transform weaponTransfrom, ForceMode2D forceMode) {
+        parent = parentObject;
+        parentTag = parent.gameObject.tag;
         this.stats = stats;
 
         if (parent.tag == "Enemy") {
             GetComponent<SpriteRenderer>().color = Color.red;
         }
+
         GetComponent<Rigidbody2D>().AddForce(weaponTransfrom.right * this.stats.speed, forceMode);
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        //If parent is not dead
-        if (parent != null) {
-            //Check if projectile hits the object that spawned it.
-            if (collision.gameObject.tag == parent.tag) {
-                return;
-            }
+        if (collision.tag == parentTag) {
+            return;
         }
 
-        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "BreakableObject") {
+        if (collision.tag == "Player" || collision.tag == "Enemy" || collision.tag == "BreakableObject") {
             collision.gameObject.GetComponent<CharacterObject>().LoseHealth(stats.damage);
         }
         OnHit();
@@ -36,19 +41,4 @@ public class ProjectileEntity : MonoBehaviour
     private void OnHit() {
         Destroy(gameObject);
     }
-
-    private void OnCollisionEnter2D(Collision2D collision) {
-        print(collision.gameObject);
-    }
-}
-
-[System.Flags]
-public enum ProjectileFlags
-{
-    None = 0,
-    Piercing = 1,
-    Etheral = 2,
-    Temp1 = 4,
-    Temp2 = 8,
-    temp3 = 16
 }

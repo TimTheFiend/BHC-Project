@@ -11,31 +11,24 @@ public class RoomDrawer : MonoBehaviour
     [Header("Pre-made rooms")]
     public List<GameObject> dungeonRooms;
 
+    [Header("Floor sprites")]
+    [SerializeField] private List<TileBase> floorSprites;
+
     [Header("Door-related variables")]
-    public TileBase door;  //TileBase for door
-    public GameObject doorObj; //NOTE: bruges til at tegne d�re som gameobject SKAL IKKE BRUGES ENDNU
+    [SerializeField] private GameObject doorObj;
 
     //Object vi tegner på.
     public GameObject activeGrid;
-    [SerializeField] private Grid grid;  //NOTE: bliver nok ikke brugt
 
-    //Tilemap for Walls
+    [Header("Tilemaps")]
     [SerializeField] private Tilemap gridWalls;
-
-    //Tilemap for Doors
-    [SerializeField] private Tilemap gridDoors;
-
-    //Tilemap for Floor
     [SerializeField] private Tilemap gridFloor;
 
-    //Liste af sprites
-    public List<TileBase> floorSprites;
-
-    //Et rums dimensioner er (16x12)
-    [SerializeField] private const int totalWidth = 16;
-    [SerializeField] private const int totalHeight = 12;
-    [SerializeField] private int halfWidth => (int)totalWidth / 2;
-    [SerializeField] private int halfHeight => totalHeight / 2;
+    [Header("Room Size")]
+    private const int totalWidth = 16;
+    private const int totalHeight = 12;
+    private int halfWidth => totalWidth / 2;
+    private int halfHeight => totalHeight / 2;
 
     /* Temp */
     private Transform roomHolder;
@@ -54,14 +47,12 @@ public class RoomDrawer : MonoBehaviour
 
         #endregion Singleton Pattern
 
-        grid = activeGrid.GetComponent<Grid>();
+        InitialiseTilemaps();
+    }
+
+    private void InitialiseTilemaps() {
         gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
-        gridDoors = activeGrid.transform.Find("Doors").GetComponent<Tilemap>();
-
-        ////Sæt half værdier
-        //halfHeight = (int)totalHeight / 2;
-        //halfWidth = (int)totalWidth / 2;
     }
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
@@ -118,7 +109,6 @@ public class RoomDrawer : MonoBehaviour
         /* Tegner d�re */
         DrawDoorsAsObjects(roomObj);
 
-        //TODO PlaceObjects() temp navn
         if (roomObj == DungeonGenerator.instance.startRoom) {
             return;
         }
