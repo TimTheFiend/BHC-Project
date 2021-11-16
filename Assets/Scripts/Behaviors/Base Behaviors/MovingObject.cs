@@ -63,12 +63,17 @@ public class MovingObject : MonoBehaviour
 
         GetComponent<SpriteRenderer>().color = new Color(1f, 0, 0);
 
+        int currentLayer = gameObject.layer;
+
+        gameObject.layer = 9;
+
         float time = 0f;
         while (time < dashLengthInSeconds) {
             time += Time.deltaTime;
             transform.position = Vector2.MoveTowards(transform.position, transform.position + (Vector3)dashDir, dashSpeed * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
+        gameObject.layer = currentLayer;
 
         GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f);
         canMove = true;
