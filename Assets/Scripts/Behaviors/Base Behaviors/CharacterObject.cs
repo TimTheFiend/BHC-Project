@@ -18,7 +18,7 @@ public class CharacterObject : MonoBehaviour
         }
     }
 
-    public void LoseHealth(float healthLost) {
+    public virtual void LoseHealth(float healthLost) {
         currentHP -= healthLost;
         if (isDead) {
             Die();

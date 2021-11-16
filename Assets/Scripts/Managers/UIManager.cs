@@ -48,8 +48,16 @@ public class UIManager : MonoBehaviour
         mapMenu.gameObject.SetActive(isActive);
     }
 
-    public void UpdateHPBar(float healthPercentage) {
+    public void DEVUpdateHPBar(float healthPercentage) {
         hpBar.value = healthPercentage;
+    }
+
+    public float UpdateHPBar
+    {
+        set
+        {
+            hpBar.value = value;
+        }
     }
 
     //DEPRECATED
