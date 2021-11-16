@@ -103,21 +103,25 @@ public class GameManager : MonoBehaviour
                 break;
 
             case RoomType.Normal:
-                ActivatePlayerRoomNormal();
+                SpawnManager.instance.ActivateNormalRoom(activeRoom, out mobsInActiveRoom);
                 break;
 
             case RoomType.Boss:
-                ActivatePlayerRoomBoss();
+                SpawnManager.instance.ActivateBossRoom(activeRoom);
                 break;
 
             case RoomType.Item:
-                ActivatePlayerRoomItem();
+                SpawnManager.instance.ActivateItemRoom(activeRoom);
                 break;
 
             default:
                 break;
         }
 
+        ActivateRoomDoors();
+    }
+
+    private void ActivateRoomDoors() {
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "Door") {
                 obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
@@ -142,38 +146,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
-    #region Activate different types of room
-
-    private void ActivatePlayerRoomNormal() {
-        foreach (Transform obj in activeRoom) {
-            if (obj.gameObject.tag == "SpawnerMob" && canUseDoors == false) {
-                GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
-                spawn.transform.SetParent(activeRoom);
-                spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
-                Destroy(obj.gameObject);
-
-                mobsInActiveRoom++;
-            }
-        }
-    }
-
-    private void ActivatePlayerRoomBoss() {
-        GameObject bossToSpawn = Instantiate(bosses[0], activeRoom.position, Quaternion.identity);
-
-        bossToSpawn.GetComponent<EnemyAttackController>().playerPosition = player.transform;
-    }
-
-    private void ActivatePlayerRoomItem() {
-        GameObject upgradeToSpawn = Instantiate(itemUpgrade, activeRoom.position, Quaternion.identity);
-
-        //TODO Add randomness
-        //int index = Random.Range(0, upgradeObjects.Count + 1);
-        //Remove the upgrade from the pool afterwards.
-        upgradeToSpawn.GetComponent<UpgradeEntity>().SetValues(upgradeObjects[0]);
-    }
-
-    #endregion Activate different types of room
 
     #endregion Activate Rooms
 
