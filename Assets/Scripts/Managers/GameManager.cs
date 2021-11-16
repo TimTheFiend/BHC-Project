@@ -120,6 +120,9 @@ public class GameManager : MonoBehaviour
         ActivateRoomDoors();
     }
 
+    /// <summary>
+    /// Changes the state of <see cref="DoorObject"/> inside <see cref="activeRoom"/>.
+    /// </summary>
     private void ActivateRoomDoors() {
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "Door") {
