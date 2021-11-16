@@ -35,21 +35,43 @@ public static class DungeonLayout
         #endregion GameObject Doors
     }
 
-    //NOTE dårligt navn
+    /// <summary>
+    /// Gets the center position of a room.
+    /// </summary>
+    /// <param name="room">The room</param>
+    /// <returns>The center position</returns>
     public static Vector3Int GetRoomCenterWorldPosition(RoomObject room) {
         return new Vector3Int(room.x * width, room.y * height, 0);
     }
 
+    /// <summary>
+    /// Gets the center position of a room.
+    /// </summary>
+    /// <param name="room">the RoomObject</param>
+    /// <param name="xPos"></param>
+    /// <param name="yPos"></param>
+    /// <returns></returns>
     public static Vector3Int GetRoomCenterWorldPosition(RoomObject room, int xPos, int yPos) {
         Vector3Int v = GetRoomCenterWorldPosition(room);
         return new Vector3Int(xPos + v.x, yPos + v.y, 0);
     }
 
+    /// <summary>
+    /// Gets the world position of an object within a room.
+    /// </summary>
+    /// <param name="obj">The object's position within the room prefab.</param>
+    /// <param name="room">The room in-which to spawn.</param>
+    /// <returns></returns>
     public static Vector3 GetWorldPosition(Vector3 obj, RoomObject room) {
         return new Vector3(obj.x + (width * room.x), obj.y + (height * room.y));
     }
 
-    //Returns the positions of the doors that gets drawn into the tilemap.
+    /// <summary>
+    /// DEPRECATED.
+    /// Gets the positions of doors to draw into a tilemap.
+    /// </summary>
+    /// <param name="room">Room to draw in</param>
+    /// <returns>List of door positions to draw.</returns>
     public static List<Vector2Int> GetTilemapDoorPosition(RoomObject room) {
         List<Vector2Int> doorsToDraw = new List<Vector2Int>();
 
@@ -69,6 +91,11 @@ public static class DungeonLayout
         return doorsToDraw;
     }
 
+    /// <summary>
+    /// Lazy implementation of where the doors are supposed to be placed within a room.
+    /// </summary>
+    /// <param name="room">Room to place doors in</param>
+    /// <returns>List of door positions to spawn.</returns>
     public static List<Vector2> GetDoorPositions(RoomObject room) {
         List<Vector2> doorsToDraw = new List<Vector2>();
         float vertical = 5.5f;
@@ -90,6 +117,12 @@ public static class DungeonLayout
         return doorsToDraw;
     }
 
+    /// <summary>
+    /// Gets the direction of which room the player is moving into.
+    /// </summary>
+    /// <param name="player">Player's position</param>
+    /// <param name="currentRoom">Room the player is currently in.</param>
+    /// <returns>Cardinal direction of movement.</returns>
     public static Vector2 GetActivatedDoorDirection(Vector3 player, RoomObject currentRoom) {
         float height = CameraManager.instance.totalHeight;
         float width = CameraManager.instance.totalWidth;
