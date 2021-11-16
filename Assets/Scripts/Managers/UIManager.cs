@@ -72,7 +72,7 @@ public class UIManager : MonoBehaviour
         foreach (RoomObject room in rooms) {
             RoomObject tempRoom = room - startRoom;
 
-            Vector2 position = new Vector2(tempRoom.x * size, tempRoom.y * size);
+            Vector2 position = new Vector2(tempRoom.x * size * -1, tempRoom.y * size * -1);
 
             GameObject newRoom = Instantiate(roomObject, mapObject.transform.position, Quaternion.identity);
 
