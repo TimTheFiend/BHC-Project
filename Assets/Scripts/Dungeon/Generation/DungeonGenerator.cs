@@ -88,10 +88,6 @@ public class DungeonGenerator : MonoBehaviour
     private void CompleteGeneration() {
         AssignRoomTypes();
 
-        foreach (RoomObject item in minimapPositions) {
-            Debug.Log($"{item} - { item.type}");
-        }
-
         RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
         GameManager.instance.SetCurrentPlayerPosition(startRoom);
     }

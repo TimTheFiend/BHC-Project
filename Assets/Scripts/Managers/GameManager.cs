@@ -53,12 +53,19 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start() {
+        StartNewDungeonFloor();
+    }
+
+    #endregion Awake, Start
+
+    /// <summary>
+    /// Starts generating a new dungeon floor.
+    /// </summary>
+    private void StartNewDungeonFloor() {
         DungeonGenerator.instance.GenerateDungeon();
 
         OnDungeonGenerationComplete();
     }
-
-    #endregion Awake, Start
 
     /// <summary>
     /// Helper method for moving Player and Camera to the start room.
@@ -69,31 +76,19 @@ public class GameManager : MonoBehaviour
         Camera.main.transform.position = new Vector3(playerObj.transform.position.x, playerObj.transform.position.y, Camera.main.transform.position.z);
     }
 
-    public void PlayerActivatedRoomMovement(RoomObject newRoom) {
-        activePlayerRoom = newRoom;
-        exploredRooms.Add(activePlayerRoom);
-
-        if (activePlayerRoom.type == RoomType.StartRoom || activePlayerRoom.type == RoomType.Item) {
-            completedRooms.Add(activePlayerRoom);
-        }
-
-        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
-
-        SetCanUseDoors();
-    }
-
     /// <summary>
     /// Sets the value of canUseDoors.
     /// </summary>
     private void SetCanUseDoors() {
-        Debug.Log(activePlayerRoom.type);
         canUseDoors = activePlayerRoom.type == RoomType.StartRoom
                    || activePlayerRoom.type == RoomType.Item
                    || completedRooms.Contains(activePlayerRoom);
     }
 
+    #region Activate Rooms
+
     /// <summary>
-    /// Activates GameObjects inside the activeRoom.
+    /// Activates GameObjects inside the activeRoom. Is called from <see cref="CameraManager"/>
     /// </summary>
     public void ActivatePlayerRoom() {
         mobsInActiveRoom = 0;
@@ -107,21 +102,25 @@ public class GameManager : MonoBehaviour
                 break;
 
             case RoomType.Normal:
-                ActivatePlayerRoomNormal();
+                SpawnManager.instance.ActivateNormalRoom(activeRoom, out mobsInActiveRoom);
                 break;
 
             case RoomType.Boss:
-                ActivatePlayerRoomBoss();
+                SpawnManager.instance.ActivateBossRoom(activeRoom);
                 break;
 
             case RoomType.Item:
-                ActivatePlayerRoomItem();
+                SpawnManager.instance.ActivateItemRoom(activeRoom);
                 break;
 
             default:
                 break;
         }
 
+        ActivateRoomDoors();
+    }
+
+    private void ActivateRoomDoors() {
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "Door") {
                 obj.gameObject.GetComponent<DoorObject>().SetDoorState(canUseDoors);
@@ -129,43 +128,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region Activate different types of room
-
-    private void ActivatePlayerRoomNormal() {
-        foreach (Transform obj in activeRoom) {
-            if (obj.gameObject.tag == "SpawnerMob" && canUseDoors == false) {
-                GameObject spawn = Instantiate(mob, obj.position, Quaternion.identity);
-                spawn.transform.SetParent(activeRoom);
-                spawn.gameObject.GetComponent<EnemyAttackController>().playerPosition = player.transform;
-                Destroy(obj.gameObject);
-
-                mobsInActiveRoom++;
-            }
-        }
-    }
-
-    private void ActivatePlayerRoomBoss() {
-        GameObject bossToSpawn = Instantiate(bosses[0], activeRoom.position, Quaternion.identity);
-
-        bossToSpawn.GetComponent<EnemyAttackController>().playerPosition = player.transform;
-    }
-
-    private void ActivatePlayerRoomItem() {
-        GameObject upgradeToSpawn = Instantiate(itemUpgrade, activeRoom.position, Quaternion.identity);
-
-        //TODO Add randomness
-        //int index = Random.Range(0, upgradeObjects.Count + 1);
-        //Remove the upgrade from the pool afterwards.
-        upgradeToSpawn.GetComponent<UpgradeEntity>().SetValues(upgradeObjects[0]);
-    }
-
-    #endregion Activate different types of room
-
     /// <summary>
     /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
     /// </summary>
-    public void IsActiveRoomCompleted() {
+    public void IsActiveRoomCompleted(Vector3 mobPosition) {
         mobsInActiveRoom--;
+        SpawnManager.instance.MobPickupDrop(mobPosition);
 
         if (mobsInActiveRoom == 0) {
             completedRooms.Add(activePlayerRoom);
@@ -179,7 +147,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion Activate Rooms
+
     #region In regards to movement between rooms, and activation.
+
+    /// <summary>
+    /// Sets the newRoom to be the activePlayerRoom, and handles any rooms that aren't of type <see cref="RoomType.Normal"/>.
+    /// </summary>
+    /// <param name="newRoom">The room the player is going to enter.</param>
+    public void PlayerActivatedRoomMovement(RoomObject newRoom) {
+        activePlayerRoom = newRoom;
+        exploredRooms.Add(activePlayerRoom);
+
+        if (activePlayerRoom.type == RoomType.StartRoom || activePlayerRoom.type == RoomType.Item) {
+            completedRooms.Add(activePlayerRoom);
+        }
+
+        activeRoom = GameObject.Find(activePlayerRoom.ToString()).transform;
+
+        SetCanUseDoors();
+    }
 
     //NOTE: Only gets called once after the generation of the dungeon.
     public void SetCurrentPlayerPosition(RoomObject room) {
