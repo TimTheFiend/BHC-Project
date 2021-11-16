@@ -39,17 +39,6 @@ public class UIManager : MonoBehaviour
 
     private void Start() {
         InitializeToggleUI();
-
-        GameObject newRoom = Instantiate(roomObject, mapObject.transform.position, Quaternion.identity);
-
-        newRoom.transform.SetParent(mapCanvas.transform, false);
-        newRoom.transform.position = new Vector3(20f, 20f, 0);
-
-        RectTransform rect = newRoom.GetComponent<RectTransform>();
-        rect.anchoredPosition = new Vector2(20f, 20f);
-
-        //newRoom.transform.position = new Vector3(50f, 20f, 0);
-        Debug.Log(rect.anchoredPosition);
     }
 
     //Gemmer toggle ui væk på startup
@@ -73,6 +62,23 @@ public class UIManager : MonoBehaviour
     public float UpdateHPBar {
         set {
             hpBar.value = value;
+        }
+    }
+
+    public void DrawMinimap(List<RoomObject> rooms) {
+        RoomObject startRoom = GameManager.instance.activePlayerRoom;
+        float size = 20f;
+
+        foreach (RoomObject room in rooms) {
+            RoomObject tempRoom = room - startRoom;
+
+            Vector2 position = new Vector2(tempRoom.x * size, tempRoom.y * size);
+
+            GameObject newRoom = Instantiate(roomObject, mapObject.transform.position, Quaternion.identity);
+
+            newRoom.transform.SetParent(mapCanvas.transform, false);
+            (newRoom.transform as RectTransform).sizeDelta = new Vector2(size, size);
+            (newRoom.transform as RectTransform).anchoredPosition = position;
         }
     }
 

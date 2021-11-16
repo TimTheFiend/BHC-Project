@@ -90,6 +90,8 @@ public class DungeonGenerator : MonoBehaviour
 
         RoomDrawer.instance.DrawDungeonRooms(minimapPositions);
         GameManager.instance.SetCurrentPlayerPosition(startRoom);
+        //NOTE: Minimap UI
+        UIManager.instance.DrawMinimap(minimapPositions);
     }
 
     #region Deadends assignment
