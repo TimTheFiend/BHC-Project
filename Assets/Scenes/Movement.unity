@@ -346,6 +346,9 @@ MonoBehaviour:
   mob: {fileID: 3143482212241901864, guid: 0ac7f302dbe914a4883155150915ebb7, type: 3}
   boss: {fileID: 4764236248724102337, guid: addc75095a6430a4db0ea361c1f677f8, type: 3}
   itemObject: {fileID: 5506231725334241965, guid: bfa8b7100eac5174f8deae679c6e5aab, type: 3}
+  pickupDrops:
+  - {fileID: 4852661316602436521, guid: 8cca733502de360439c697cdf2cce8b7, type: 3}
+  - {fileID: 3122376472112071270, guid: bcb7d87c8f7c52446b83d31b5f0c2e43, type: 3}
   enemies: []
   itemUpgrades:
   - {fileID: 11400000, guid: 3ee0806ea8aba584c94e91eb106c5eb2, type: 2}
@@ -1165,7 +1168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5789079135157185644, guid: 049a4ae5787ea4e49a1e89b97809616e, type: 3}
       propertyPath: maxHP
-      value: 100
+      value: 500
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 049a4ae5787ea4e49a1e89b97809616e, type: 3}
