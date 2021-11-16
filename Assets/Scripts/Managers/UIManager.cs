@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image mapMenu;
     public GameObject mapObject;
     public GameObject roomObject;
+    public Canvas mapCanvas;
 
     [Header("Minimap UI Test")]
     public RenderTexture image;
@@ -39,9 +40,16 @@ public class UIManager : MonoBehaviour
     private void Start() {
         InitializeToggleUI();
 
-        GameObject newRoom = Instantiate(roomObject, new Vector3(0, 0, 0), Quaternion.identity);
-        newRoom.transform.SetParent(mapObject.transform);
-        newRoom.GetComponent<RectTransform>().position = Vector3.zero;
+        GameObject newRoom = Instantiate(roomObject, mapObject.transform.position, Quaternion.identity);
+
+        newRoom.transform.SetParent(mapCanvas.transform, false);
+        newRoom.transform.position = new Vector3(20f, 20f, 0);
+
+        RectTransform rect = newRoom.GetComponent<RectTransform>();
+        rect.anchoredPosition = new Vector2(20f, 20f);
+
+        //newRoom.transform.position = new Vector3(50f, 20f, 0);
+        Debug.Log(rect.anchoredPosition);
     }
 
     //Gemmer toggle ui væk på startup
