@@ -80,7 +80,6 @@ public class GameManager : MonoBehaviour
     /// Sets the value of canUseDoors.
     /// </summary>
     private void SetCanUseDoors() {
-        Debug.Log(activePlayerRoom.type);
         canUseDoors = activePlayerRoom.type == RoomType.StartRoom
                    || activePlayerRoom.type == RoomType.Item
                    || completedRooms.Contains(activePlayerRoom);
@@ -132,8 +131,9 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Checks if the room is completed, and opens the door(s) if <see langword="true"/>.
     /// </summary>
-    public void IsActiveRoomCompleted() {
+    public void IsActiveRoomCompleted(Vector3 mobPosition) {
         mobsInActiveRoom--;
+        SpawnManager.instance.MobPickupDrop(mobPosition);
 
         if (mobsInActiveRoom == 0) {
             completedRooms.Add(activePlayerRoom);

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,8 +15,13 @@ public class SpawnManager : MonoBehaviour
     [Header("Item templates")]
     public GameObject itemObject;
 
-    [Header("Lists")]
+    [Header("Enemy drops")]
+    public List<GameObject> pickupDrops = new List<GameObject>();
+
+    [Header("Enemies")]
     public List<GameObject> enemies = new List<GameObject>();
+
+    [Header("Room")]
     public List<UpgradeObject> itemUpgrades = new List<UpgradeObject>();
     public List<GameObject> bosses = new List<GameObject>();
 
@@ -94,4 +100,37 @@ public class SpawnManager : MonoBehaviour
 
     #endregion Room Handling
 
+    #region Pickup drops
+
+    public void MobPickupDrop(Vector3 mobPosition) {
+        Dictionary<GameObject, float> weight = weight = new Dictionary<GameObject, float>();
+        if (isDebug) {
+            foreach (GameObject pickup in pickupDrops) {
+                weight.Add(pickup, 0.9f);
+            }
+        }
+
+        GameObject _pickup = PickupWeight(weight);
+        if (_pickup == null) {
+            Debug.Log("No pickup");
+            return;
+        }
+
+        Instantiate(_pickup, mobPosition, Quaternion.identity);
+    }
+
+    private GameObject? PickupWeight(Dictionary<GameObject, float> dict) {
+        float value = Random.value;
+
+        List<GameObject> gObjs = new List<GameObject>();
+        gObjs.AddRange(dict.Where(x => x.Value >= value).Select(x => x.Key).ToList());
+
+        if (gObjs.Count == 0) {
+            return null;
+        }
+
+        return gObjs[Random.Range(0, gObjs.Count)];
+    }
+
+    #endregion Pickup drops
 }
