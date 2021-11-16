@@ -102,11 +102,12 @@ public class SpawnManager : MonoBehaviour
 
     #region Pickup drops
 
+    //TODO better system.
     public void MobPickupDrop(Vector3 mobPosition) {
         Dictionary<GameObject, float> weight = weight = new Dictionary<GameObject, float>();
         if (isDebug) {
             foreach (GameObject pickup in pickupDrops) {
-                weight.Add(pickup, 0.9f);
+                weight.Add(pickup, 0.33f);
             }
         }
 
@@ -119,6 +120,7 @@ public class SpawnManager : MonoBehaviour
         Instantiate(_pickup, mobPosition, Quaternion.identity);
     }
 
+    //TODO refactor code.
     private GameObject? PickupWeight(Dictionary<GameObject, float> dict) {
         float value = Random.value;
 
