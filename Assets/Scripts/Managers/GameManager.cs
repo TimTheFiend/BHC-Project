@@ -8,27 +8,19 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("The player object.")]
     public GameObject playerObj;
-
     public PlayerController player;
 
     [Header("Room-to-Room movement")]
     public bool canUseDoors = true;  //`true` because the player starts in an empty room.
 
-    [Tooltip("Used to keep track of Player's position in relation to the minimap.")]
-    public RoomObject activePlayerRoom = new RoomObject(-1, -1);
+    [Header("Active room information")]
+    public RoomObject activePlayerRoom = new RoomObject(-1, -1);  //Used to keep track of Player's position in relation to the minimap.
+    private Transform activeRoom;  //Player room transform, for access to objects in said room.
+    private int mobsInActiveRoom;
 
-    public Transform activeRoom;
-    [SerializeField] private int mobsInActiveRoom;
-
-    [Tooltip("Contains a list of rooms the player has visited, and is not currently in.")]
+    [Header("Information about where the player has been.")]
     public HashSet<RoomObject> exploredRooms = new HashSet<RoomObject>();  //Only contains unique.
     public HashSet<RoomObject> completedRooms = new HashSet<RoomObject>();  //Only contains unique.
-
-    public GameObject mob;
-    public GameObject itemUpgrade;
-
-    public List<UpgradeObject> upgradeObjects = new List<UpgradeObject>();
-    public List<GameObject> bosses = new List<GameObject>();
 
     #region Awake, Start
 
@@ -94,13 +86,6 @@ public class GameManager : MonoBehaviour
         mobsInActiveRoom = 0;
 
         switch (activePlayerRoom.type) {
-            case RoomType.Null:
-                Debug.LogError("Current Room is set as type: NULL");
-                break;
-
-            case RoomType.StartRoom:
-                break;
-
             case RoomType.Normal:
                 SpawnManager.instance.ActivateNormalRoom(activeRoom, out mobsInActiveRoom);
                 break;
@@ -114,6 +99,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             default:
+                Debug.Assert(activePlayerRoom.type != RoomType.Null, "activePlayerRoom type is \"Null\".");
                 break;
         }
 
@@ -190,6 +176,7 @@ public class GameManager : MonoBehaviour
         Vector2 newRoom = DungeonLayout.GetActivatedDoorDirection(playerObj.transform.position, activePlayerRoom);
         //Set new room.
         //SetCurrentPlayerPosition(new RoomObject((int)newRoom.x + activePlayerRoom.x, (int)newRoom.y + activePlayerRoom.y));
+        UIManager.instance.MoveMinimap(newRoom);
         PlayerActivatedRoomMovement(DungeonGenerator.instance.GetActiveRoom(new RoomObject((int)newRoom.x + activePlayerRoom.x, (int)newRoom.y + activePlayerRoom.y)));
 
         CameraManager.instance.MoveToRoom(newRoom);

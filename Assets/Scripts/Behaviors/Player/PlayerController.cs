@@ -36,10 +36,21 @@ public class PlayerController : CharacterObject
         pMovement.AttemptDash();
     }
 
+    public void OpenMinimap(InputAction.CallbackContext _context) {
+        switch (_context.phase) {
+            case InputActionPhase.Started:
+                UIManager.instance.ToggleMap(true);
+                break;
+
+            case InputActionPhase.Canceled:
+                UIManager.instance.ToggleMap(false);
+                break;
+        }
+    }
+
     public override void LoseHealth(float healthLost) {
         base.LoseHealth(healthLost);
         UIManager.instance.UpdateHPBar = currentHP / maxHP * 100;
         Debug.Log(currentHP / maxHP * 100);
     }
-    
 }
