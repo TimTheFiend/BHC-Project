@@ -92,29 +92,45 @@ public class UIManager : MonoBehaviour
 
             /* Spawner _panel */
             GameObject newRoom = Instantiate(_panel, mapObject.transform.position, Quaternion.identity);
-
+            newRoom.name = room.type.ToString();
             /*temp*/
             minimapRooms.Add(position, newRoom);
-            newRoom.GetComponent<Image>().sprite = TempDrawProperRoom(room);
+            //newRoom.GetComponent<Image>().sprite = TempDrawProperRoom(room);
             /* temp slut*/
 
             newRoom.transform.SetParent(mapCanvas.transform, false);
             (newRoom.transform as RectTransform).sizeDelta = new Vector2(roomSize, roomSize);
             (newRoom.transform as RectTransform).anchoredPosition = position;
         }
+
+        UpdateCurrentMinimapRoom();
     }
 
-    private Sprite TempDrawProperRoom(RoomObject room) {
-        switch (room.type) {
+    private void UpdateCurrentMinimapRoom() {
+        //Finde GameObject på Canvas position - DONE
+        GameObject room = minimapRooms[(mapCanvas.transform as RectTransform).anchoredPosition * -1];
+        //Hente RoomType baseret på GameObject.name
+        RoomType temp;
+        Debug.Assert(System.Enum.TryParse(room.name, out temp), "Unable to convert string to RoomType");
+        //Ændr Image.sprite
+
+        Sprite spriteToUse;
+
+        switch (temp) {
             case RoomType.Boss:
-                return bossRoom;
+                spriteToUse = bossRoom;
+                break;
 
             case RoomType.Item:
-                return itemRoom;
+                spriteToUse = itemRoom;
+                break;
 
             default:
-                return normalRoom;
+                spriteToUse = normalRoom;
+                break;
         }
+
+        room.GetComponent<Image>().sprite = spriteToUse;
     }
 
     public void MoveMinimap(Vector2 dir) {
@@ -133,5 +149,6 @@ public class UIManager : MonoBehaviour
         }
 
         (mapCanvas.transform as RectTransform).anchoredPosition += moveDir;
+        UpdateCurrentMinimapRoom();
     }
 }
