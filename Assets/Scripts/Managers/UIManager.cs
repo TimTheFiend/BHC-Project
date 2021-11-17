@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [Header("Gameplay constants")]
     [SerializeField] private Slider hpBar;
     [SerializeField] private Slider energyBar;
+    [SerializeField] private GameObject mainUI;
 
     [Header("Toggle-ables")]
     [SerializeField] private Image statsMenu;
@@ -28,6 +29,8 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         #endregion Singleton Pattern
+
+        DontDestroyOnLoad(mainUI);
     }
 
     private void Start() {
@@ -52,10 +55,8 @@ public class UIManager : MonoBehaviour
         hpBar.value = healthPercentage;
     }
 
-    public float UpdateHPBar
-    {
-        set
-        {
+    public float UpdateHPBar {
+        set {
             hpBar.value = value;
         }
     }
