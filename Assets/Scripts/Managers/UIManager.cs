@@ -10,20 +10,24 @@ public class UIManager : MonoBehaviour
     [Header("Gameplay constants")]
     [SerializeField] private Slider hpBar;
     [SerializeField] private Slider energyBar;
+
     [Header("Toggle-ables")]
     [SerializeField] private Image statsMenu;
     [SerializeField] private Image mapMenu;
 
     private void Awake() {
+
         #region Singleton Pattern
+
         if (instance == null) {
             instance = this;
         }
         else if (instance != this) {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject); 
-        #endregion
+        DontDestroyOnLoad(gameObject);
+
+        #endregion Singleton Pattern
     }
 
     private void Start() {
@@ -44,8 +48,16 @@ public class UIManager : MonoBehaviour
         mapMenu.gameObject.SetActive(isActive);
     }
 
-    public void UpdateHPBar(float healthPercentage) {
+    public void DEVUpdateHPBar(float healthPercentage) {
         hpBar.value = healthPercentage;
+    }
+
+    public float UpdateHPBar
+    {
+        set
+        {
+            hpBar.value = value;
+        }
     }
 
     //DEPRECATED

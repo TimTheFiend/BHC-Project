@@ -18,6 +18,8 @@ public class PlayerController : CharacterObject
 
         //TODO fix
         currentHP = maxHP;
+
+        DontDestroyOnLoad(gameObject);
     }
 
     public void OnMovement(InputAction.CallbackContext _context) {
@@ -33,4 +35,11 @@ public class PlayerController : CharacterObject
     public void OnDash(InputAction.CallbackContext _context) {
         pMovement.AttemptDash();
     }
+
+    public override void LoseHealth(float healthLost) {
+        base.LoseHealth(healthLost);
+        UIManager.instance.UpdateHPBar = currentHP / maxHP * 100;
+        Debug.Log(currentHP / maxHP * 100);
+    }
+    
 }

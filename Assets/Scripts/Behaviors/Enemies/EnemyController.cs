@@ -15,7 +15,8 @@ public class EnemyController : CharacterObject
     }
 
     protected override void Die() {
+        Vector3 pos = transform.position;
         base.Die();
-        GameManager.instance.IsActiveRoomCompleted();
+        GameManager.instance.IsActiveRoomCompleted(pos);
     }
 }
