@@ -36,26 +36,21 @@ public class PlayerController : CharacterObject
         pMovement.AttemptDash();
     }
 
-    public override void LoseHealth(float healthLost) {
-        base.LoseHealth(healthLost);
-        UIManager.instance.UpdateHPBar = currentHP / maxHP * 100;
-        Debug.Log(currentHP / maxHP * 100);
-    }
-
     public void OpenMinimap(InputAction.CallbackContext _context) {
-        bool activateMap = false;
         switch (_context.phase) {
             case InputActionPhase.Started:
-                print("OPEN MAP");
-                activateMap = true;
                 UIManager.instance.ToggleMap(true);
                 break;
 
             case InputActionPhase.Canceled:
-                print("CLOSE MAP");
-                activateMap = false;
                 UIManager.instance.ToggleMap(false);
                 break;
         }
+    }
+
+    public override void LoseHealth(float healthLost) {
+        base.LoseHealth(healthLost);
+        UIManager.instance.UpdateHPBar = currentHP / maxHP * 100;
+        Debug.Log(currentHP / maxHP * 100);
     }
 }

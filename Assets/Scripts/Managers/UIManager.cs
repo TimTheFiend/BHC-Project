@@ -15,12 +15,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image statsMenu;
     [SerializeField] private Image mapMenu;
     public GameObject mapObject;
-    public GameObject roomObject;
+    public GameObject _panel;
     public Canvas mapCanvas;
 
     [Header("Minimap UI Test")]
-    public RenderTexture image;
-    public Sprite sprite;
+    public Sprite normalRoom;
+    public Sprite bossRoom;
+    public Sprite itemRoom;
+    public Sprite unknownRoom;
+    public Dictionary<Vector2, GameObject> minimapRooms = new Dictionary<Vector2, GameObject>();
+    private const float roomSize = 20f;
 
     private void Awake() {
 
@@ -32,6 +36,7 @@ public class UIManager : MonoBehaviour
         else if (instance != this) {
             Destroy(gameObject);
         }
+
         DontDestroyOnLoad(gameObject);
 
         #endregion Singleton Pattern
@@ -47,6 +52,8 @@ public class UIManager : MonoBehaviour
         mapMenu.gameObject.SetActive(false);
     }
 
+    #region Toggle UI
+
     public void ToggleStats(bool isActive) {
         statsMenu.gameObject.SetActive(isActive);
     }
@@ -55,9 +62,9 @@ public class UIManager : MonoBehaviour
         mapMenu.gameObject.SetActive(isActive);
     }
 
-    public void DEVUpdateHPBar(float healthPercentage) {
-        hpBar.value = healthPercentage;
-    }
+    #endregion Toggle UI
+
+    #region Updating player bars
 
     public float UpdateHPBar {
         set {
@@ -65,31 +72,66 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void DrawMinimap(List<RoomObject> rooms) {
-        RoomObject startRoom = GameManager.instance.activePlayerRoom;
-        float size = 20f;
-
-        foreach (RoomObject room in rooms) {
-            RoomObject tempRoom = room - startRoom;
-
-            Vector2 position = new Vector2(tempRoom.x * size * -1, tempRoom.y * size * -1);
-
-            GameObject newRoom = Instantiate(roomObject, mapObject.transform.position, Quaternion.identity);
-
-            newRoom.transform.SetParent(mapCanvas.transform, false);
-            (newRoom.transform as RectTransform).sizeDelta = new Vector2(size, size);
-            (newRoom.transform as RectTransform).anchoredPosition = position;
-        }
-    }
-
-    //DEPRECATED
-    public void DEVUpdateEnergyBar(float energyPercentage) {
-        energyBar.value = energyPercentage;
-    }
-
     public float UpdateEnergyBar {
         set {
             energyBar.value = value;
         }
+    }
+
+    #endregion Updating player bars
+
+    /* Minimap UI */
+
+    public void DrawInitialMinimap(List<RoomObject> rooms) {
+        RoomObject startRoom = GameManager.instance.activePlayerRoom;
+
+        foreach (RoomObject room in rooms) {
+            RoomObject tempRoom = room - startRoom;
+
+            Vector2 position = new Vector2(tempRoom.x * roomSize * -1, tempRoom.y * roomSize * -1);  //*-1 to reverse the mirroring.
+
+            /* Spawner _panel */
+            GameObject newRoom = Instantiate(_panel, mapObject.transform.position, Quaternion.identity);
+
+            /*temp*/
+            minimapRooms.Add(position, newRoom);
+            newRoom.GetComponent<Image>().sprite = TempDrawProperRoom(room);
+            /* temp slut*/
+
+            newRoom.transform.SetParent(mapCanvas.transform, false);
+            (newRoom.transform as RectTransform).sizeDelta = new Vector2(roomSize, roomSize);
+            (newRoom.transform as RectTransform).anchoredPosition = position;
+        }
+    }
+
+    private Sprite TempDrawProperRoom(RoomObject room) {
+        switch (room.type) {
+            case RoomType.Boss:
+                return bossRoom;
+
+            case RoomType.Item:
+                return itemRoom;
+
+            default:
+                return normalRoom;
+        }
+    }
+
+    public void MoveMinimap(Vector2 dir) {
+        Vector2 moveDir = Vector2.zero;
+        if (dir == Vector2.up) {
+            moveDir = Vector2.down * roomSize;
+        }
+        else if (dir == Vector2.down) {
+            moveDir = Vector2.up * roomSize;
+        }
+        else if (dir == Vector2.left) {
+            moveDir = Vector2.right * roomSize;
+        }
+        else if (dir == Vector2.right) {
+            moveDir = Vector2.left * roomSize;
+        }
+
+        (mapCanvas.transform as RectTransform).anchoredPosition += moveDir;
     }
 }
