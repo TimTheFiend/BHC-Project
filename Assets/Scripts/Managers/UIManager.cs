@@ -107,16 +107,16 @@ public class UIManager : MonoBehaviour
     }
 
     private void UpdateCurrentMinimapRoom() {
-        //Finde GameObject på Canvas position - DONE
-        GameObject room = minimapRooms[(mapCanvas.transform as RectTransform).anchoredPosition * -1];
+        //Finde GameObject på Canvas position
+        GameObject roomUI = minimapRooms[(mapCanvas.transform as RectTransform).anchoredPosition * -1];
         //Hente RoomType baseret på GameObject.name
-        RoomType temp;
-        Debug.Assert(System.Enum.TryParse(room.name, out temp), "Unable to convert string to RoomType");
+        RoomType roomType;
+        Debug.Assert(System.Enum.TryParse(roomUI.name, out roomType), "Unable to convert string to RoomType");
         //Ændr Image.sprite
 
         Sprite spriteToUse;
 
-        switch (temp) {
+        switch (roomType) {
             case RoomType.Boss:
                 spriteToUse = bossRoom;
                 break;
@@ -130,7 +130,7 @@ public class UIManager : MonoBehaviour
                 break;
         }
 
-        room.GetComponent<Image>().sprite = spriteToUse;
+        roomUI.GetComponent<Image>().sprite = spriteToUse;
     }
 
     public void MoveMinimap(Vector2 dir) {
