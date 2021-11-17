@@ -74,6 +74,7 @@ public class DungeonGenerator : MonoBehaviour
             if (GenerateDungeonLayout()) {
                 if (HasEnoughDeadends()) {
                     CompleteGeneration();
+                    Debug.Log($"Generated dungeon {i}.");
                     return true;
                 }
             }

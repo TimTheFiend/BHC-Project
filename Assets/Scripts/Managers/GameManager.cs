@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Starts generating a new dungeon floor.
     /// </summary>
-    private void StartNewDungeonFloor() {
+    public void StartNewDungeonFloor() {
         DungeonGenerator.instance.GenerateDungeon();
 
         OnDungeonGenerationComplete();

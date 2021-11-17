@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 4271429890282310469}
   - component: {fileID: 2648893194199602959}
   m_Layer: 5
-  m_Name: Item/pauch
+  m_Name: Item/pouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -512,7 +512,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: item/pauch
+  m_Text: item/pouch
 --- !u!1 &7191158890717835319
 GameObject:
   m_ObjectHideFlags: 0
