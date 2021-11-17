@@ -329,7 +329,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dungeonRooms:
-  - {fileID: 1201902355016325831, guid: fc00e624a074bad4190e2aebf71d523e, type: 3}
   - {fileID: 612981878781629852, guid: c93196a467ce4e844a9fb9e850e889e3, type: 3}
   - {fileID: 4714099283584762678, guid: 63a67558637212c4a92e6d3e3ada4faa, type: 3}
   - {fileID: 6445251118205748310, guid: dae65abcaae9b60458aacdd83e23641a, type: 3}
@@ -340,15 +339,12 @@ MonoBehaviour:
   - {fileID: 4782447951913400167, guid: 008de9274c516e04c88bce6c108861ea, type: 3}
   - {fileID: 4410668136131067713, guid: c8af1aeae81c37745a7d26208e99f632, type: 3}
   - {fileID: 2102064985005644977, guid: 5153c3a50276b35449b1b62449fec6e2, type: 3}
-  door: {fileID: 11400000, guid: c93f218f149668b47831ef5e600f531c, type: 2}
-  doorObj: {fileID: 1420009668040789852, guid: eedc6cf9899a1444aa02f5cfb737fd12, type: 3}
-  activeGrid: {fileID: 1823938182}
-  grid: {fileID: 0}
-  gridWalls: {fileID: 0}
-  gridDoors: {fileID: 0}
-  gridFloor: {fileID: 0}
   floorSprites:
   - {fileID: 11400000, guid: 0175faf343390594c89183ccd1de2177, type: 2}
+  doorObj: {fileID: 1420009668040789852, guid: eedc6cf9899a1444aa02f5cfb737fd12, type: 3}
+  activeGrid: {fileID: 1823938182}
+  gridWalls: {fileID: 0}
+  gridFloor: {fileID: 0}
 --- !u!114 &627995532 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2648893194199602959, guid: 4eeaa86eb4ce7b04ca4e95d3e6ca2d61, type: 3}
