@@ -5,10 +5,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovementController : MovingObject
 {
-    //public void OnMovement(InputAction.CallbackContext _context) {
-    //    UpdateMoveDirection(_context.ReadValue<Vector2>());
-    //}
-
+    /// <summary>
+    /// Handles UI for dash.
+    /// </summary>
     protected override IEnumerator DashCooldown() {
         float time = 0f;
         while (time < cooldownDash) {

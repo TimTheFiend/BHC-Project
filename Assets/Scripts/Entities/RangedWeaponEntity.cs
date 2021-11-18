@@ -13,11 +13,13 @@ public class RangedWeaponEntity : WeaponEntity
 
     public override void AttemptAttack() {
         if (!isAttacking) {
-            //TODO attack
             StartCoroutine(Attack());
         }
     }
 
+    /// <summary>
+    /// Spawns a projectile from the object.
+    /// </summary>
     protected override IEnumerator Attack() {
         isAttacking = true;
 

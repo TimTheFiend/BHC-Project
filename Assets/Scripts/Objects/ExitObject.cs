@@ -45,6 +45,10 @@ public class ExitObject : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded_HubWorld;
     }
 
+    /// <summary>
+    /// Loads the next scene based on the current scene's name.
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.tag == "Player") {
             Scene currentScene = SceneManager.GetActiveScene();

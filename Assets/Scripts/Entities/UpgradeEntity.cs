@@ -19,21 +19,27 @@ public class UpgradeEntity : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the values of the object.
+    /// </summary>
+    /// <param name="stats">The upgrade.</param>
     public void SetValues(UpgradeObject stats) {
         upgradeObject = stats;
 
         GetComponent<SpriteRenderer>().sprite = upgradeObject.sprite;
     }
 
+    /// <summary>
+    /// Handles upgrading the player.
+    /// </summary>
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.tag == "Player") {
             GameObject player = collision.gameObject;
 
-            Debug.Log((player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats);
+            //If the upgrade is a weapon upgrade.
             if (upgradeObject.IsWeaponUpgrade) {
                 (player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats.UpgradeStats(upgradeObject.weaponStats);
             }
-            Debug.Log((player.GetComponent<PlayerAttackController>().activeWeapon as RangedWeaponEntity).weaponStats);
 
             Destroy(gameObject);
         }

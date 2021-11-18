@@ -12,10 +12,16 @@ public class PlayerAttackController : AttackingObject
         SetWeaponStats();
     }
 
+    /// <summary>
+    /// Sets the weapon to have the default player stats.
+    /// </summary>
     protected override void SetWeaponStats() {
         activeWeapon.weaponStats = WeaponStats.PlayerDefault();
     }
 
+    /// <summary>
+    /// Updates the data so it follows the cursor position.
+    /// </summary>
     public override void UpdateTrackingData() {
         UpdateTrackingData(Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
     }

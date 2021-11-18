@@ -38,6 +38,9 @@ public class ProjectileEntity : MonoBehaviour
         OnHit();
     }
 
+    /// <summary>
+    /// Object's behavior on colliding with an appropriate object.
+    /// </summary>
     private void OnHit() {
         Destroy(gameObject);
     }

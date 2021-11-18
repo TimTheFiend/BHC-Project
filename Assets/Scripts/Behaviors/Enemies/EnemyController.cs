@@ -16,11 +16,14 @@ public class EnemyController : CharacterObject
 
     protected override void Die() {
         Vector3 pos = transform.position;
+
+        //Specific boss handling.
         if (gameObject.name.StartsWith("Boss")) {
             GameManager.instance.BossRoomIsCompleted();
             base.Die();
             return;
         }
+        //Non-boss.
         base.Die();
         GameManager.instance.IsActiveRoomCompleted(pos);
     }

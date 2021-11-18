@@ -22,20 +22,36 @@ public class PlayerController : CharacterObject
         DontDestroyOnLoad(gameObject);
     }
 
+    /// <summary>
+    /// Handles Movement inputs.
+    /// </summary>
+    /// <param name="_context"></param>
     public void OnMovement(InputAction.CallbackContext _context) {
         pMovement.UpdateMoveDirection(_context.ReadValue<Vector2>());
     }
 
+    /// <summary>
+    /// Handles attack inputs.
+    /// </summary>
+    /// <param name="_context"></param>
     public void OnAttack(InputAction.CallbackContext _context) {
         if (!_context.canceled) {
             pAttack.AttemptAttack();
         }
     }
 
+    /// <summary>
+    /// Handles Dashing inputs.
+    /// </summary>
+    /// <param name="_context"></param>
     public void OnDash(InputAction.CallbackContext _context) {
         pMovement.AttemptDash();
     }
 
+    /// <summary>
+    /// Handles minimap UI input.
+    /// </summary>
+    /// <param name="_context"></param>
     public void OpenMinimap(InputAction.CallbackContext _context) {
         switch (_context.phase) {
             case InputActionPhase.Started:
@@ -48,6 +64,10 @@ public class PlayerController : CharacterObject
         }
     }
 
+    /// <summary>
+    /// Updates the player's health, and the UI.
+    /// </summary>
+    /// <param name="healthLost"></param>
     public override void LoseHealth(float healthLost) {
         base.LoseHealth(healthLost);
         UIManager.instance.UpdateHPBar = currentHP / maxHP * 100;

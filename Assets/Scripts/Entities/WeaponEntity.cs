@@ -10,17 +10,21 @@ public class WeaponEntity : MonoBehaviour
     public float attackCooldown = .5f;
     public float attackDamage = .5f;
 
+    /// <summary>
+    /// Attempts to attack, and attacks if it isn't on cooldown.
+    /// </summary>
     public virtual void AttemptAttack() {
         if (!isAttacking) {
-            //TODO attack
             StartCoroutine(Attack());
         }
     }
 
+    /// <summary>
+    /// The weapon attacks.
+    /// </summary>
     protected virtual IEnumerator Attack() {
         isAttacking = true;
 
-        //TODO attack
         print("attack");
 
         yield return new WaitForSeconds(attackCooldown);

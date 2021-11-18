@@ -16,7 +16,6 @@ public class MovingObject : MonoBehaviour
     public bool canMove = true;  //Determines if the moveing object can actively move
     public bool isDashing = false;
 
-
     public Vector2 moveDirection;
 
     protected virtual void Start() {
@@ -39,6 +38,10 @@ public class MovingObject : MonoBehaviour
         //rbody.velocity = newPosition * movementSpeed * Time.deltaTime;
     }
 
+    /// <summary>
+    /// Updates the direction the object is going.
+    /// </summary>
+    /// <param name="newDirection"></param>
     public void UpdateMoveDirection(Vector2 newDirection) {
         moveDirection = newDirection;
     }
@@ -80,7 +83,9 @@ public class MovingObject : MonoBehaviour
         StartCoroutine(DashCooldown());
     }
 
-    //Dash cooldown UI
+    /// <summary>
+    /// Handles dash cooldown for UI.
+    /// </summary>
     protected virtual IEnumerator DashCooldown() {
         float time = 0f;
         while (time < cooldownDash) {

@@ -109,6 +109,9 @@ public class GameManager : MonoBehaviour
         ActivateRoomDoors();
     }
 
+    /// <summary>
+    /// Activates the active room's doors.
+    /// </summary>
     private void ActivateRoomDoors() {
         foreach (Transform obj in activeRoom) {
             if (obj.gameObject.tag == "Door") {
@@ -136,6 +139,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles boss room completion.
+    /// </summary>
     public void BossRoomIsCompleted() {
         completedRooms.Add(activePlayerRoom);
         SpawnManager.instance.SpawnDungeonExit(activeRoom.position);
@@ -164,7 +170,10 @@ public class GameManager : MonoBehaviour
         SetCanUseDoors();
     }
 
-    //NOTE: Only gets called once after the generation of the dungeon.
+    /// <summary>
+    /// Handles the player moving between rooms.
+    /// </summary>
+    /// <param name="room"></param>
     public void SetCurrentPlayerPosition(RoomObject room) {
         if (exploredRooms.Count == 0) {
             activePlayerRoom = room;

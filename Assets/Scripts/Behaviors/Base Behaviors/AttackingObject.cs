@@ -20,23 +20,37 @@ public class AttackingObject : MonoBehaviour
         MoveWeapon();
     }
 
+    /// <summary>
+    /// Sets the values of the weapon.
+    /// </summary>
     protected virtual void SetWeaponStats() {
         activeWeapon.weaponStats = WeaponStats.EnemyDefault();
     }
 
+    /// <summary>
+    /// Attempts to active with <see cref="activeWeapon"/>
+    /// </summary>
     public virtual void AttemptAttack() {
         activeWeapon.AttemptAttack();
     }
 
-    //TODO IEnumerator Attack
-
+    /// <summary>
+    /// Must be overwritten.
+    /// </summary>
     public virtual void UpdateTrackingData() {
     }
 
+    /// <summary>
+    /// Updates the position of where to point the weapon.
+    /// </summary>
+    /// <param name="newTrackingPosition">the position.</param>
     protected virtual void UpdateTrackingData(Vector2 newTrackingPosition) {
         trackingPosition = newTrackingPosition;
     }
 
+    /// <summary>
+    /// Moves the weapon around.
+    /// </summary>
     protected virtual void MoveWeapon() {
         CalculateWeaponAngle();
 

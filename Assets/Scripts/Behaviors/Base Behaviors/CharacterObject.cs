@@ -12,12 +12,19 @@ public class CharacterObject : MonoBehaviour
         currentHP = maxHP;
     }
 
+    /// <summary>
+    /// Checks if the object is dead.
+    /// </summary>
     public bool isDead {
         get {
             return currentHP <= 0;
         }
     }
 
+    /// <summary>
+    /// Removes hp from the object, and checks if the object dies as a result.
+    /// </summary>
+    /// <param name="healthLost">The amount of damage received.</param>
     public virtual void LoseHealth(float healthLost) {
         currentHP -= healthLost;
         if (isDead) {
@@ -25,10 +32,17 @@ public class CharacterObject : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Handles what happens on object death.
+    /// </summary>
     protected virtual void Die() {
         Destroy(gameObject);
     }
 
+    /// <summary>
+    /// Adds hp to the object, and ensures it doesn't go above maxHP.
+    /// </summary>
+    /// <param name="healthRecovered">Amount of hp.</param>
     public void RecoverHealth(float healthRecovered) {
         currentHP += healthRecovered;
         if (currentHP > maxHP) {
