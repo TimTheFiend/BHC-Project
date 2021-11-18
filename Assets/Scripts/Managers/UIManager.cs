@@ -49,6 +49,15 @@ public class UIManager : MonoBehaviour
         InitializeToggleUI();
     }
 
+    private void InitialiseValues() {
+        (mapCanvas.transform as RectTransform).anchoredPosition = Vector2.zero;
+
+        foreach (GameObject obj in minimapRooms.Values) {
+            Destroy(obj);
+        }
+        minimapRooms.Clear();
+    }
+
     //Gemmer toggle ui væk på startup
     private void InitializeToggleUI() {
         statsMenu.gameObject.SetActive(false);
@@ -86,6 +95,7 @@ public class UIManager : MonoBehaviour
     /* Minimap UI */
 
     public void DrawInitialMinimap(List<RoomObject> rooms) {
+        InitialiseValues();
         RoomObject startRoom = GameManager.instance.activePlayerRoom;
 
         foreach (RoomObject room in rooms) {

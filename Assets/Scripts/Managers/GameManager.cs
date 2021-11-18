@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
     public void StartNewDungeonFloor() {
         DungeonGenerator.instance.GenerateDungeon();
 
+        canUseDoors = true;
         OnDungeonGenerationComplete();
     }
 
@@ -84,6 +85,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void ActivatePlayerRoom() {
         mobsInActiveRoom = 0;
+        Debug.Log(string.Format("{0} - {1}", activePlayerRoom, activePlayerRoom.type));
 
         switch (activePlayerRoom.type) {
             case RoomType.Normal:
@@ -91,7 +93,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case RoomType.Boss:
-                SpawnManager.instance.ActivateBossRoom(activeRoom);
+                SpawnManager.instance.ActivateBossRoom(activeRoom, out mobsInActiveRoom);
+                //SpawnManager.instance.ActivateBossRoom(activeRoom);
                 break;
 
             case RoomType.Item:
@@ -131,6 +134,13 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void BossRoomIsCompleted() {
+        completedRooms.Add(activePlayerRoom);
+        SpawnManager.instance.SpawnDungeonExit(activeRoom.position);
+        SetCanUseDoors();
+        ActivateRoomDoors();
     }
 
     #endregion Activate Rooms

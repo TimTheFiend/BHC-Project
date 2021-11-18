@@ -25,6 +25,9 @@ public class SpawnManager : MonoBehaviour
     public List<UpgradeObject> itemUpgrades = new List<UpgradeObject>();
     public List<GameObject> bosses = new List<GameObject>();
 
+    [Header("Exit")]
+    public GameObject exitObject;
+
     private void Awake() {
 
         #region Singleton pattern
@@ -74,6 +77,21 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="activeRoom">RoomHolder</param>
     public void ActivateBossRoom(Transform activeRoom) {
+        if (isDebug) {
+            GameObject bossToSpawn = Instantiate(boss, activeRoom.position, Quaternion.identity);
+            bossToSpawn.GetComponent<EnemyAttackController>().playerPosition = GameManager.instance.player.transform;
+        }
+        else {
+            Debug.LogError("Non-debug `ActivateBossRoom` hasn't been implemented");
+        }
+    }
+
+    /// <summary>
+    /// Activates a room of type <see cref="RoomType.Boss"/>.
+    /// </summary>
+    /// <param name="activeRoom">RoomHolder</param>
+    public void ActivateBossRoom(Transform activeRoom, out int mobsInActiveRoom) {
+        mobsInActiveRoom = 1;
         if (isDebug) {
             GameObject bossToSpawn = Instantiate(boss, activeRoom.position, Quaternion.identity);
             bossToSpawn.GetComponent<EnemyAttackController>().playerPosition = GameManager.instance.player.transform;
@@ -135,4 +153,8 @@ public class SpawnManager : MonoBehaviour
     }
 
     #endregion Pickup drops
+
+    public void SpawnDungeonExit(Vector3 pos) {
+        GameObject exit = Instantiate(exitObject, pos, Quaternion.identity);
+    }
 }
