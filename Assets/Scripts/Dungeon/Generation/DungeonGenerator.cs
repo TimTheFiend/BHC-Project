@@ -16,7 +16,7 @@ public class DungeonGenerator : MonoBehaviour
     public int rngSeed;
 
     [Header("Generation variables")]
-    [Range(1, 10)] public int dungeonLevel = 1;
+    private int dungeonLevel = 0;
     [Range(5, 10)] public int maxLayoutWidth = 6;
     [Range(5, 10)] public int maxLayoutHeight = 5;
     public readonly int _minAmountDeadendsPerFloor = 5;
@@ -63,23 +63,29 @@ public class DungeonGenerator : MonoBehaviour
     /// Starts the process of generating a new dungeon layout.
     /// </summary>
     public void GenerateDungeon() {
-        Debug.Assert(DebugStartGeneration() == true, "Couldn't generate layout.");
+        IncreaseLevel();
+        Debug.Assert(StartGeneration() == true, "Couldn't generate layout.");
     }
 
     /// <summary>
     /// Attempts to generate the dungeon.
     /// </summary>
-    private bool DebugStartGeneration() {
+    private bool StartGeneration() {
         for (int i = 0; i < generationAttempts; i++) {
             if (GenerateDungeonLayout()) {
                 if (HasEnoughDeadends()) {
                     CompleteGeneration();
+                    Debug.Log($"Generated dungeon {i}.");
                     return true;
                 }
             }
         }
 
         return false;
+    }
+
+    public void IncreaseLevel() {
+        dungeonLevel++;
     }
 
     /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class RoomDrawer : MonoBehaviour
@@ -51,12 +52,16 @@ public class RoomDrawer : MonoBehaviour
     }
 
     private void InitialiseTilemaps() {
+        activeGrid = GameObject.Find("Grid_");
+        Debug.Assert(activeGrid != null);
+
         gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
         gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
     }
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.
     public void DrawDungeonRooms(List<RoomObject> roomPositions) {
+        InitialiseTilemaps();
         foreach (RoomObject room in roomPositions) {
 
             #region RoomHolder

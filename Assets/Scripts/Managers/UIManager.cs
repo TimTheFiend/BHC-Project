@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [Header("Gameplay constants")]
     [SerializeField] private Slider hpBar;
     [SerializeField] private Slider energyBar;
+    [SerializeField] private GameObject mainUI;
 
     [Header("Toggle-ables")]
     [SerializeField] private Image statsMenu;
@@ -40,10 +41,21 @@ public class UIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         #endregion Singleton Pattern
+
+        DontDestroyOnLoad(mainUI);
     }
 
     private void Start() {
         InitializeToggleUI();
+    }
+
+    private void InitialiseValues() {
+        (mapCanvas.transform as RectTransform).anchoredPosition = Vector2.zero;
+
+        foreach (GameObject obj in minimapRooms.Values) {
+            Destroy(obj);
+        }
+        minimapRooms.Clear();
     }
 
     //Gemmer toggle ui væk på startup
@@ -83,6 +95,7 @@ public class UIManager : MonoBehaviour
     /* Minimap UI */
 
     public void DrawInitialMinimap(List<RoomObject> rooms) {
+        InitialiseValues();
         RoomObject startRoom = GameManager.instance.activePlayerRoom;
 
         foreach (RoomObject room in rooms) {

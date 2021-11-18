@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4568505724786020538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4568505724786020536}
+  - component: {fileID: 4568505724786020518}
+  - component: {fileID: 4568505724786020537}
+  - component: {fileID: 4568505724786020539}
+  - component: {fileID: 4568505724786020519}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4568505724786020536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568505724786020538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4568505724786020518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568505724786020538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f564d2500123140438e0f53ac5467585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dungeonRooms:
+  - {fileID: 612981878781629852, guid: c93196a467ce4e844a9fb9e850e889e3, type: 3}
+  - {fileID: 4714099283584762678, guid: 63a67558637212c4a92e6d3e3ada4faa, type: 3}
+  - {fileID: 6445251118205748310, guid: dae65abcaae9b60458aacdd83e23641a, type: 3}
+  - {fileID: 2898389795856899761, guid: 5e412b464d2194f41947b24a0c7544e8, type: 3}
+  - {fileID: 567297059037690853, guid: f0f9d9836d117af4ead5bbfdb78a3281, type: 3}
+  - {fileID: 8393016877617188876, guid: 0e831b890f374954e8be393e685398bf, type: 3}
+  - {fileID: 1380629809465429732, guid: 1ea2ceb8e091f7141809af03529390bb, type: 3}
+  - {fileID: 4782447951913400167, guid: 008de9274c516e04c88bce6c108861ea, type: 3}
+  - {fileID: 4410668136131067713, guid: c8af1aeae81c37745a7d26208e99f632, type: 3}
+  - {fileID: 2102064985005644977, guid: 5153c3a50276b35449b1b62449fec6e2, type: 3}
+  floorSprites:
+  - {fileID: 11400000, guid: 0175faf343390594c89183ccd1de2177, type: 2}
+  doorObj: {fileID: 1420009668040789852, guid: eedc6cf9899a1444aa02f5cfb737fd12, type: 3}
+  activeGrid: {fileID: 0}
+  gridWalls: {fileID: 0}
+  gridFloor: {fileID: 0}
+--- !u!114 &4568505724786020537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568505724786020538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d93ee0534673af4da86c25528beda09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDebug: 0
+  hasSeed: 0
+  rngSeed: -1565143487
+  dungeonLevel: 1
+  maxLayoutWidth: 8
+  maxLayoutHeight: 7
+  minAmountDeadends: 3
+  maxAmountRooms: 26
+  randomRoomGiveUp: 0.5
+--- !u!114 &4568505724786020539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568505724786020538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f820e5015b52c6d4d8e19eb79be2f250, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerObj: {fileID: 0}
+  player: {fileID: 0}
+  canUseDoors: 1
+--- !u!114 &4568505724786020519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4568505724786020538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8864dba427f9b4c4eb0012b1801466dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDebug: 1
+  mob: {fileID: 3143482212241901864, guid: 0ac7f302dbe914a4883155150915ebb7, type: 3}
+  boss: {fileID: 4764236248724102337, guid: addc75095a6430a4db0ea361c1f677f8, type: 3}
+  itemObject: {fileID: 5506231725334241965, guid: bfa8b7100eac5174f8deae679c6e5aab, type: 3}
+  pickupDrops:
+  - {fileID: 4852661316602436521, guid: 8cca733502de360439c697cdf2cce8b7, type: 3}
+  - {fileID: 3122376472112071270, guid: bcb7d87c8f7c52446b83d31b5f0c2e43, type: 3}
+  enemies: []
+  itemUpgrades:
+  - {fileID: 11400000, guid: 3ee0806ea8aba584c94e91eb106c5eb2, type: 2}
+  bosses: []
