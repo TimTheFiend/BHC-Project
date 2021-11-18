@@ -84,6 +84,9 @@ public class DungeonGenerator : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Increases the level, a variable in how many rooms are generated on that level.
+    /// </summary>
     public void IncreaseLevel() {
         dungeonLevel++;
     }
@@ -102,7 +105,10 @@ public class DungeonGenerator : MonoBehaviour
 
     #region Deadends assignment
 
-    /// Make sure there's enough deadends
+    /// <summary>
+    /// Makes sure there's enough deadends.
+    /// </summary>
+    /// <returns><c>true</c> if there's enough deadends; otherwise <c>false</c></returns>
     private bool HasEnoughDeadends() {
         int deadendCounter = 0;
         foreach (RoomObject room in minimapPositions) {
@@ -236,7 +242,9 @@ public class DungeonGenerator : MonoBehaviour
         GetMaxAmountRooms();
     }
 
-    //NOTE: needs expansion.
+    /// <summary>
+    /// Generates an int value for the amount of rooms that needs to be in this level.
+    /// </summary>
     private void GetMaxAmountRooms() {
         //minAmountDeadends = Random.Range(_minAmountDeadendsPerFloor, _minAmountDeadendsPerFloor + 1 + 1); //+1 +1 because exclusive, and for variation.
         maxAmountRooms = Mathf.RoundToInt(3.33f * dungeonLevel + minAmountDeadends);
@@ -280,6 +288,11 @@ public class DungeonGenerator : MonoBehaviour
 
     #endregion Add Room To Layout
 
+    /// <summary>
+    /// Gets the actual <see cref="RoomObject"/> object, properties and all.
+    /// </summary>
+    /// <param name="room">A RoomObject with the same Center values</param>
+    /// <returns>The generated RoomObject</returns>
     public RoomObject GetActiveRoom(RoomObject room) {
         return minimapPositions.Where(r => r == room).SingleOrDefault();
     }

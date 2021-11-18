@@ -120,7 +120,10 @@ public class SpawnManager : MonoBehaviour
 
     #region Pickup drops
 
-    //TODO better system.
+    /// <summary>
+    /// Checks to see if a mob should drop an item.
+    /// </summary>
+    /// <param name="mobPosition">Position of the dead mob.</param>
     public void MobPickupDrop(Vector3 mobPosition) {
         Dictionary<GameObject, float> weight = weight = new Dictionary<GameObject, float>();
         if (isDebug) {
@@ -138,7 +141,11 @@ public class SpawnManager : MonoBehaviour
         Instantiate(_pickup, mobPosition, Quaternion.identity);
     }
 
-    //TODO refactor code.
+    /// <summary>
+    /// Helper method for MobPickupDrop
+    /// </summary>
+    /// <param name="dict"></param>
+    /// <returns></returns>
     private GameObject? PickupWeight(Dictionary<GameObject, float> dict) {
         float value = Random.value;
 
@@ -154,6 +161,10 @@ public class SpawnManager : MonoBehaviour
 
     #endregion Pickup drops
 
+    /// <summary>
+    /// Spawns an <see cref="ExitObject"/> after the boss of a dungeon has been killed.
+    /// </summary>
+    /// <param name="pos">The center position of the boss room.</param>
     public void SpawnDungeonExit(Vector3 pos) {
         GameObject exit = Instantiate(exitObject, pos, Quaternion.identity);
     }

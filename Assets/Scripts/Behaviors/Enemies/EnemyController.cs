@@ -17,7 +17,6 @@ public class EnemyController : CharacterObject
     protected override void Die() {
         Vector3 pos = transform.position;
         if (gameObject.name.StartsWith("Boss")) {
-            Debug.LogError("BOSS DEAD");
             GameManager.instance.BossRoomIsCompleted();
             base.Die();
             return;

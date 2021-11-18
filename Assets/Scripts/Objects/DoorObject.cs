@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Door-object used in the Dungeon.
+/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -18,6 +21,10 @@ public class DoorObject : MonoBehaviour
         ActivateDoor(false);
     }
 
+    /// <summary>
+    /// Change the door sprite to either Open or Closed.
+    /// </summary>
+    /// <param name="isOpen">The state the door should be.</param>
     public void SetDoorState(bool isOpen) {
         this.isOpen = isOpen;
         GetComponent<SpriteRenderer>().sprite = this.isOpen ? doorOpen : doorClosed;

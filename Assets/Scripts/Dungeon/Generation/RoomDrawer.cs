@@ -52,11 +52,23 @@ public class RoomDrawer : MonoBehaviour
     }
 
     private void InitialiseTilemaps() {
-        activeGrid = GameObject.Find("Grid_");
-        Debug.Assert(activeGrid != null);
+        try {
+            activeGrid = GameObject.Find("Grid_");
 
-        gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
-        gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
+            if (activeGrid.transform.Find("Walls").TryGetComponent(out Tilemap tilemap)) {
+                gridWalls = tilemap;
+            }
+            if (activeGrid.transform.Find("Floor").TryGetComponent(out Tilemap _tilemap)) {
+                gridFloor = _tilemap;
+            }
+
+            //gridFloor = activeGrid.transform.Find("Floor").GetComponent<Tilemap>();
+            //gridWalls = activeGrid.transform.Find("Walls").GetComponent<Tilemap>();
+        }
+        catch (MissingReferenceException) {
+        }
+        catch (System.NullReferenceException) {
+        }
     }
 
     //Metode der bliver kaldt n�r et nyt level skal tegnes.

@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/HubWorld.unity
-    guid: f75d9c5f13911f944b4b0ad91da34e8c
-  - enabled: 1
-    path: Assets/Scenes/Movement.unity
-    guid: 90e980578129ac24e970a67c65a52ed2
+    path: Assets/Scenes/Dungeon Floor.unity
+    guid: f5ac2a6d817f8b543b27ebcea1e04b4e
   - enabled: 1
     path: Assets/Scenes/Dungeon.unity
     guid: 78a1b6f6c23d94b40a40bcdb61e62385
+  - enabled: 1
+    path: Assets/Scenes/HubWorld.unity
+    guid: f75d9c5f13911f944b4b0ad91da34e8c
   m_configObjects: {}

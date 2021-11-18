@@ -49,6 +49,9 @@ public class UIManager : MonoBehaviour
         InitializeToggleUI();
     }
 
+    /// <summary>
+    /// Resets internal values.
+    /// </summary>
     private void InitialiseValues() {
         (mapCanvas.transform as RectTransform).anchoredPosition = Vector2.zero;
 
@@ -58,7 +61,9 @@ public class UIManager : MonoBehaviour
         minimapRooms.Clear();
     }
 
-    //Gemmer toggle ui væk på startup
+    /// <summary>
+    /// Sets UI elements state on startup.
+    /// </summary>
     private void InitializeToggleUI() {
         statsMenu.gameObject.SetActive(false);
         mapMenu.gameObject.SetActive(false);
@@ -66,10 +71,18 @@ public class UIManager : MonoBehaviour
 
     #region Toggle UI
 
+    /// <summary>
+    /// Toggles the <see cref="statsMenu"/> UI-element.
+    /// </summary>
+    /// <param name="isActive">the state the element should be.</param>
     public void ToggleStats(bool isActive) {
         statsMenu.gameObject.SetActive(isActive);
     }
 
+    /// <summary>
+    /// Toggles the <see cref="mapMenu"/> UI-element.
+    /// </summary>
+    /// <param name="isActive">the state the element should be.</param>
     public void ToggleMap(bool isActive) {
         mapMenu.gameObject.SetActive(isActive);
     }
@@ -78,12 +91,18 @@ public class UIManager : MonoBehaviour
 
     #region Updating player bars
 
+    /// <summary>
+    /// Sets the value for the HPbar.
+    /// </summary>
     public float UpdateHPBar {
         set {
             hpBar.value = value;
         }
     }
 
+    /// <summary>
+    /// Sets the value for the EnergyBar.
+    /// </summary>
     public float UpdateEnergyBar {
         set {
             energyBar.value = value;
@@ -94,6 +113,10 @@ public class UIManager : MonoBehaviour
 
     /* Minimap UI */
 
+    /// <summary>
+    /// Draws the entire dungeonmap, filled with <see cref="unknownRoom"/> sprites.
+    /// </summary>
+    /// <param name="rooms">The dungeon layout.</param>
     public void DrawInitialMinimap(List<RoomObject> rooms) {
         InitialiseValues();
         RoomObject startRoom = GameManager.instance.activePlayerRoom;
@@ -119,11 +142,14 @@ public class UIManager : MonoBehaviour
         UpdateCurrentMinimapRoom();
     }
 
+    /// <summary>
+    /// Updates the current player room, setting the proper sprite.
+    /// </summary>
     private void UpdateCurrentMinimapRoom() {
         //Finde GameObject på Canvas position
         GameObject roomUI = minimapRooms[(mapCanvas.transform as RectTransform).anchoredPosition * -1];
         //Hente RoomType baseret på GameObject.name
-        RoomType roomType;
+        RoomType roomType = RoomType.Null;
         Debug.Assert(System.Enum.TryParse(roomUI.name, out roomType), "Unable to convert string to RoomType");
         //Ændr Image.sprite
 
@@ -146,6 +172,10 @@ public class UIManager : MonoBehaviour
         roomUI.GetComponent<Image>().sprite = spriteToUse;
     }
 
+    /// <summary>
+    /// Moves the minimap so the player is always in the center.
+    /// </summary>
+    /// <param name="dir"></param>
     public void MoveMinimap(Vector2 dir) {
         Vector2 moveDir = Vector2.zero;
         if (dir == Vector2.up) {

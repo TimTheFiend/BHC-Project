@@ -12,30 +12,32 @@ public class ExitObject : MonoBehaviour
     private Vector3 hubWorldPosCam = new Vector3(0.5f, 3.5f, -10f);
     private Vector3 hubWorldPos = new Vector3(0.5f, 3.5f, 0f);
 
-    private void OnEnable() {
-        Debug.Log("Enabled");
+    /// <summary>
+    /// Sets a delegate on <see cref="SceneManager.sceneLoaded"/> based on where the object is.
+    /// </summary>
+    private void Start() {
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
 
         if (sceneName.ToLower().Contains("hub")) {
-            Debug.Log("GO TO DUNGEON");
             SceneManager.sceneLoaded += OnSceneLoaded_Dungeon;
         }
         else {
-            Debug.Log("GO TO HUBWORLD");
             SceneManager.sceneLoaded += OnSceneLoaded_HubWorld;
         }
     }
 
-    private void OnDisable() {
-        Debug.Log("Disabled");
-    }
-
+    /// <summary>
+    /// Handles scene preparation for going to the Dungeon.
+    /// </summary>
     private void OnSceneLoaded_Dungeon(Scene scene, LoadSceneMode mode) {
         GameManager.instance.StartNewDungeonFloor();
         SceneManager.sceneLoaded -= OnSceneLoaded_Dungeon;
     }
 
+    /// <summary>
+    /// Handles scene preparation for going to the hubworld.
+    /// </summary>
     private void OnSceneLoaded_HubWorld(Scene scene, LoadSceneMode mode) {
         GameManager.instance.playerObj.transform.position = hubWorldPos;
         CameraManager.instance.gameObject.transform.position = hubWorldPosCam;
@@ -53,8 +55,6 @@ public class ExitObject : MonoBehaviour
             }
             else {
                 SceneManager.LoadScene(hubWorld);
-                //GameManager.instance.playerObj.transform.position = hubWorldPos;
-                //CameraManager.instance.gameObject.transform.position = hubWorldPos;
             }
         }
     }
